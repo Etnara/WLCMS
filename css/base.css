@@ -228,7 +228,7 @@ main:not(.login):not(.calendar-view):not(.dashboard) {
     padding: 1rem;
 }
 
-/* Form Controls */
+/* Form Controls */ 
 
 input[type=text], input[type=password], input[type=date], input[type=email], input[type=number], 
 input[type=tel], select, textarea, .pseudo-input, .pseudo-input-disabled {
@@ -239,6 +239,10 @@ input[type=tel], select, textarea, .pseudo-input, .pseudo-input-disabled {
     background-color: var(--page-background-color);
     margin-bottom: 0.5rem;
     scroll-margin: 7.5rem;
+}
+
+input[type=text]{
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
 }
 
 input[type=text]:disabled, input[type=password]:disabled, input[type=date]:disabled, input[type=number]:disabled,
@@ -384,7 +388,7 @@ h3:not(:first-of-type) {
 }
 
 .error-toast {
-    background-color: var(--error-toast-background-color);
+    background-color: #f8d7da;
     color: var(--error-toast-font-color);
     padding: 1rem;
     border-radius: 0.5rem;
