@@ -44,7 +44,7 @@ table, td, tr, th, form, fieldset, em, button, a {
 :root {
     /* CSS variables that will be used across the page */
     --page-background-color: #ffffff;
-    --page-font-color: #333333;
+    --page-font-color: #ff0000;
     --inactive-font-color: #d0d0d0;
     --inactive-background-color: #f0f0f0;
     --standout-background: #fafafa;
@@ -143,10 +143,12 @@ nav ul li a {
     font-weight: 500;
     text-decoration: none;
     transition: color .3s;
+    font-size: 2.5rem;
 }
 
 nav ul li a:hover {
     color: var(--accent-color);
+    font-size: 1.1rem;
 }
 
 span.logo {
@@ -579,7 +581,7 @@ main.dashboard > p {
 
 .dashboard-item:hover {
     background-color: var(--accent-color);
-    cursor: pointer;
+    cursor: crosshair;
     /* text-shadow: 0px 0px .25rem black; */
 }
 
