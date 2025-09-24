@@ -44,7 +44,7 @@ table, td, tr, th, form, fieldset, em, button, a {
 :root {
     /* CSS variables that will be used across the page */
     --page-background-color: #ffffff;
-    --page-font-color: #333333;
+    --page-font-color: #ff0000;
     --inactive-font-color: #d0d0d0;
     --inactive-background-color: #f0f0f0;
     --standout-background: #fafafa;
@@ -55,13 +55,13 @@ table, td, tr, th, form, fieldset, em, button, a {
     --info-toast-background-color: #2f2f2f;
     --info-toast-font-color: white;
 
-    --error-toast-background-color: #701a1a;
+    --error-toast-background-color: #f8d7da;
     --error-toast-font-color: white;
 
 
     --shadow-and-border-color: #e8e8e8;
 
-    --main-color: #294877; /* Changed to Fred SPCA Navy */
+    --main-color: #1e1e2e;
 
     --accent-color: #c52e81;
  
@@ -143,10 +143,12 @@ nav ul li a {
     font-weight: 500;
     text-decoration: none;
     transition: color .3s;
+    font-size: 2.5rem;
 }
 
 nav ul li a:hover {
     color: var(--accent-color);
+    font-size: 1.1rem;
 }
 
 span.logo {
@@ -239,6 +241,11 @@ input[type=tel], select, textarea, .pseudo-input, .pseudo-input-disabled {
     background-color: var(--page-background-color);
     margin-bottom: 0.5rem;
     scroll-margin: 7.5rem;
+    box-shadow: #3b3333;
+}
+
+input[type=text]{
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
 }
 
 input[type=text]:disabled, input[type=password]:disabled, input[type=date]:disabled, input[type=number]:disabled,
@@ -312,7 +319,7 @@ h1 {
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 2rem;
-    background-color: var(--main-color);
+    background-color: #ffcc00;
     color: var(--page-background-color);
     width: 100%;
     text-align: center;
@@ -386,7 +393,7 @@ h3:not(:first-of-type) {
 }
 
 .error-toast {
-    background-color: var(--error-toast-background-color);
+    background-color: #f8d7da;
     color: var(--error-toast-font-color);
     padding: 1rem;
     border-radius: 0.5rem;
@@ -543,7 +550,7 @@ button.cancel:hover, a.cancel:hover {
 
 /* Dashboard */
 main.dashboard {
-    padding: 0 8rem 4rem 8rem;
+    padding: 2rem;
 }
 
 main.dashboard > p {
@@ -581,7 +588,7 @@ main.dashboard > p {
 
 .dashboard-item:hover {
     background-color: var(--accent-color);
-    cursor: pointer;
+    cursor: crosshair;
     /* text-shadow: 0px 0px .25rem black; */
 }
 
@@ -627,7 +634,7 @@ form.signup-form .section-box {
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #fafafa;
+    background-color: #e0f7fa;
 }
 /**/
 
@@ -858,7 +865,7 @@ table.general th:last-of-type {
 table.general th {
     background-color: var(--main-color);
     color: var(--button-font-color);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 table.general th, table.general td {
@@ -902,6 +909,7 @@ img.profile-pic {
 
 .link-like {
     cursor: pointer;
+    color: var(--accent-color);
 }
 
 .form-row {
