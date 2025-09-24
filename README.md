@@ -17,6 +17,8 @@ The ODHS Medicine Tracker code was modified in the Fall of 2024, changing the co
 
 In Spring 2025, the Step VA Volunteer Management code was adapted to develop the Fredericksburg SCPA Volunteer Management Web Application. Numerous existing database tables were retained with modifications or renamed, while new tables were introduced as needed. Certain files and functionalities from the original system were integrated, while additional features were designed specifically for the Fredericksburg SCPA Volunteer Management system. The team responsible for these updates and enhancements included Yalda Alemy, Luke Blair, Madison Van Buren, Sean Foley, Luke Gibson, Aiden Meyer, and Israel Ortiz.
 
+In Fall 2025, the Fredericksburg SCPA Volunteer Management Web Application code was adapted to develop the WLCMS Speaker Management Web App. The team responsible for these updates and enhancements included Zak Butt, Michael Salazar, Matt Vierow, Lexie Engelhardt, Caleb Lineberry, Josh Venzen, Sanaa Abdulkadir.
+
 ## User Types
 There are two types of users (also referred to as 'roles') within FredSPCA.
 * Admins
