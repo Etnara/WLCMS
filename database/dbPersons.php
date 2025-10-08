@@ -34,13 +34,13 @@ function add_person($person) {
 
     // If the result is empty, it means the person doesn't exist, so we can add the person
     if (mysqli_num_rows($result) == 0) {
-        // Prepare the insert query
+        // Prepare the insert query (note: database must have event_topic and event_topic_summary columns)
         $insert_query = 'INSERT INTO dbpersons (
             id, start_date, first_name, last_name, street_address, city, state, zip_code, 
             phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, 
             birthday, email, emergency_contact_first_name, emergency_contact_last_name, 
             emergency_contact_relation, type, status, password, skills, interests, 
-            archived, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered, training_level
+            event_topic, event_topic_summary, archived, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered, training_level
         ) VALUES ("' .
             $person->get_id() . '","' .
             $person->get_start_date() . '","' .
@@ -63,7 +63,9 @@ function add_person($person) {
             $person->get_status() . '","' .
             $person->get_password() . '","' .
             $person->get_skills() . '","' .
-            $person->get_interests() . '","' .     
+            $person->get_interests() . '","' .
+            $person->get_event_topic() . '","' .
+            $person->get_event_topic_summary() . '","' .
             $person->get_archived() . '","' .                
             $person->get_is_new_volunteer() . '","' .
             $person->get_is_community_service_volunteer() . '","' .
@@ -632,6 +634,8 @@ function make_a_person($result_row) {
         $result_row['archived'],
         $result_row['skills'],
         $result_row['interests'],
+        isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
+        isset($result_row['event_topic_summary']) ? $result_row['event_topic_summary'] : '',
         $result_row['training_level'],
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],
@@ -642,9 +646,9 @@ function make_a_person($result_row) {
         //$result_row['background_date'],
         //$result_row['gender'],
         //$result_row['race']
-	    $result_row['is_community_service_volunteer'],
-	    $result_row['is_new_volunteer'],
-	    $result_row['total_hours_volunteered']
+        $result_row['is_community_service_volunteer'],
+        $result_row['is_new_volunteer'],
+        $result_row['total_hours_volunteered']
     );
 
     return $thePerson;

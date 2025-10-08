@@ -155,32 +155,16 @@
         </fieldset>
 
         <fieldset class="section-box mb-4">
-            <h3 class="mb-2">Other Required Information</h3>
+            <h3 class="mb-2">Event Topic</h3>
+            <p class="mb-2">Please provide information of the event topic and summary of it.</p>
+            <div class="blue-div"></div>
+            <label for="event_topic"><em>* </em>Event Topic Name</label>
+            <input type="text" id="event_topic" name="event_topic" required placeholder="Enter the event topic name">
+
+            <label for="event_topic_summary"><em>* </em>Event Topic Summary</label>
+            <textarea id="event_topic_summary" name="event_topic_summary" required placeholder="Write a brief summary of the event topic" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
+            
 	    <div class="blue-div"></div>
-            
-           <!-- fix this area is buggy -->
-            
-           <label><em>* </em>Are you volunteering for court-ordered community service?</label>
-            <div class="radio-group">
-	      <div class="radio-element">
-                <input type="radio" id="yes" name="is_community_service_volunteer" value="yes" required>
-                <label for="yes">Yes</label>
-	      </div>
-
-	      <div class="radio-element">
-                <input type="radio" id="no" name="is_community_service_volunteer" value="no">
-                <label for="no">No</label>
-	      </div>
-            </div>
-         
-        
-            
-
-            <label>Are there any specific skills you have that you believe could be useful for volunteering at the FredSPCA</label>
-            <input type="text" id="skills" name="skills" placeholder="">
-
-            <label>Any interests/hobbies?</label>
-            <input type="text" id="interests" name="interests" placeholder="">
 
 
         </fieldset>
