@@ -48,6 +48,7 @@ require_once('header.php');
             'emergency_contact_first_name', 'emergency_contact_last_name',
             'emergency_contact_relation', 'emergency_contact_phone',
             'emergency_contact_phone_type',
+            'event_topic', 'event_topic_summary',
             'username', 'password',
             'is_community_service_volunteer',
             'is_new_volunteer', 
@@ -119,6 +120,27 @@ require_once('header.php');
             $errors = true;
         }
 
+        // Event topic fields (speaker/topic information)
+        $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
+        $event_topic_summary = isset($args['event_topic_summary']) ? trim(strip_tags($args['event_topic_summary'])) : '';
+
+        // Basic validation: topic required and reasonably bounded
+        if ($event_topic === '') {
+            echo "<p>Event topic is required.</p>";
+            $errors = true;
+        } elseif (strlen($event_topic) > 255) {
+            echo "<p>Event topic is too long (max 255 characters).</p>";
+            $errors = true;
+        }
+
+        if ($event_topic_summary === '') {
+            echo "<p>Event topic summary is required.</p>";
+            $errors = true;
+        } elseif (strlen($event_topic_summary) > 4000) {
+            echo "<p>Event topic summary is too long (max 4000 characters).</p>";
+            $errors = true;
+        }
+
         $skills = isset($args['skills']) ? $args['skills'] : '';
         $interests = isset($args['interests']) ? $args['interests'] : '';
 
@@ -154,7 +176,8 @@ require_once('header.php');
             $emergency_contact_first_name, $emergency_contact_last_name,
             $emergency_contact_phone, $emergency_contact_phone_type,
             $emergency_contact_relation, $type, $status, $archived, 
-            $skills, $interests, $training_level,
+            $skills, $interests,
+            $event_topic, $event_topic_summary, $training_level,
             $is_community_service_volunteer, $is_new_volunteer,
             $total_hours_volunteered
         );

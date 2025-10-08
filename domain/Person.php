@@ -57,6 +57,8 @@ class Person {
 	
     private $skills;
     private $interests;
+	private $event_topic;
+	private $event_topic_summary;
     //private $disability_accomodation_needs;
    // ADDED NEW ONES -YALDA
     private $is_new_volunteer;
@@ -74,7 +76,7 @@ class Person {
     	$state, $zip_code, $phone1, $phone1type, $email, $emergency_contact_first_name,
     	$emergency_contact_last_name, $emergency_contact_phone, $emergency_contact_phone_type,
     	$emergency_contact_relation, $type, $status, $archived, 
-    	$skills, $interests, $training_level,  
+	$skills, $interests, $event_topic, $event_topic_summary, $training_level,  
    	 	$is_community_service_volunteer,           // required param FIRST
     	$is_new_volunteer = 1,                     // optional
     	$total_hours_volunteered = 0.00    		     // optional
@@ -108,6 +110,8 @@ class Person {
         //$this->preferred_feedback_method = $preferred_feedback_method;
         $this->skills = $skills;
         $this->interests = $interests;
+	$this->event_topic = $event_topic;
+	$this->event_topic_summary = $event_topic_summary;
         //$this->disability_accomodation_needs = $disability_accomodation_needs;
         //$this->training_complete = $training_complete;
         //$this->training_date = $training_date;
@@ -257,6 +261,14 @@ class Person {
 
 	function get_interests() {
 		return $this->interests;
+	}
+
+	function get_event_topic() {
+		return $this->event_topic;
+	}
+
+	function get_event_topic_summary() {
+		return $this->event_topic_summary;
 	}
 
 	function get_training_level() {
