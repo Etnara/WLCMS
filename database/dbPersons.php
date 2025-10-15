@@ -37,9 +37,7 @@ function add_person($person) {
         // Prepare the insert query (note: database must have event_topic and event_topic_summary columns)
         $insert_query = 'INSERT INTO dbpersons (
             id, start_date, first_name, last_name, street_address, city, state, zip_code, 
-            phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, 
-            birthday, email, emergency_contact_first_name, emergency_contact_last_name, 
-            emergency_contact_relation, type, status, password, skills, interests, 
+            phone1, phone1type,type, status, password, skills, interests, 
             event_topic, event_topic_summary, archived, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered, training_level
         ) VALUES ("' .
             $person->get_id() . '","' .
@@ -52,13 +50,8 @@ function add_person($person) {
             $person->get_zip_code() . '","' .
             $person->get_phone1() . '","' .
             $person->get_phone1type() . '","' .
-            $person->get_emergency_contact_phone() . '","' .
-            $person->get_emergency_contact_phone_type() . '","' .
             $person->get_birthday() . '","' .
             $person->get_email() . '","' .
-            $person->get_emergency_contact_first_name() . '","' .
-            $person->get_emergency_contact_last_name() . '","' .
-            $person->get_emergency_contact_relation() . '","' .
             $person->get_type() . '","' .
             $person->get_status() . '","' .
             $person->get_password() . '","' .
@@ -238,17 +231,13 @@ function archive_volunteer($volunteer_id) {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, birthday, email,
-                    emergency_contact_first_name, contact_num, emergency_contact_relation, contact_method, type,
-                    status, notes, password, skills, interests, archived_date, emergency_contact_last_name, 
-                    is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
-                 ) 
-                 SELECT 
+                    phone1, phone1type, type,
+                    status, notes, password, skills, interests, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                 )
+                 SELECT
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, birthday, email,
-                    emergency_contact_first_name, contact_num, emergency_contact_relation, contact_method, type,
-                    status, notes, password, skills, interests, NOW(),
-                    emergency_contact_last_name, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    phone1, phone1type,type,
+                    status, notes, password, skills, interests, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -624,11 +613,6 @@ function make_a_person($result_row) {
         $result_row['phone1'],
         $result_row['phone1type'],
         $result_row['email'],
-        $result_row['emergency_contact_first_name'],
-        $result_row['emergency_contact_last_name'],
-        $result_row['emergency_contact_phone'],
-        $result_row['emergency_contact_phone_type'],
-        $result_row['emergency_contact_relation'],
         $result_row['type'],
         $result_row['status'],
         $result_row['archived'],
@@ -860,22 +844,13 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     // updates the required fields of a person's account
     function update_person_required(
         $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
-        $zip_code, $email, $phone1, $phone1type, $emergency_contact_first_name,
-        $emergency_contact_last_name, $emergency_contact_phone,
-        $emergency_contact_phone_type, $emergency_contact_relation, $type,
+        $zip_code, $email, $phone1, $phone1type, $type,
         $skills, $interests
     ) {
         $query = "update dbpersons set 
             first_name='$first_name', last_name='$last_name', birthday='$birthday',
             street_address='$street_address', city='$city', state='$state',
-            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', 
-            emergency_contact_first_name='$emergency_contact_first_name', 
-            emergency_contact_last_name='$emergency_contact_last_name', 
-            emergency_contact_phone='$emergency_contact_phone', 
-            emergency_contact_phone_type='$emergency_contact_phone_type', 
-            emergency_contact_relation='$emergency_contact_relation', type='$type',
-            
-           
+            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', type='$type',
             skills='$skills', interests='$interests'
         
             where id='$id'";
