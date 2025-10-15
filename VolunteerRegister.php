@@ -6,7 +6,7 @@
 <html>
 <head>
     <?php require_once('database/dbMessages.php'); ?>
-    <title>Fredericksburg SPCA | Register</title>
+    <title>WLCMS | Speaker Interest Form</title>
     <link href="css/normal_tw.css" rel="stylesheet">
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
@@ -42,6 +42,11 @@ require_once('header.php');
         $args = sanitize($_POST, $ignoreList);
 
         $required = array(
+            'first_name', 'last_name',
+            'email', 'phone'
+        );
+
+        /* $required = array(
             'first_name', 'last_name', 'birthdate',
             'street_address', 'city', 'state', 'zip', 
             'email', 'phone', 'phone_type',
@@ -50,7 +55,7 @@ require_once('header.php');
             'is_community_service_volunteer',
             'is_new_volunteer', 
             'total_hours_volunteered'
-        );
+        ); */
 
         $errors = false;
 
@@ -60,6 +65,7 @@ require_once('header.php');
 
         $first_name = $args['first_name'];
         $last_name = $args['last_name'];
+        /*
         $birthday = validateDate($args['birthdate']);
         if (!$birthday) {
             echo "<p>Invalid birthdate.</p>";
@@ -82,6 +88,7 @@ require_once('header.php');
             echo "<p>Invalid ZIP code.</p>";
             $errors = true;
         }
+        */
 
         $email = strtolower($args['email']);
         if (!validateEmail($email)) {
@@ -95,26 +102,19 @@ require_once('header.php');
             $errors = true;
         }
 
-        $phone1type = $args['phone_type'];
+        /* $phone1type = $args['phone_type'];
         if (!valueConstrainedTo($phone1type, array('cellphone', 'home', 'work'))) {
             echo "<p>Invalid phone type.</p>";
             $errors = true;
-        }
+        } */
 
  
 
         // Event topic fields (speaker/topic information)
-        $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
+       // $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
         $event_topic_summary = isset($args['event_topic_summary']) ? trim(strip_tags($args['event_topic_summary'])) : '';
 
-        // Basic validation: topic required and reasonably bounded
-        if ($event_topic === '') {
-            echo "<p>Event topic is required.</p>";
-            $errors = true;
-        } elseif (strlen($event_topic) > 255) {
-            echo "<p>Event topic is too long (max 255 characters).</p>";
-            $errors = true;
-        }
+     
 
         if ($event_topic_summary === '') {
             echo "<p>Event topic summary is required.</p>";
@@ -127,9 +127,13 @@ require_once('header.php');
         $skills = isset($args['skills']) ? $args['skills'] : '';
         $interests = isset($args['interests']) ? $args['interests'] : '';
 
-        $is_community_service_volunteer = $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
+
+        # $interests = isset($args['interests']) ? $args['interests'] : '';
+
+        /* $is_community_service_volunteer = $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
         $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
         $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
+        
 
         $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
         $archived = 0;
@@ -145,6 +149,7 @@ require_once('header.php');
         } else {
             $password = password_hash($args['password'], PASSWORD_BCRYPT);
         }
+        */
 
         if ($errors) {
             echo '<p class="error">Your form submission contained unexpected or invalid input.</p>';
@@ -152,6 +157,11 @@ require_once('header.php');
         }
 
         $newperson = new Person(
+            $first_name, $last_name, $email,
+            $phone1,
+        );
+
+        /* $newperson = new Person(
             $id, $password, date("Y-m-d"),
             $first_name, $last_name, $birthday,
             $street_address, $city, $state, $zip_code,
@@ -160,7 +170,7 @@ require_once('header.php');
             $event_topic, $event_topic_summary, $training_level,
             $is_community_service_volunteer, $is_new_volunteer,
             $total_hours_volunteered
-        );
+        ); */
 
         $result = add_person($newperson);
         if (!$result) {
