@@ -106,7 +106,8 @@ require_once('header.php');
                                     echo "<td>" . htmlspecialchars($volunteer->get_first_name()) . "</td>";
                                     echo "<td>" . htmlspecialchars($volunteer->get_last_name()) . "</td>";
                                     echo "<td>" . htmlspecialchars($check_in_info['startTime']) . "</td>";
-                                    echo "<td><button type='button' onclick=\"clockOut('{$check_in_info['shift_id']}')\" class='blue-button'>Check-Out</button></td>";
+                                    //$check_in_info['shift_id']
+                                    echo "<td><button type='button' onclick=\"clockOut('{$volunteer->get_id()}')\" class='blue-button'>Check-Out</button></td>";
                                     echo "</tr>";
                                 }
                             }
@@ -164,9 +165,30 @@ require_once('header.php');
             });
         }
 
-        function clockOut(shiftID) {
-            const description = prompt("Please enter a description for clocking out:");
-            if (description !== null && description.trim() !== "") {
+        function clockOut(personID) {
+            const description = prompt("Are you sure you want to reject "+ personID +"?");
+            if (description !== null){
+                fetch('clockOut.php',{
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `personID=${encodeURIComponent(personID)}`
+                }).then(response => response.text())
+                .then(data => {
+                    if (data.trim() === 'success') {
+                        alert(personID + " was successfully archived!");
+                    } else {
+                        alert("Archiving failed for " + personID);
+                    }
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("There was an error rejecting "+personID);
+                });
+            } else{
+                alert("Rejection cancelled.")
+            }
+            /*if (description !== null && description.trim() !== "") {
                 fetch('clockOut.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -183,7 +205,7 @@ require_once('header.php');
                 });
             } else {
                 alert("Clock out cancelled. Description is required.");
-            }
+            }*/
         }
 
         document.addEventListener("DOMContentLoaded", function() {

@@ -1,19 +1,21 @@
 <?php
 require_once 'database/dbShifts.php';
-//require_once 'database/dbPersons.php';
+require_once 'database/dbPersons.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $shiftID = $_POST['shiftID'];
-    $description = $_POST['description'];
+    $personID = $_POST['personID'];
     //$test = retrieve_persons_by_name ("Bob SPCA");
     //alert($test);
-
-    if (!empty($shiftID) && !empty($description)) {
-        clockOutByShiftID($shiftID, $description)
-        //archive_volunteer($volunteerID);
-        echo "Success";
-    } else {
-        echo "Missing shiftID or description.";
+    if (!empty($personID)){
+        $result = archive_volunteer($personID);
+        if ($result == true){
+            echo "success";
+        } else{
+            echo "failed";
+        }
+        
+    } else{
+        echo "person does not exist";
     }
 }
 ?>
