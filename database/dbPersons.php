@@ -259,6 +259,7 @@ function archive_volunteer($volunteer_id) {
     $stmt->close();
     $stmt_delete->close();
     mysqli_close($con);
+    return true;
 }
 
     if (!(check_if_signed_up($event_info['id'], $personID))) {
