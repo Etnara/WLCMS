@@ -26,7 +26,7 @@
         require_once('database/dbEvents.php');
         $args = sanitize($_POST, null);
         $required = array(
-            "name", "date", "start-time", "end-time", "description", "type"
+            "name", "description", "date", "start-time", "end-time"
         );
         if (!wereRequiredFieldsSubmitted($args, $required)) {
             echo 'bad form data';
@@ -86,14 +86,16 @@
             <form id="new-event-form" method="POST">
                 <label for="name">* Event Name </label>
                 <input type="text" id="name" name="name" required placeholder="Enter name"> 
+                <label for="name">* Description </label>
+                <input type="text" id="description" name="description" required placeholder="Enter description">
                 <label for="name">* Date </label>
                 <input type="date" id="date" name="date" <?php if ($date) echo 'value="' . $date . '"'; ?> min="<?php echo date('Y-m-d'); ?>" required>
                 <label for="name">* Start Time </label>
                 <input type="text" id="start-time" name="start-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
                 <label for="name">* End Time </label>
                 <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM">
-                <label for="name">* Description </label>
-                <input type="text" id="description" name="description" required placeholder="Enter description">
+                <!-- It seems theres a bug with the time not accepting 12:00 PM -->
+                <!--
                 <label for="name">Event Type </label>
                 <input type="text" id="type" name="type" required placeholder="Enter Event Type">
                 <label for="name">Location </label>
@@ -107,6 +109,7 @@
                     <option value="Orange">Orange</option>
                     <option value="Pink">Pink</option>
                 </select>
+-->
                 <input type="submit" value="Create Event">
                 
             </form>

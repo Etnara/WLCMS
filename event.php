@@ -232,13 +232,13 @@
         <?php
             require_once('include/output.php');
             $event_name = $event_info['name'];
+            $event_description = $event_info['description'];
             $event_date = date('l, F j, Y', strtotime($event_info['date']));
             $event_startTime = time24hto12h($event_info['startTime']);
             $event_endTime = time24hto12h($event_info['endTime']);
-            $event_description = $event_info['description'];
             $event_location = $event_info['location'];
-            $event_capacity = $event_info['capacity'];
-            $event_training_level = $event_info['training_level_required'];
+            /* $event_capacity = $event_info['capacity']; */
+            /* $event_training_level = $event_info['training_level_required']; */
             require_once('include/time.php');
         ?>
 
@@ -266,6 +266,12 @@
 
                 <div id="table-wrapper">
             <table>
+                <tr>
+                    <td class="label">Description</td>
+                    <td>
+                        <?php echo wordwrap($event_description, 50, "<br />\n"); ?>
+                    </td>
+                </tr>
                 <tr>  
                     <td class="label">Date</td>
                     <td><?php echo $event_date; ?></td>
@@ -275,18 +281,20 @@
                     <td><?php echo $event_startTime . " - " . $event_endTime; ?></td>
                 </tr>
                 <tr>
+                    <td class="label">Speaker</td>
+                    <td>
+                        <?php # echo wordwrap($event_location, 50, "<br />\n"); ?>
+                        <?php echo wordwrap("John Speaker", 50, "<br />\n"); ?>
+                    </td>
+                </tr>
+<!--
+                <tr>
                     <td class="label">Location</td>
                     <td>
                         <?php echo wordwrap($event_location, 50, "<br />\n"); ?>
                     </td>
                 </tr>
                 
-                <tr>
-                    <td class="label">Description</td>
-                    <td>
-                        <?php echo wordwrap($event_description, 50, "<br />\n"); ?>
-                    </td>
-                </tr>
                 <tr>
                     <td class="label">Capacity</td>
                     <td id="description-cell"><?php echo $event_capacity; ?></td>
@@ -298,6 +306,7 @@
                     }
                     echo $event_training_level; ?></td>
                 </tr>
+-->
             </table>
         </div>
 
@@ -454,3 +463,4 @@
     </main>
 </body>
 </html>
+
