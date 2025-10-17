@@ -71,6 +71,11 @@
 
     include_once('database/dbinfo.php'); 
     $con=connect();  
+    $query = "
+        SELECT id, first_name, last_name
+        FROM dbpersons
+    ";
+    $people = mysqli_query($con, $query);
 
 ?><!DOCTYPE html>
 <html>
@@ -94,6 +99,16 @@
                 <input type="text" id="start-time" name="start-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
                 <label for="name">* End Time </label>
                 <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM">
+                <label for="name">* Speaker </label>
+                <select id="speaker" name="speaker">
+                  <option value="John">John</option>
+                  <?php
+                    foreach ($people as $person) {
+                      echo "<option value=\"{$person['id']}\">{$person['first_name']} {$person['last_name']}</option>\n";
+                    }
+                  ?>
+                </select>
+
                 <!-- It seems theres a bug with the time not accepting 12:00 PM -->
                 <!--
                 <label for="name">Event Type </label>
@@ -135,3 +150,4 @@
         </main>
     </body>
 </html>
+
