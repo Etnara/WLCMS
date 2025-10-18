@@ -38,36 +38,7 @@
 
         </fieldset>
 
-        <fieldset class="section-box mb-4">
-            <h3>Emergency Contact</h3>
-            <p class="mb-2">Please provide us with someone to contact on your behalf in case of an emergency.</p>
-	    <div class="blue-div"></div>
-
-            <label for="emergency_contact_first_name" required><em>* </em>Contact First Name</label>
-            <input type="text" id="emergency_contact_first_name" name="emergency_contact_first_name" required placeholder="Enter emergency contact first name">
-
-            <label for="emergency_contact_last_name" required><em>* </em>Contact Last Name</label>
-            <input type="text" id="emergency_contact_last_name" name="emergency_contact_last_name" required placeholder="Enter emergency contact last name">
-
-            <label for="emergency_contact_relation"><em>* </em>Contact Relation to You</label>
-            <input type="text" id="emergency_contact_relation" name="emergency_contact_relation" required placeholder="Ex. Spouse, Mother, Father, Sister, Brother, Friend">
-
-            <label for="emergency_contact_phone"><em>* </em>Contact Phone Number</label>
-            <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Enter emergency contact phone number. Ex. (555) 555-5555">
-
-            <label><em>* </em>Contact Phone Type</label>
-            <div class="radio-group">
-	      <div class="radio-element">
-                <input type="radio" id="phone-type-cellphone" name="emergency_contact_phone_type" value="cellphone" required><label for="phone-type-cellphone">Cell</label>
-	      </div>
-	      <div class="radio-element">
-                <input type="radio" id="phone-type-home" name="emergency_contact_phone_type" value="home" required><label for="phone-type-home">Home</label>
-	      </div>
-	      <div class="radio-element">
-                <input type="radio" id="phone-type-work" name="emergency_contact_phone_type" value="work" required><label for="phone-type-work">Work</label>
-	      </div>
-            </div>
-        </fieldset>
+ 
 
         <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
@@ -109,27 +80,6 @@
             
         </script>
 
-
-        <fieldset class="section-box mb-4">
-            <h3>Login Credentials</h3>
-            <p class="mb-2">You will use the following information to log in to the system.</p>
-	    <div class="blue-div"></div>
-
-            <label for="username"><em>* </em>Username</label>
-            <input type="text" id="username" name="username" required placeholder="Enter a username">
-
-            <label for="password"><em>* </em>Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
-            <p id="password-error" class="error hidden">Password needs to be at least 8 characters long, contain at least one number, one uppercase letter, and one lowercase letter!</p>
-
-            <label for="password-reenter"><em>* </em>Re-enter Password</label>
-            <input type="password" id="password-reenter" name="password-reenter" placeholder="Re-enter password" required>
-            <p id="password-match-error" class="error hidden">Passwords do not match!</p>
-            
-              <!-- Required by backend -->
-        <input type="hidden" name="is_new_volunteer" value="1">
-        <input type="hidden" name="total_hours_volunteered" value="0">
-        </fieldset>
             
         <p class="error-block">By pressing Submit below, you are agreeing to volunteer for the organization.</p>
         <input type="submit" name="registration-form" value="Submit" class="blue-button">

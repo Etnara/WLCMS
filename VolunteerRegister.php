@@ -43,7 +43,7 @@ require_once('header.php');
 
         $required = array(
             'first_name', 'last_name',
-            'email', 'phone'
+            'email', 'phone', 'event_topic', 'event_topic_summary'
         );
 
         /* $required = array(
@@ -108,23 +108,8 @@ require_once('header.php');
             $errors = true;
         } */
 
-        $emergency_contact_first_name = $args['emergency_contact_first_name'];
-        $emergency_contact_last_name = $args['emergency_contact_last_name'];
-        $emergency_contact_relation = $args['emergency_contact_relation'];
 
-        $emergency_contact_phone = validateAndFilterPhoneNumber($args['emergency_contact_phone']);
-        if (!$emergency_contact_phone) {
-            echo "<p>Invalid emergency contact phone.</p>";
-            $errors = true;
-        }
 
-        $emergency_contact_phone_type = $args['emergency_contact_phone_type'];
-        if (!valueConstrainedTo($emergency_contact_phone_type, array('cellphone', 'home', 'work'))) {
-            echo "<p>Invalid emergency phone type.</p>";
-            $errors = true;
-        }
-
-<<<<<<< Updated upstream
         // Event topic fields (speaker/topic information)
         $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
         $event_topic_summary = isset($args['event_topic_summary']) ? trim(strip_tags($args['event_topic_summary'])) : '';
@@ -146,35 +131,64 @@ require_once('header.php');
             $errors = true;
         }
 
+
         $skills = isset($args['skills']) ? $args['skills'] : '';
         $interests = isset($args['interests']) ? $args['interests'] : '';
-=======
-        # $skills = isset($args['skills']) ? $args['skills'] : '';
->>>>>>> Stashed changes
 
-
-        # $interests = isset($args['interests']) ? $args['interests'] : '';
-
-        /* $is_community_service_volunteer = $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
+        $is_community_service_volunteer = isset($args['is_community_service_volunteer']) && $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
         $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
         $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
-        
 
         $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
         $archived = 0;
         $status = "Inactive";
         $training_level = "None";
 
-        $id = $args['username'];
+        // Provide defaults for fields not present on the speaker interest form
+        $birthday = isset($args['birthdate']) ? validateDate($args['birthdate']) : '';
+        $street_address = isset($args['street_address']) ? $args['street_address'] : '';
+        $city = isset($args['city']) ? $args['city'] : '';
+        $state = isset($args['state']) ? $args['state'] : '';
+        $zip_code = isset($args['zip']) ? $args['zip'] : '';
+        $phone1type = isset($args['phone_type']) ? $args['phone_type'] : '';
+        $emergency_contact_first_name = isset($args['emergency_contact_first_name']) ? $args['emergency_contact_first_name'] : '';
+        $emergency_contact_last_name = isset($args['emergency_contact_last_name']) ? $args['emergency_contact_last_name'] : '';
+        $emergency_contact_phone = isset($args['emergency_contact_phone']) ? validateAndFilterPhoneNumber($args['emergency_contact_phone']) : '';
+        $emergency_contact_phone_type = isset($args['emergency_contact_phone_type']) ? $args['emergency_contact_phone_type'] : '';
+        $emergency_contact_relation = isset($args['emergency_contact_relation']) ? $args['emergency_contact_relation'] : '';
 
-        $password = isSecurePassword($args['password']);
-        if (!$password) {
-            echo "<p>Password is not secure enough.</p>";
-            $errors = true;
+        // If username/password not provided by this simplified form, generate them so add_person can still create an account
+        if (!empty($args['username'])) {
+            $id = $args['username'];
         } else {
-            $password = password_hash($args['password'], PASSWORD_BCRYPT);
+            // generate id from email prefix + uniqid
+            $prefix = '';
+            if (strpos($email, '@') !== false) {
+                $prefix = preg_replace('/[^a-z0-9]/', '', strtolower(strstr($email, '@', true)));
+            }
+            if ($prefix === '') $prefix = 'user';
+            $id = $prefix . substr(uniqid(), -6);
         }
-        */
+
+        if (!empty($args['password'])) {
+            $password_ok = isSecurePassword($args['password']);
+            if (!$password_ok) {
+                echo "<p>Password is not secure enough.</p>";
+                $errors = true;
+            } else {
+                $password = password_hash($args['password'], PASSWORD_BCRYPT);
+            }
+        } else {
+            // generate a secure random password for the account
+            try {
+                $generated = bin2hex(random_bytes(8));
+            } catch (Exception $e) {
+                // fallback
+                $generated = bin2hex(openssl_random_pseudo_bytes(8));
+            }
+            $password = password_hash($generated, PASSWORD_BCRYPT);
+            // NOTE: consider emailing $generated to the user or require password reset on first login
+        }
 
         if ($errors) {
             echo '<p class="error">Your form submission contained unexpected or invalid input.</p>';
@@ -182,27 +196,17 @@ require_once('header.php');
         }
 
         $newperson = new Person(
-            $first_name, $last_name, $email,
-            $phone1,
+            $id, $first_name, $last_name,
+            $phone1, $email, $archived,
+            $event_topic, $event_topic_summary
         );
-
-        /* $newperson = new Person(
-            $id, $password, date("Y-m-d"),
-            $first_name, $last_name, $birthday,
-            $street_address, $city, $state, $zip_code,
-            $phone1, $phone1type, $email, $type, $status, $archived, 
-            $skills, $interests,
-            $event_topic, $event_topic_summary, $training_level,
-            $is_community_service_volunteer, $is_new_volunteer,
-            $total_hours_volunteered
-        ); */
 
         $result = add_person($newperson);
         if (!$result) {
             $showPopup = true;
         } else {
             echo '<script>document.location = "login.php?registerSuccess";</script>';
-            $title = $id . " has been added as a volunteer";
+            $title = $id . " has been added as a speaker";
             $body = "New volunteer account has been created";
             system_message_all_admins($title, $body);
         }

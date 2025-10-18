@@ -36,34 +36,17 @@ function add_person($person) {
     if (mysqli_num_rows($result) == 0) {
         // Prepare the insert query (note: database must have event_topic and event_topic_summary columns)
         $insert_query = 'INSERT INTO dbpersons (
-            id, start_date, first_name, last_name, street_address, city, state, zip_code, 
-            phone1, phone1type,type, status, password, skills, interests, 
-            event_topic, event_topic_summary, archived, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered, training_level
+            id,first_name, last_name, 
+            phone1,event_topic, event_topic_summary, archived
         ) VALUES ("' .
             $person->get_id() . '","' .
-            $person->get_start_date() . '","' .
             $person->get_first_name() . '","' .
             $person->get_last_name() . '","' .
-            $person->get_street_address() . '","' .
-            $person->get_city() . '","' .
-            $person->get_state() . '","' .
-            $person->get_zip_code() . '","' .
             $person->get_phone1() . '","' .
-            $person->get_phone1type() . '","' .
-            $person->get_birthday() . '","' .
             $person->get_email() . '","' .
-            $person->get_type() . '","' .
-            $person->get_status() . '","' .
-            $person->get_password() . '","' .
-            $person->get_skills() . '","' .
-            $person->get_interests() . '","' .
+            $person->get_archived() . ','.
             $person->get_event_topic() . '","' .
-            $person->get_event_topic_summary() . '","' .
-            $person->get_archived() . '","' .                
-            $person->get_is_new_volunteer() . '","' .
-            $person->get_is_community_service_volunteer() . '","' .
-            $person->get_total_hours_volunteered() . '","' .
-            $person->get_training_level() . '");';
+            $person->get_event_topic_summary() .  '");';
     
         // Check if the query is properly built
         if (empty($insert_query)) {
@@ -174,13 +157,7 @@ function update_hours($id, $new_hours) {
     return $result;
 }
 
-function update_birthday($id, $new_birthday) {
-	$con=connect();
-	$query = 'UPDATE dbpersons SET birthday = "' . $new_birthday . '" WHERE id = "' . $id . '"';
-	$result = mysqli_query($con,$query);
-	mysqli_close($con);
-	return $result;
-}
+
 
 /* update volunteer hours */ /* $original_start_time, $original_end_time,  */
 function update_volunteer_hours($eventname, $username, $new_start_time, $new_end_time) {
@@ -231,13 +208,12 @@ function archive_volunteer($volunteer_id) {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, type,
-                    status, notes, password, skills, interests, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    phone1, phone1type, type, notes, password, skills, interests, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
                  )
                  SELECT
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
                     phone1, phone1type,type,
-                    status, notes, password, skills, interests, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                     notes, password, skills, interests, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -381,16 +357,6 @@ function update_profile_pic($id, $link) {
  * Returns the age of the person by subtracting the 
  * person's birthday from the current date
 */
-
-function get_age($birthday) {
-
-  $today = date("Ymd");
-  // If month-day is before the person's birthday,
-  // subtract 1 from current year - birth year
-  $age = date_diff(date_create($birthday), date_create($today))->format('%y');
-
-  return $age;
-}
 
 function update_start_date($id, $new_start_date) {
 	$con=connect();
@@ -601,26 +567,13 @@ function make_a_person($result_row) {
 	 */
     $thePerson = new Person(
         $result_row['id'],
-        $result_row['password'],
-        $result_row['start_date'],
         $result_row['first_name'],
         $result_row['last_name'],
-        $result_row['birthday'],
-        $result_row['street_address'],
-        $result_row['city'],
-        $result_row['state'],
-        $result_row['zip_code'],
         $result_row['phone1'],
-        $result_row['phone1type'],
         $result_row['email'],
-        $result_row['type'],
-        $result_row['status'],
         $result_row['archived'],
-        $result_row['skills'],
-        $result_row['interests'],
         isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         isset($result_row['event_topic_summary']) ? $result_row['event_topic_summary'] : '',
-        $result_row['training_level'],
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],
         //$result_row['training_date'],
@@ -630,9 +583,6 @@ function make_a_person($result_row) {
         //$result_row['background_date'],
         //$result_row['gender'],
         //$result_row['race']
-        $result_row['is_community_service_volunteer'],
-        $result_row['is_new_volunteer'],
-        $result_row['total_hours_volunteered']
     );
 
     return $thePerson;
