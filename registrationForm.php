@@ -39,7 +39,6 @@
         </fieldset>
 
 
-
         <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
             <p class="mb-2">Please provide information of the event topic and summary of it.</p>
