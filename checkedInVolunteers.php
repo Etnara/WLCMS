@@ -14,14 +14,31 @@ if ($accessLevel < 2) {
     die();
 }
 include_once "database/dbPersons.php";
+
+//added
+//$hasUnapproved = count(get_unapproved_speakers()) > 0; // for when speakers have not been approved yet 
+$hasUnapproved = true; // default testing for when speakers have not been approved yet
+
 include_once "database/dbShifts.php";
 
+
+
+//added
+if (isset($_GET['status']) && isset($_GET['name'])) {
+    $action = $_GET['status'] === 'approved' ? 'approved' : 'rejected';
+    $name = htmlspecialchars($_GET['name']);
+    echo "<script>alert('You {$action} {$name}');</script>";
+}
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fredericksburg SPCA | Checked In Volunteers</title>
+    <title>WLCMS | Speaker Intrest Form Review</title>
   	<link href="css/normal_tw.css" rel="stylesheet">
 
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
@@ -52,7 +69,8 @@ require_once('header.php');
 
     <div class="hero-header">
         <div class="center-header">
-            <h1>View Checked In Volunteers</h1>
+            <!--<h1>View Checked In Volunteers</h1>-->
+            <h1>Speaker Intrest Form Review</h1>
         </div>
     </div>
 
@@ -73,12 +91,14 @@ require_once('header.php');
                             <th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Check-In Time</th>
-                            <th>Actions</th>
+                            <th>Organization</th>
+                            <th>Topics Of Interest</th>
+                            <th>Accept/Reject</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
+                        
+<?php
                         $date = date('Y-m-d');
                         $checkedInPersons = [];
                         $all_volunteers = getall_volunteers();
@@ -91,22 +111,40 @@ require_once('header.php');
                                 $checkedInPersons[] = $check_in_info;
                             }
                         }
-
+                        
                         if (empty($checkedInPersons)) {
-                            echo "<tr><td colspan='5' class='text-center py-6'>No volunteers are currently checked in.</td></tr>";
+                            echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
                                 $volunteer = retrieve_person($check_in_info['person_id']);
                                 if ($volunteer) {
-                                    $full_name = $volunteer->get_first_name() . " " . $volunteer->get_last_name();
-                                    $rowValue = htmlspecialchars($check_in_info['shift_id']) . '|' . htmlspecialchars($full_name);
+                                  $firstName = htmlspecialchars($volunteer->get_first_name());
+                                    $lastName = htmlspecialchars($volunteer->get_last_name());
+                                    $fullName = "{$firstName} {$lastName}";
+
+                                    
+                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars($volunteer->get_organization()) : 'Unknown Org';
+                                    $topics = method_exists($volunteer, 'get_topics') ? htmlspecialchars($volunteer->get_topics()) : 'No topics listed';
+                                    $isApproved = method_exists($volunteer, 'get_approved') ? $volunteer->get_approved() : false;
+                                    $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
                                     echo "<tr>";
-                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='$rowValue'></td>";
-                                    echo "<td>" . htmlspecialchars($volunteer->get_first_name()) . "</td>";
-                                    echo "<td>" . htmlspecialchars($volunteer->get_last_name()) . "</td>";
-                                    echo "<td>" . htmlspecialchars($check_in_info['startTime']) . "</td>";
-                                    echo "<td><button type='button' onclick=\"clockOut('{$check_in_info['shift_id']}')\" class='blue-button'>Check-Out</button></td>";
+                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$check_in_info['shift_id']}|{$fullName}'></td>";
+                                    echo "<td>{$firstName}</td>";
+                                    echo "<td>{$lastName}</td>";
+                                    //added
+                                    echo "<td>{$organization}</td>";
+                                    echo "<td>{$topics}</td>";
+                                    //added accept and reject buttons w/red exclamation to unapproved speakers
+                                    echo "<td>
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}')\">Accept</button>
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}')\">Reject</button>";
+
+                                            // added, only shows icon if not approved or rejected
+                                            if (!$isApproved && !$isRejected) {
+                                                echo "<span style='color: red; font-size: 18px; margin-left: 8px;' title='Unapproved speaker'>&#x26A0;</span>";
+                                            }
+                                    echo "</td>";
                                     echo "</tr>";
                                 }
                             }
@@ -202,6 +240,18 @@ require_once('header.php');
                 document.getElementById('bulk-actions').style.display = anyChecked ? 'flex' : 'none';
             }
         });
+    
+    //added
+    function confirmAction(action, fullName) {
+    const target = action === 'accept'
+        ? `AcceptSpeaker.php?name=${fullName}`
+        : `RejectSpeaker.php?name=${fullName}`;
+    if (confirm(`Are you sure you want to ${action} ${fullName}?`)) {
+        window.location.href = target;
+    }
+}
+
+
     </script>
 
 </body>
