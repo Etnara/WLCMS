@@ -217,14 +217,6 @@ function check_out($personID, $eventID, $end_time) {
     return $result;
 }
 
-/* Return true if a given user is currently able to check-in to a given event */
-function can_check_in($personID, $event_info) {
-
-    if (!(time() > strtotime($event_info['date']) && time() < strtotime($event_info['date']) + 86400)) {
-        // event is not ongoing
-        return False;
-    }
-
 
 function archive_volunteer($volunteer_id) {
     $con = connect(); // Ensure this function connects to your database
@@ -251,7 +243,9 @@ function archive_volunteer($volunteer_id) {
 
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $volunteer_id);
-        $stmt->execute();
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }
 
         // Check if the row was inserted successfully
         if ($stmt->affected_rows === 0) {
@@ -262,25 +256,36 @@ function archive_volunteer($volunteer_id) {
         $query_delete = "DELETE FROM dbpersons WHERE id = ?";
         $stmt_delete = $con->prepare($query_delete);
         $stmt_delete->bind_param("s", $volunteer_id);
-        $stmt_delete->execute();
+
+        if (!$stmt_delete->execute()){
+            throw new Exception("Failed to properly delete.");
+        }
 
         // Commit transaction
         mysqli_commit($con);
 
-        echo "Volunteer successfully archived.";
+        //echo "Volunteer successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        echo "Error archiving volunteer: " . $e->getMessage();
-        return false;
+        //echo "Error archiving volunteer: " . $e->getMessage();
+        return ['success' => false, 'message' => $e->getMessage()];
     }
 
     // Close connection
     $stmt->close();
     $stmt_delete->close();
     mysqli_close($con);
-    return true;
+    return ['success' => true, 'message' => 'Volunteer archived successfully.'];;
 }
+
+/* Return true if a given user is currently able to check-in to a given event */
+function can_check_in($personID, $event_info) {
+
+    if (!(time() > strtotime($event_info['date']) && time() < strtotime($event_info['date']) + 86400)) {
+        // event is not ongoing
+        return False;
+    }
 
     if (!(check_if_signed_up($event_info['id'], $personID))) {
         // user is not signed up for this event

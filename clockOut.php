@@ -1,6 +1,6 @@
 <?php
-require_once 'database/dbShifts.php';
-require_once 'database/dbPersons.php';
+require_once __DIR__ . '/database/dbPersons.php';
+require_once __DIR__ . '/database/dbShifts.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personID = $_POST['personID'];
@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //alert($test);
     if (!empty($personID)){
         $result = archive_volunteer($personID);
-        if ($result == true){
+        if ($result["success"]){
             echo "success";
         } else{
-            echo "failed";
+            echo "Error: " + $result['message'];
         }
         
     } else{
