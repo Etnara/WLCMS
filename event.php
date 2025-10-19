@@ -237,8 +237,21 @@
             $event_startTime = time24hto12h($event_info['startTime']);
             $event_endTime = time24hto12h($event_info['endTime']);
             $event_location = $event_info['location'];
+            $event_speaker = $event_info['speaker'];
+            if ($event_speaker == "")
+                $event_speaker = "None";
+            else {
+                $con=connect();
+                $query = "
+                    SELECT first_name, last_name
+                    FROM dbpersons
+                    WHERE id=\"{$event_speaker}\"
+                ";
+                $result = mysqli_query($con, $query)->fetch_assoc();
+                $con->close();
+                $event_speaker = "{$result['first_name']} {$result['last_name']}";
+            }
             /* $event_capacity = $event_info['capacity']; */
-            /* $event_training_level = $event_info['training_level_required']; */
             require_once('include/time.php');
         ?>
 
@@ -283,8 +296,7 @@
                 <tr>
                     <td class="label">Speaker</td>
                     <td>
-                        <?php # echo wordwrap($event_location, 50, "<br />\n"); ?>
-                        <?php echo wordwrap("John Speaker", 50, "<br />\n"); ?>
+                        <?php echo wordwrap($event_speaker, 50, "<br />\n"); ?>
                     </td>
                 </tr>
 <!--

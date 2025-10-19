@@ -26,7 +26,7 @@
         require_once('database/dbEvents.php');
         $args = sanitize($_POST, null);
         $required = array(
-            "name", "description", "date", "start-time", "end-time"
+            "name", "description", "date", "start-time", "end-time", "speaker"
         );
         if (!wereRequiredFieldsSubmitted($args, $required)) {
             echo 'bad form data';
@@ -101,7 +101,7 @@
                 <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM">
                 <label for="name">* Speaker </label>
                 <select id="speaker" name="speaker">
-                  <option value="John">John</option>
+                  <option value="null">None</option>
                   <?php
                     foreach ($people as $person) {
                       echo "<option value=\"{$person['id']}\">{$person['first_name']} {$person['last_name']}</option>\n";
@@ -109,22 +109,11 @@
                   ?>
                 </select>
 
-                <!-- It seems theres a bug with the time not accepting 12:00 PM -->
-                <!--
-                <label for="name">Event Type </label>
-                <input type="text" id="type" name="type" required placeholder="Enter Event Type">
-                <label for="name">Location </label>
-                <input type="text" id="location" name="location" required placeholder="Enter location">
-                <label for="name">Capacity </label>
-                <input type="number" id="capacity" name="capacity" required placeholder="Enter capacity (e.g. 1-99)">
-                <label for="training">* Training Type:</label>
-                <select id="training_level_required" name="training_level_required">
-                    <option value="None">None</option>
-                    <option value="Green">Green</option>
-                    <option value="Orange">Orange</option>
-                    <option value="Pink">Pink</option>
-                </select>
--->
+                <!-- TODO: Fix bug with the time not accepting 12:00 PM -->
+                <!-- Might do something with these later -->
+                <input type="hidden" id="location" value="None">
+                <input type="hidden" id="capacity" value="None">
+
                 <input type="submit" value="Create Event">
                 
             </form>

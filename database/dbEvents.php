@@ -525,42 +525,26 @@ function fetch_event_by_id($id) {
 function create_event($event) {
     $connection = connect();
     $name = $event["name"];
-    //$abbrevName = $event["abbrev-name"];
+    $description = $event["description"];
     $date = $event["date"];
     $startTime = $event["start-time"];    
     $endTime = $event["end-time"];
-    $description = $event["description"];
-    $type = $event['type'];
-    if (isset($event["capacity"])) {
-        $capacity = $event["capacity"];
-    } else {
-        $capacity = 999;
-    }
-    if (isset($event["location"])) {
-        $location = $event["location"];
-    } else {
-        $location = "";
-    }
-    //$completed = $event["completed"];
-    /*
-    $restricted_signup = $event["role"];
-    if ($restricted_signup == "r") {
-        $restricted = 1;
-    } else {
-        $restricted = 0;
-    }
-        */
-    $restricted = 0;
-    $description = $event["description"];
-    $training_level_required = $event["training_level_required"];
-    //$location = $event["location"];
-    //$services = $event["service"];
+    $speaker =
+        $event["speaker"] == "null" ?
+            "null"
+        :   "'{$event["speaker"]}'";
 
-    //$animal = $event["animal"];
+    # Placeholders for SPCA
+    $type = (isset($event["type"])) ? $event["type"] : "None";
+    $capacity = (isset($event["capacity"])) ? $event["capacity"] : 999;
+    $location = (isset($event["location"])) ? $event["location"] : "";
+    $restricted = 0;
+    $training_level_required = "None";
     $completed = "no";
+
     $query = "
-        insert into dbevents (name, date, startTime, endTime, restricted_signup, description, capacity, completed, location, training_level_required, type)
-        values ('$name', '$date', '$startTime', '$endTime', $restricted, '$description', $capacity, '$completed', '$location', '$training_level_required', '$type')
+        insert into dbevents (name, date, startTime, endTime, speaker, restricted_signup, description, capacity, completed, location, training_level_required, type)
+        values ('$name', '$date', '$startTime', '$endTime', $speaker, $restricted, '$description', $capacity, '$completed', '$location', '$training_level_required', '$type')
     ";
     $result = mysqli_query($connection, $query);
     if (!$result) {
@@ -591,33 +575,23 @@ function update_event($eventID, $eventDetails) {
     $connection = connect();
     $id = $eventDetails["id"];
     $name = $eventDetails["name"];
-    #$abbrevName = $eventDetails["abbrev-name"];
+    $description = $eventDetails["description"];
     $date = $eventDetails["date"];
     $startTime = $eventDetails["start-time"];
-    #$restricted = $eventDetails["restricted"];
     $endTime = $eventDetails["end-time"];
-    $description = $eventDetails["description"];
-    $capacity = $eventDetails["capacity"];
-    #$completed = $eventDetails["completed"];
-    #$restricted_signup = $eventDetails["restricted_signup"];
-    $location = $eventDetails["location"];
-    //$services = $eventDetails["service"];
-    
-    #$completed = $eventDetails["completed"];
-    #$query = "
-       # update dbEvents set name='$name', abbrevName='$abbrevName', date='$date', startTime='$startTime', restricted='$restricted', description='$description', locationID='$location', completed='$completed'
-       # where id='$eventID'
-    #";
-   # $query = "
-    #    update dbevents set id='$id', name='$name', date='$date', startTime='$startTime', endTime='$endTime', description='$description', capacity='$capacity', completed='$completed', event_type='$event_type', restricted_signup='$restricted_signup'
-    #    where id='$eventID'
-    #";
+    $speaker =
+        $eventDetails["speaker"] == "null" ?
+            "null"
+        :   "'{$eventDetails["speaker"]}'";
+
+    # Placeholders for SPCA
+    $capacity = (isset($event["capacity"])) ? $event["capacity"] : 999;
+    $location = (isset($event["location"])) ? $event["location"] : "";
     $query = "
-        update dbevents set id='$id', name='$name', date='$date', startTime='$startTime', endTime='$endTime', description='$description', location='$location', capacity=$capacity
+        update dbevents set id='$id', name='$name', description='$description', date='$date', startTime='$startTime', endTime='$endTime', speaker=$speaker, location='$location', capacity=$capacity
         where id='$eventID'
     ";
     $result = mysqli_query($connection, $query);
-    // update_services_for_event($eventID, $services);
     mysqli_commit($connection);
     mysqli_close($connection);
     return $result;
