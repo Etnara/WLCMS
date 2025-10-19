@@ -34,31 +34,29 @@ function add_person($person) {
 
     // If the result is empty, it means the person doesn't exist, so we can add the person
     if (mysqli_num_rows($result) == 0) {
-        // Prepare the insert query (note: database must have event_topic and event_topic_summary columns)
-        $insert_query = 'INSERT INTO dbpersons (
-            id,first_name, last_name, 
-            phone1,event_topic, event_topic_summary, archived
-        ) VALUES ("' .
-            $person->get_id() . '","' .
-            $person->get_first_name() . '","' .
-            $person->get_last_name() . '","' .
-            $person->get_phone1() . '","' .
-            $person->get_email() . '","' .
-            $person->get_archived() . ','.
-            $person->get_event_topic() . '","' .
-            $person->get_event_topic_summary() .  '");';
-    
-        // Check if the query is properly built
-        if (empty($insert_query)) {
-            die("Error: insert query is empty");
-        }
+        // Prepare and escape values for the insert query
+        $id_val = mysqli_real_escape_string($con, $person->get_id());
+        $first_name_val = mysqli_real_escape_string($con, $person->get_first_name());
+        $last_name_val = mysqli_real_escape_string($con, $person->get_last_name());
+        $phone1_val = mysqli_real_escape_string($con, $person->get_phone1());
+        $email_val = mysqli_real_escape_string($con, $person->get_email());
+        $event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
+        $event_topic_summary_val = mysqli_real_escape_string($con, $person->get_event_topic_summary());
+        $archived_val = (int)$person->get_archived();
+
+        // Note: ordering of columns must match the ordering of values below
+        $insert_query = "INSERT INTO dbpersons (
+            id, first_name, last_name, phone1, email, event_topic, event_topic_summary, archived
+        ) VALUES (
+            '$id_val', '$first_name_val', '$last_name_val', '$phone1_val', '$email_val', '$event_topic_val', '$event_topic_summary_val', $archived_val
+        )";
 
         // Perform the insert
         if (mysqli_query($con, $insert_query)) {
             mysqli_close($con);
             return true;
         } else {
-            die("Error: " . mysqli_error($con)); // Debugging MySQL error
+            die("Error inserting person: " . mysqli_error($con) . " -- Query: " . $insert_query);
         }
     }
 
