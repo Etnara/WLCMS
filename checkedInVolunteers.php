@@ -166,14 +166,16 @@ require_once('header.php');
         }
 
         function clockOut(personID) {
-            const description = prompt("Are you sure you want to reject "+ personID +"?");
-            if (description !== null){
+            $doArchive = confirm("Are you sure you want to reject "+ personID +"?");
+            if ($doArchive){
                 fetch('clockOut.php',{
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `personID=${encodeURIComponent(personID)}`
                 }).then(response => response.text())
                 .then(data => {
+                    console.log("PHP response:", data);
+                    //alert("Response from PHP:\n" + data);
                     if (data.trim() === 'success') {
                         alert(personID + " was successfully archived!");
                     } else {
@@ -183,7 +185,8 @@ require_once('header.php');
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert("There was an error rejecting "+personID);
+                    //alert("There was an error rejecting "+personID);
+                    alert(error);
                 });
             } else{
                 alert("Rejection cancelled.")
