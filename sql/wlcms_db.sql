@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 18, 2025 at 11:07 PM
+-- Generation Time: Oct 20, 2025 at 02:42 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -121,6 +121,10 @@ CREATE TABLE `dbeventpersons` (
 --
 
 INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
+(64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
+(100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
+(64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
+(100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
@@ -491,6 +495,10 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 ('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
 ('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
 ('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
+('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
+('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
+('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
+('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
 ('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv');
 
 -- --------------------------------------------------------
@@ -512,6 +520,8 @@ CREATE TABLE `dbpersonhours` (
 
 INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VALUES
 ('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
+('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
+('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
 ('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00');
 
 -- --------------------------------------------------------
@@ -522,10 +532,15 @@ INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VA
 
 CREATE TABLE `dbpersons` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` text DEFAULT NULL,
   `first_name` text NOT NULL,
   `last_name` text DEFAULT NULL,
   `phone1` varchar(12) NOT NULL,
   `email` text DEFAULT NULL,
+  `status` text DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `password` text DEFAULT NULL,
+  `interests` text NOT NULL,
   `archived` tinyint(1) NOT NULL,
   `event_topic` varchar(255) NOT NULL DEFAULT '',
   `event_topic_summary` text NOT NULL
@@ -535,22 +550,18 @@ CREATE TABLE `dbpersons` (
 -- Dumping data for table `dbpersons`
 --
 
-INSERT INTO `dbpersons` (`id`, `first_name`, `last_name`, `phone1`, `email`, `archived`, `event_topic`, `event_topic_summary`) VALUES
-('ameyer123', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 0, '', ''),
-('ameyer3', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 0, '', ''),
-('BobVolunteer', 'Bob', 'SPCA', '9806761234', 'fred54321@gmail.com', 0, '', ''),
-('lukeg', 'Luke', 'Gibson', '1234567890', 'volunteer@volunteer.com', 0, '', ''),
-('maddiev', 'maddie', 'van buren', '1234567890', 'mvanbure@mail.umw.edu', 0, '', ''),
-('michael_smith', 'Michael', 'Smith', '4345559876', 'michaelsmith@email.com', 0, '', ''),
-('michellevb', 'Michelle', 'Van Buren', '1234567890', 'michelle.vb@gmail.com', 0, '', ''),
-('s', 'ttt', 't', '4444444444', NULL, 0, 't44df@gmail.com', ','),
-('t44df98e29e', 'bgkh', 't', '4444444444', NULL, 0, 't44df@gmail.com', '0,ss'),
-('t44dfae5c20', '$2y$10$6kSlzyCTIish/BSfoRBHkuirLqyQHxBPzE5IskIfQ9dAsnlgoDXSW', '2025-10-18', 'bgkh', NULL, 0, 't', ','),
-('t44dfe0e1e6', '$2y$10$K2Ys75S.7uDhoddNfXz1..3of.O9oiYASNO/Ue46DRW1DI4pDu5AK', '2025-10-18', 'bgkh', NULL, 0, 't', ','),
-('t4df31d71d', '$2y$10$3ARxpBhRMYEbzvSmUHzVjuTv6lNYE1QEUZzUhpmgAVQv2DFZHdkui', '2025-10-18', 'bgkh', NULL, 0, 'tsd', ','),
-('test_acc', 'test', 'test', '5555555555', 'test@gmail.com', 0, '', ''),
-('vmsroot', 'vmsroot', '', '', '', 0, '', ''),
-('Volunteer25', 'Volley', 'McTear', '9887765543', 'volly@gmail.com', 0, '', '');
+INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `phone1`, `email`, `status`, `notes`, `password`, `interests`, `archived`, `event_topic`, `event_topic_summary`) VALUES
+('ameyer123', '2025-05-01', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Inactive', NULL, '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', 'a', 0, '', ''),
+('ameyer3', '2025-03-26', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Active', NULL, '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', 'a', 0, '', ''),
+('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', '9806761234', 'fred54321@gmail.com', 'Active', NULL, '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', 'No interests', 0, '', ''),
+('lukeg', '2025-04-29', 'Luke', 'Gibson', '1234567890', 'volunteer@volunteer.com', 'Active', NULL, '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', 'none', 0, '', ''),
+('maddiev', '2025-04-28', 'maddie', 'van buren', '1234567890', 'mvanbure@mail.umw.edu', 'Active', NULL, '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', 'yoga', 0, '', ''),
+('michael_smith', '2025-03-16', 'Michael', 'Smith', '4345559876', 'michaelsmith@email.com', 'Active', '', '$2y$10$XYZ789xyz456LMN123DEF', 'Homeless Shelter Assistance', 0, '', ''),
+('michellevb', '2025-04-29', 'Michelle', 'Van Buren', '1234567890', 'michelle.vb@gmail.com', 'Active', NULL, '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', 'doggies', 0, '', ''),
+('test_acc', '2025-04-29', 'test', 'test', '5555555555', 'test@gmail.com', 'Active', NULL, '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', '', 0, '', ''),
+('test4921d4e', NULL, 'test4', 't', '4444444444', 'test4@gmail.com', NULL, NULL, '$2y$10$XC/X2Dc/wp.F2tsKBmiX4.QhKt8hIegAnkLbs7nACnauY8cLgA0.G', '', 0, 'test4tpic', 'testsmma'),
+('vmsroot', NULL, 'vmsroot', '', '', '', 'Active', 'System root user account', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', 'N/A', 0, '', ''),
+('Volunteer25', '2025-04-30', 'Volley', 'McTear', '9887765543', 'volly@gmail.com', 'Active', NULL, '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', 'None', 0, '', '');
 
 -- --------------------------------------------------------
 

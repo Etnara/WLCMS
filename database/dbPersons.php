@@ -565,8 +565,10 @@ function make_a_person($result_row) {
 	 */
     $thePerson = new Person(
         $result_row['id'],
+        isset($result_row['password']) ? $result_row['password'] : '',
         $result_row['first_name'],
         $result_row['last_name'],
+        isset($result_row['status']) ? $result_row['status'] : '',
         $result_row['phone1'],
         $result_row['email'],
         $result_row['archived'],

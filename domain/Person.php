@@ -20,6 +20,7 @@ class Person {
 	private $emergency_contact_phone_type;
 	private $emergency_contact_relation;
 	private $type;
+	private $status;
 
 	private $archived;
 	private $skills;
@@ -33,14 +34,17 @@ class Person {
 	private $access_level;
 
 	public function __construct(
-		$id, $first_name, $last_name,$phone1,  $email, 
-		 $archived,
-		 $event_topic, $event_topic_summary, 
+		$id, $password, $first_name, $last_name, $status, $phone1, $email,
+		$archived, $event_topic, $event_topic_summary
 	) {
 		$this->id = $id;
 
+		$this->password = $password;
+
 		$this->first_name = $first_name;
 		$this->last_name = $last_name;
+
+		$this->status = $status;
 
 		$this->phone1 = $phone1;
 
@@ -60,6 +64,8 @@ class Person {
 	public function get_first_name() { return $this->first_name; }
 	public function get_last_name() { return $this->last_name; }
 
+	public function get_status() { return $this->status; }
+
 	public function get_phone1() { return $this->phone1; }
 
 	public function get_email() { return $this->email; }
@@ -70,5 +76,7 @@ class Person {
 	public function get_event_topic_summary() { return $this->event_topic_summary; }
 
 	public function get_access_level() { return $this->access_level; }
+
+	public function get_password() { return $this->password; }
 
 }
