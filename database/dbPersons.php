@@ -42,13 +42,14 @@ function add_person($person) {
         $email_val = mysqli_real_escape_string($con, $person->get_email());
         $password_val = mysqli_real_escape_string($con, $person->get_password());
         $status_val = mysqli_real_escape_string($con, $person->get_status());
-        $event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
+        //$event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
         $event_topic_summary_val = mysqli_real_escape_string($con, $person->get_event_topic_summary());
         $archived_val = (int)$person->get_archived();
+        $organization_val = mysqli_real_escape_string($con, $person->get_organization());
 
         // Note: ordering of columns must match the ordering of values below
         $insert_query = "INSERT INTO dbpersons (
-            id, password, first_name, last_name, phone1, email, status, event_topic, event_topic_summary, archived
+            id, password, first_name, last_name, phone1, email, status, event_topic_summary, archived, organization
         ) VALUES (" .
             "'" . $id_val . "', " .
             "'" . $password_val . "', " .
@@ -57,9 +58,9 @@ function add_person($person) {
             "'" . $phone1_val . "', " .
             "'" . $email_val . "', " .
             "'" . $status_val . "', " .
-            "'" . $event_topic_val . "', " .
             "'" . $event_topic_summary_val . "', " .
-            $archived_val .
+            $archived_val . ", " .
+            "'" . $organization_val . "'" .
         ")";
 
         // Perform the insert
@@ -216,13 +217,13 @@ function archive_volunteer($volunteer_id) {
     try {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
-                    id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, type, notes, password, skills, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    id, first_name, last_name,
+                    phone1, notes, password, archived_date, email, status, event_topic_summary, archived, organization
                  )
                  SELECT
-                    id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type,type,
-                     notes, password, skills, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    id, first_name, last_name, 
+                    phone1,
+                     notes, password, NOW(), email, status, event_topic_summary, archived, organization
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -231,7 +232,7 @@ function archive_volunteer($volunteer_id) {
 
         // Check if the row was inserted successfully
         if ($stmt->affected_rows === 0) {
-            throw new Exception("Volunteer not found or already archived.");
+            throw new Exception("Speaker not found or already archived.");
         }
 
         // Delete the volunteer from dbpersons
@@ -243,11 +244,11 @@ function archive_volunteer($volunteer_id) {
         // Commit transaction
         mysqli_commit($con);
 
-        echo "Volunteer successfully archived.";
+        echo "Speaker successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        echo "Error archiving volunteer: " . $e->getMessage();
+        echo "Error archiving speaker: " . $e->getMessage();
     }
 
     // Close connection
@@ -583,8 +584,9 @@ function make_a_person($result_row) {
         $result_row['phone1'],
         $result_row['email'],
         $result_row['archived'],
-        isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         isset($result_row['event_topic_summary']) ? $result_row['event_topic_summary'] : '',
+        $result_row['organization']
+        //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],
         //$result_row['training_date'],
@@ -678,17 +680,14 @@ function phone_edit($phone) {
 	else return "";
 }
 
-function get_people_for_export($attr, $first_name, $last_name, $type, $status, $start_date, $city, $zip, $phone, $email) {
+function get_people_for_export($attr, $first_name, $last_name, $type, $status, $phone, $email) {
 	$first_name = "'".$first_name."'";
 	$last_name = "'".$last_name."'";
 	$status = "'".$status."'";
-	$start_date = "'".$start_date."'";
-	$city = "'".$city."'";
-	$zip = "'".$zip."'";
 	$phone = "'".$phone."'";
 	$email = "'".$email."'";
 	$select_all_query = "'.'";
-	if ($start_date == $select_all_query) $start_date = $start_date." or start_date=''";
+	//if ($start_date == $select_all_query) $start_date = $start_date." or start_date=''";
 	if ($email == $select_all_query) $email = $email." or email=''";
     
 	$type_query = "";
@@ -698,8 +697,7 @@ function get_people_for_export($attr, $first_name, $last_name, $type, $status, $
     	$type_query = "'.*($type_query).*'";
     }
     
-    error_log("query for start date is ". $start_date);
-    error_log("query for type is ". $type_query);
+ 
     
    	$con=connect();
     $query = "SELECT ". $attr ." FROM dbpersons WHERE 
@@ -707,9 +705,6 @@ function get_people_for_export($attr, $first_name, $last_name, $type, $status, $
     			" and last_name REGEXP ". $last_name . 
     			" and (type REGEXP ". $type_query .")". 
     			" and status REGEXP ". $status . 
-    			" and (start_date REGEXP ". $start_date . ")" .
-    			" and city REGEXP ". $city .
-    			" and zip REGEXP ". $zip .
     			" and (phone1 REGEXP ". $phone ." or phone2 REGEXP ". $phone . " )" .
     			" and (email REGEXP ". $email .") ORDER BY last_name, first_name";
 	error_log("Querying database for exporting");
@@ -806,7 +801,7 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     function update_person_required(
         $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
         $zip_code, $email, $phone1, $phone1type, $type,
-        $skills
+        $skills,
     ) {
         $query = "update dbpersons set 
             first_name='$first_name', last_name='$last_name', birthday='$birthday',

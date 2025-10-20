@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2025 at 02:42 AM
+-- Generation Time: Oct 20, 2025 at 03:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `dbarchived_volunteers`
 --
 
+DROP TABLE IF EXISTS `dbarchived_volunteers`;
 CREATE TABLE `dbarchived_volunteers` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -72,6 +73,7 @@ INSERT INTO `dbarchived_volunteers` (`id`, `start_date`, `first_name`, `last_nam
 -- Table structure for table `dbdiscussions`
 --
 
+DROP TABLE IF EXISTS `dbdiscussions`;
 CREATE TABLE `dbdiscussions` (
   `author_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -92,6 +94,7 @@ INSERT INTO `dbdiscussions` (`author_id`, `title`, `body`, `time`) VALUES
 -- Table structure for table `dbeventmedia`
 --
 
+DROP TABLE IF EXISTS `dbeventmedia`;
 CREATE TABLE `dbeventmedia` (
   `id` int(11) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -109,6 +112,7 @@ CREATE TABLE `dbeventmedia` (
 -- Table structure for table `dbeventpersons`
 --
 
+DROP TABLE IF EXISTS `dbeventpersons`;
 CREATE TABLE `dbeventpersons` (
   `eventID` int(11) NOT NULL,
   `userID` varchar(256) NOT NULL,
@@ -136,6 +140,7 @@ INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
 -- Table structure for table `dbevents`
 --
 
+DROP TABLE IF EXISTS `dbevents`;
 CREATE TABLE `dbevents` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -178,6 +183,7 @@ INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `descripti
 -- Table structure for table `dbgroups`
 --
 
+DROP TABLE IF EXISTS `dbgroups`;
 CREATE TABLE `dbgroups` (
   `group_name` varchar(255) NOT NULL,
   `color_level` varchar(50) NOT NULL
@@ -197,6 +203,7 @@ INSERT INTO `dbgroups` (`group_name`, `color_level`) VALUES
 -- Table structure for table `dbmessages`
 --
 
+DROP TABLE IF EXISTS `dbmessages`;
 CREATE TABLE `dbmessages` (
   `id` int(11) NOT NULL,
   `senderID` varchar(256) NOT NULL,
@@ -480,6 +487,7 @@ INSERT INTO `dbmessages` (`id`, `senderID`, `recipientID`, `title`, `body`, `tim
 -- Table structure for table `dbpendingsignups`
 --
 
+DROP TABLE IF EXISTS `dbpendingsignups`;
 CREATE TABLE `dbpendingsignups` (
   `username` varchar(25) NOT NULL,
   `eventname` varchar(100) NOT NULL,
@@ -507,6 +515,7 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 -- Table structure for table `dbpersonhours`
 --
 
+DROP TABLE IF EXISTS `dbpersonhours`;
 CREATE TABLE `dbpersonhours` (
   `personID` varchar(256) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -530,6 +539,7 @@ INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VA
 -- Table structure for table `dbpersons`
 --
 
+DROP TABLE IF EXISTS `dbpersons`;
 CREATE TABLE `dbpersons` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -540,28 +550,28 @@ CREATE TABLE `dbpersons` (
   `status` text DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `password` text DEFAULT NULL,
-  `interests` text NOT NULL,
   `archived` tinyint(1) NOT NULL,
-  `event_topic` varchar(255) NOT NULL DEFAULT '',
-  `event_topic_summary` text NOT NULL
+  `event_topic_summary` text NOT NULL,
+  `organization` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `dbpersons`
 --
 
-INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `phone1`, `email`, `status`, `notes`, `password`, `interests`, `archived`, `event_topic`, `event_topic_summary`) VALUES
-('ameyer123', '2025-05-01', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Inactive', NULL, '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', 'a', 0, '', ''),
-('ameyer3', '2025-03-26', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Active', NULL, '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', 'a', 0, '', ''),
-('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', '9806761234', 'fred54321@gmail.com', 'Active', NULL, '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', 'No interests', 0, '', ''),
-('lukeg', '2025-04-29', 'Luke', 'Gibson', '1234567890', 'volunteer@volunteer.com', 'Active', NULL, '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', 'none', 0, '', ''),
-('maddiev', '2025-04-28', 'maddie', 'van buren', '1234567890', 'mvanbure@mail.umw.edu', 'Active', NULL, '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', 'yoga', 0, '', ''),
-('michael_smith', '2025-03-16', 'Michael', 'Smith', '4345559876', 'michaelsmith@email.com', 'Active', '', '$2y$10$XYZ789xyz456LMN123DEF', 'Homeless Shelter Assistance', 0, '', ''),
-('michellevb', '2025-04-29', 'Michelle', 'Van Buren', '1234567890', 'michelle.vb@gmail.com', 'Active', NULL, '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', 'doggies', 0, '', ''),
-('test_acc', '2025-04-29', 'test', 'test', '5555555555', 'test@gmail.com', 'Active', NULL, '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', '', 0, '', ''),
-('test4921d4e', NULL, 'test4', 't', '4444444444', 'test4@gmail.com', NULL, NULL, '$2y$10$XC/X2Dc/wp.F2tsKBmiX4.QhKt8hIegAnkLbs7nACnauY8cLgA0.G', '', 0, 'test4tpic', 'testsmma'),
-('vmsroot', NULL, 'vmsroot', '', '', '', 'Active', 'System root user account', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', 'N/A', 0, '', ''),
-('Volunteer25', '2025-04-30', 'Volley', 'McTear', '9887765543', 'volly@gmail.com', 'Active', NULL, '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', 'None', 0, '', '');
+INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `phone1`, `email`, `status`, `notes`, `password`, `archived`, `event_topic_summary`, `organization`) VALUES
+('ameyer123', '2025-05-01', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Inactive', NULL, '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', 0, '', NULL),
+('ameyer3', '2025-03-26', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Active', NULL, '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', 0, '', NULL),
+('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', '9806761234', 'fred54321@gmail.com', 'Active', NULL, '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', 0, '', NULL),
+('lukeg', '2025-04-29', 'Luke', 'Gibson', '1234567890', 'volunteer@volunteer.com', 'Active', NULL, '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', 0, '', NULL),
+('maddiev', '2025-04-28', 'maddie', 'van buren', '1234567890', 'mvanbure@mail.umw.edu', 'Active', NULL, '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', 0, '', NULL),
+('michael_smith', '2025-03-16', 'Michael', 'Smith', '4345559876', 'michaelsmith@email.com', 'Active', '', '$2y$10$XYZ789xyz456LMN123DEF', 0, '', NULL),
+('michellevb', '2025-04-29', 'Michelle', 'Van Buren', '1234567890', 'michelle.vb@gmail.com', 'Active', NULL, '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', 0, '', NULL),
+('test_acc', '2025-04-29', 'test', 'test', '5555555555', 'test@gmail.com', 'Active', NULL, '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', 0, '', NULL),
+('test5a2ef1a', NULL, 'test5', 'test5a', '5554444447', 'test5@gmail.com', 'Inactive', NULL, '$2y$10$mvvK1y0nHcwS3tsGyS6AxOz6Ydxy1iEATLuWcN3UBWmaoWcgQpIm6', 0, 'test5smmmay', NULL),
+('test6d41114', NULL, 'test6', 't6', '6666666666', 'test6@gmail.com', 'Inactive', NULL, '$2y$10$ne4ayEM/XEB/QEAtLl/KseGfeAs23ZmyIHh4WHt9NqC479dJECQfW', 0, 'test6summary', 'best org'),
+('vmsroot', NULL, 'vmsroot', '', '', '', 'Active', 'System root user account', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', 0, '', NULL),
+('Volunteer25', '2025-04-30', 'Volley', 'McTear', '9887765543', 'volly@gmail.com', 'Active', NULL, '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', 0, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -569,6 +579,7 @@ INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `phone1`
 -- Table structure for table `dbshifts`
 --
 
+DROP TABLE IF EXISTS `dbshifts`;
 CREATE TABLE `dbshifts` (
   `shift_id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -612,6 +623,7 @@ INSERT INTO `dbshifts` (`shift_id`, `person_id`, `date`, `startTime`, `endTime`,
 -- Table structure for table `discussion_replies`
 --
 
+DROP TABLE IF EXISTS `discussion_replies`;
 CREATE TABLE `discussion_replies` (
   `reply_id` int(11) NOT NULL,
   `user_reply_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -639,6 +651,7 @@ INSERT INTO `discussion_replies` (`reply_id`, `user_reply_id`, `author_id`, `dis
 -- Table structure for table `monthly_hours_snapshot`
 --
 
+DROP TABLE IF EXISTS `monthly_hours_snapshot`;
 CREATE TABLE `monthly_hours_snapshot` (
   `id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -668,6 +681,7 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- Table structure for table `user_groups`
 --
 
+DROP TABLE IF EXISTS `user_groups`;
 CREATE TABLE `user_groups` (
   `user_id` varchar(255) NOT NULL,
   `group_name` varchar(255) NOT NULL

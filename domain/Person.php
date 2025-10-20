@@ -25,7 +25,7 @@ class Person {
 	private $archived;
 	private $skills;
 	//private $interests;
-	private $event_topic;
+	//private $event_topic;
 	private $event_topic_summary;
 	private $is_community_service_volunteer;
 	private $is_new_volunteer;
@@ -33,11 +33,15 @@ class Person {
 	private $training_level;
 	private $access_level;
 
+	private $organization;
+
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $event_topic, $event_topic_summary
+		$archived, $event_topic_summary,$organization
 	) {
 		$this->id = $id;
+
+		$this->organization = $organization;
 
 		$this->password = $password;
 
@@ -52,7 +56,7 @@ class Person {
 
 		$this->archived = $archived;
 
-		$this->event_topic = $event_topic;
+		//$this->event_topic = $event_topic;
 		$this->event_topic_summary = $event_topic_summary;
 
 		$this->access_level = ($id === 'vmsroot') ? 3 : 1;
@@ -60,6 +64,8 @@ class Person {
 
 	// Getters used by dbPersons and other code
 	public function get_id() { return $this->id; }
+
+	public function get_organization() { return $this->organization; }
 
 	public function get_first_name() { return $this->first_name; }
 	public function get_last_name() { return $this->last_name; }
@@ -72,7 +78,7 @@ class Person {
 
 	public function get_archived() { return $this->archived; }
 
-	public function get_event_topic() { return $this->event_topic; }
+	//public function get_event_topic() { return $this->event_topic; }
 	public function get_event_topic_summary() { return $this->event_topic_summary; }
 
 	public function get_access_level() { return $this->access_level; }

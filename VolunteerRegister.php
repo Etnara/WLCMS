@@ -43,7 +43,7 @@ require_once('header.php');
 
         $required = array(
             'first_name', 'last_name',
-            'email', 'phone', 'event_topic', 'event_topic_summary'
+            'email', 'phone',  'event_topic_summary', 'organization'
         );
 
         /* $required = array(
@@ -111,17 +111,11 @@ require_once('header.php');
 
 
         // Event topic fields (speaker/topic information)
-        $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
+     //   $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
         $event_topic_summary = isset($args['event_topic_summary']) ? trim(strip_tags($args['event_topic_summary'])) : '';
 
         // Basic validation: topic required and reasonably bounded
-        if ($event_topic === '') {
-            echo "<p>Event topic is required.</p>";
-            $errors = true;
-        } elseif (strlen($event_topic) > 255) {
-            echo "<p>Event topic is too long (max 255 characters).</p>";
-            $errors = true;
-        }
+
 
         if ($event_topic_summary === '') {
             echo "<p>Event topic summary is required.</p>";
@@ -131,31 +125,40 @@ require_once('header.php');
             $errors = true;
         }
 
+        $organization = isset($args['organization']) ? trim(strip_tags($args['organization'])) : '';
+        if ($organization === '') {
+            echo "<p>Organization is required.</p>";
+            $errors = true;
+        } elseif (strlen($organization) > 255) {
+            echo "<p>Organization is too long (max 255 characters).</p>";
+            $errors = true;
+        }
 
-        $skills = isset($args['skills']) ? $args['skills'] : '';
+
+       // $skills = isset($args['skills']) ? $args['skills'] : '';
         //$interests = isset($args['interests']) ? $args['interests'] : '';
 
-        $is_community_service_volunteer = isset($args['is_community_service_volunteer']) && $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
-        $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
-        $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
+       // $is_community_service_volunteer = isset($args['is_community_service_volunteer']) && $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
+      //  $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
+      //  $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
 
-        $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
+      //  $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
         $archived = 0;
         $status = "Inactive";
-        $training_level = "None";
+       // $training_level = "None";
 
         // Provide defaults for fields not present on the speaker interest form
-        $birthday = isset($args['birthdate']) ? validateDate($args['birthdate']) : '';
-        $street_address = isset($args['street_address']) ? $args['street_address'] : '';
-        $city = isset($args['city']) ? $args['city'] : '';
-        $state = isset($args['state']) ? $args['state'] : '';
-        $zip_code = isset($args['zip']) ? $args['zip'] : '';
-        $phone1type = isset($args['phone_type']) ? $args['phone_type'] : '';
-        $emergency_contact_first_name = isset($args['emergency_contact_first_name']) ? $args['emergency_contact_first_name'] : '';
-        $emergency_contact_last_name = isset($args['emergency_contact_last_name']) ? $args['emergency_contact_last_name'] : '';
-        $emergency_contact_phone = isset($args['emergency_contact_phone']) ? validateAndFilterPhoneNumber($args['emergency_contact_phone']) : '';
-        $emergency_contact_phone_type = isset($args['emergency_contact_phone_type']) ? $args['emergency_contact_phone_type'] : '';
-        $emergency_contact_relation = isset($args['emergency_contact_relation']) ? $args['emergency_contact_relation'] : '';
+     //   $birthday = isset($args['birthdate']) ? validateDate($args['birthdate']) : '';
+       // $street_address = isset($args['street_address']) ? $args['street_address'] : '';
+       // $city = isset($args['city']) ? $args['city'] : '';
+       // $state = isset($args['state']) ? $args['state'] : '';
+       // $zip_code = isset($args['zip']) ? $args['zip'] : '';
+       // $phone1type = isset($args['phone_type']) ? $args['phone_type'] : '';
+       // $emergency_contact_first_name = isset($args['emergency_contact_first_name']) ? $args['emergency_contact_first_name'] : '';
+       // $emergency_contact_last_name = isset($args['emergency_contact_last_name']) ? $args['emergency_contact_last_name'] : '';
+        //$emergency_contact_phone = isset($args['emergency_contact_phone']) ? validateAndFilterPhoneNumber($args['emergency_contact_phone']) : '';
+       // $emergency_contact_phone_type = isset($args['emergency_contact_phone_type']) ? $args['emergency_contact_phone_type'] : '';
+      //  $emergency_contact_relation = isset($args['emergency_contact_relation']) ? $args['emergency_contact_relation'] : '';
 
         // If username/password not provided by this simplified form, generate them so add_person can still create an account
         if (!empty($args['username'])) {
@@ -198,7 +201,7 @@ require_once('header.php');
         $newperson = new Person(
             $id, $password, $first_name, $last_name, $status,
             $phone1, $email, $archived,
-            $event_topic, $event_topic_summary
+            $event_topic_summary, $organization
         );
 
         $result = add_person($newperson);
