@@ -28,7 +28,7 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $args = sanitize($_POST, null);
         $required = array(
-            "id", "name", "date", "start-time", "description", "speaker");
+            "id", "name", "date", "start-time", "description");
 
         if (!wereRequiredFieldsSubmitted($args, $required)) {
             echo 'bad form data';
@@ -43,13 +43,12 @@
             $startTime = $args['start-time'] = $validated[0];
             $endTime = $args['end-time'] = $validated[1];
             $date = $args['date'] = validateDate($args["date"]);
-            #$capacity = intval($args["capacity"]);
-            /* $capacity = 999; */
-            /* $assignedVolunteerCount = count(getvolunteers_byevent($id)); */
-            /* $difference = $assignedVolunteerCount - $capacity; */
-            /* if ($capacity < $assignedVolunteerCount) { */
-            /*    $errors .= "<p>There are currently $assignedVolunteerCount volunteers assigned to this event. The new capacity must not exceed this number. You must remove $difference volunteer(s) from the event to reduce the capacity to $capacity.</p>"; */
-            /* } */
+            $capacity = intval($args["capacity"]);
+            $assignedVolunteerCount = count(getvolunteers_byevent($id));
+            $difference = $assignedVolunteerCount - $capacity;
+            if ($capacity < $assignedVolunteerCount) {
+               $errors .= "<p>There are currently $assignedVolunteerCount volunteers assigned to this event. The new capacity must not exceed this number. You must remove $difference volunteer(s) from the event to reduce the capacity to $capacity.</p>";
+            }
             if (!$startTime || !$date > 11){
                 $errors .= '<p>Your request was missing arguments.</p>';
             }
@@ -76,13 +75,18 @@
     }
     require_once('include/output.php');
 
+    // get animal data from database for form
+    // Connect to database
     include_once('database/dbinfo.php'); 
     $con=connect();  
-    $query = "
-        SELECT id, first_name, last_name
-        FROM dbpersons
-    ";
-    $people = mysqli_query($con, $query);
+    /*$sql = "SELECT * FROM `dbLocations`";
+    $all_locations = mysqli_query($con,$sql);
+    $sql = "SELECT * FROM `dbServices`";
+    $all_services = mysqli_query($con,$sql);
+
+    // get current selected services for event
+    $current_services = get_services($id);
+    */
 ?>
 <!DOCTYPE html>
 <html>
@@ -106,33 +110,18 @@
                 <label for="name">Abbreviated Name</label>
                 <input type="text" id="abbrev-name" name="abbrev-name" value="<//?php echo $event['abbrevName'] ?>" maxlength="11"  required placeholder="Enter name that will appear on calendar">
                 --->
-                <label for="name">Description </label>
-                <input type="text" id="description" name="description" value="<?php echo $event['description'] ?>" required placeholder="Enter description">
                 <label for="name">Date </label>
                 <input type="date" id="date" name="date" value="<?php echo $event['date'] ?>" min="<?php echo date('Y-m-d'); ?>" required>
                 <label for="name">Start Time </label>
                 <input type="text" id="start-time" name="start-time" value="<?php echo time24hto12h($event['startTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
                 <label for="name">End Time </label>
                 <input type="text" id="end-time" name="end-time" value="<?php echo time24hto12h($event['endTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 12:00 PM">
-                <label for="name">* Speaker </label>
-                <select id="speaker" name="speaker">
-                  <option value="null">None</option>
-                  <?php
-                    foreach ($people as $person) {
-                      $selected = $person['id'] == $event['speaker'] ? "selected" : "";
-                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";
-                    }
-                  ?>
-                </select>
-
-<!--
+                <label for="name">Description </label>
+                <input type="text" id="description" name="description" value="<?php echo $event['description'] ?>" required placeholder="Enter description">
                 <label for="name">Location </label>
                 <input type="text" id="location" name="location" value="<?php echo $event['location'] ?>" placeholder="Enter location">
                 <label for="name">Capacity </label>
                 <input type="number" id="capacity" name="capacity" value="<?php echo $event['capacity'] ?>" placeholder="Enter capacity (e.g. 1-99)">
-    -->
-                <input type="hidden" id="location" name="location" value="999" placeholder="Enter location">
-                <input type="hidden" id="capacity" name="capacity" value="999" placeholder="Enter capacity (e.g. 1-99)">
                 <!--<fieldset>
                     <label for="name">* Service </label>
                     </?php 

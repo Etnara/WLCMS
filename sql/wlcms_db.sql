@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
-<<<<<<<< HEAD:sql/wlcms_db.sql
 -- Generation Time: Oct 20, 2025 at 03:31 PM
-========
--- Generation Time: Oct 20, 2025 at 04:16 PM
->>>>>>>> a43775569bff3b504867af6b5bf2015c440654be:sql/wlcms_db_fefm.sql
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 

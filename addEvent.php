@@ -26,7 +26,7 @@
         require_once('database/dbEvents.php');
         $args = sanitize($_POST, null);
         $required = array(
-            "name", "description", "date", "start-time", "end-time", "speaker"
+            "name", "date", "start-time", "end-time", "description", "type"
         );
         if (!wereRequiredFieldsSubmitted($args, $required)) {
             echo 'bad form data';
@@ -71,11 +71,6 @@
 
     include_once('database/dbinfo.php'); 
     $con=connect();  
-    $query = "
-        SELECT id, first_name, last_name
-        FROM dbpersons
-    ";
-    $people = mysqli_query($con, $query);
 
 ?><!DOCTYPE html>
 <html>
@@ -91,29 +86,27 @@
             <form id="new-event-form" method="POST">
                 <label for="name">* Event Name </label>
                 <input type="text" id="name" name="name" required placeholder="Enter name"> 
-                <label for="name">* Description </label>
-                <input type="text" id="description" name="description" required placeholder="Enter description">
                 <label for="name">* Date </label>
                 <input type="date" id="date" name="date" <?php if ($date) echo 'value="' . $date . '"'; ?> min="<?php echo date('Y-m-d'); ?>" required>
                 <label for="name">* Start Time </label>
                 <input type="text" id="start-time" name="start-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
                 <label for="name">* End Time </label>
                 <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM">
-                <label for="name">* Speaker </label>
-                <select id="speaker" name="speaker">
-                  <option value="null">None</option>
-                  <?php
-                    foreach ($people as $person) {
-                      echo "<option value=\"{$person['id']}\">{$person['first_name']} {$person['last_name']}</option>\n";
-                    }
-                  ?>
+                <label for="name">* Description </label>
+                <input type="text" id="description" name="description" required placeholder="Enter description">
+                <label for="name">Event Type </label>
+                <input type="text" id="type" name="type" required placeholder="Enter Event Type">
+                <label for="name">Location </label>
+                <input type="text" id="location" name="location" required placeholder="Enter location">
+                <label for="name">Capacity </label>
+                <input type="number" id="capacity" name="capacity" required placeholder="Enter capacity (e.g. 1-99)">
+                <label for="training">* Training Type:</label>
+                <select id="training_level_required" name="training_level_required">
+                    <option value="None">None</option>
+                    <option value="Green">Green</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Pink">Pink</option>
                 </select>
-
-                <!-- TODO: Fix bug with the time not accepting 12:00 PM -->
-                <!-- Might do something with these later -->
-                <input type="hidden" id="location" value="None">
-                <input type="hidden" id="capacity" value="None">
-
                 <input type="submit" value="Create Event">
                 
             </form>
@@ -139,4 +132,3 @@
         </main>
     </body>
 </html>
-

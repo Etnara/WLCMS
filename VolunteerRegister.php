@@ -108,7 +108,7 @@ require_once('header.php');
             $errors = true;
         } */
 
- 
+
 
         // Event topic fields (speaker/topic information)
      //   $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';

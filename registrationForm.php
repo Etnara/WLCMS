@@ -41,6 +41,8 @@
 
         </fieldset>
 
+    
+ 
 
         <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
@@ -80,10 +82,8 @@
             
         </script>
 
-
-        
             
-        <p class="error-block">By pressing Submit below, you are sure that all entered information is correct</p>
+        <p class="error-block">By pressing Submit below, you are agreeing to volunteer for the organization.</p>
         <input type="submit" name="registration-form" value="Submit" class="blue-button">
     </form>
    </div> 
