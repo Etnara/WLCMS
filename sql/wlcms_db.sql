@@ -1,15 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
-<<<<<<<< HEAD:sql/wlcms_db.sql
--- Generation Time: Oct 20, 2025 at 03:31 PM
-========
--- Generation Time: Oct 20, 2025 at 04:16 PM
->>>>>>>> a43775569bff3b504867af6b5bf2015c440654be:sql/wlcms_db_fefm.sql
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Oct 20, 2025 at 04:11 PM
+-- Server version: 10.11.14-MariaDB
+-- PHP Version: 8.4.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -132,10 +128,6 @@ INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
 (64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
-(100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
-(64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
-(100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
-(64, 'vmsroot', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: '),
 (100, 'john_doe', 'v', 'Skills:  | Dietary restrictions:  | Disabilities:  | Materials: ');
 
 -- --------------------------------------------------------
@@ -152,6 +144,7 @@ CREATE TABLE `dbevents` (
   `startTime` char(5) NOT NULL,
   `endTime` char(5) NOT NULL,
   `description` text NOT NULL,
+  `speaker` varchar(256) DEFAULT NULL,
   `capacity` int(11) NOT NULL,
   `completed` text NOT NULL,
   `restricted_signup` tinyint(1) NOT NULL,
@@ -164,22 +157,22 @@ CREATE TABLE `dbevents` (
 -- Dumping data for table `dbevents`
 --
 
-INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `description`, `capacity`, `completed`, `restricted_signup`, `location`, `training_level_required`, `type`) VALUES
-(112, 'DOGGIE WALKIES', '2025-04-30', '13:00', '15:00', 'walking the doggies in the woods', 20, 'yes', 0, 'Miami, USA', 'None', 'blah'),
-(117, 'Color Test', '2025-05-02', '13:00', '14:00', 'Testing the colors in the calendar', 12, 'no', 0, 'Fred', 'Green', 'Test'),
-(118, 'Halloween Event', '2025-10-31', '18:00', '20:30', 'It is halloween!!', 50, 'no', 0, 'Fredericksburg, VA', 'Orange', 'Holiday'),
-(119, 'party :)', '2026-01-14', '01:00', '01:01', 'dancin', 1, 'no', 0, 'my house', 'Green', 'party :)'),
-(120, 'SDLFjkafs', '2025-09-10', '12:00', '14:00', 'j;aksdfj', 99999, 'no', 0, 'asdf;j', 'None', 'sadj'),
-(121, 'Whikey Valor Tasting', '2025-09-24', '15:00', '18:00', 'Come have a taste of fine barrel aged whiskey with fellow Vets.', 25, 'no', 0, 'Old Silk Mill', 'None', 'Tasting'),
-(122, 'Event', '2025-12-01', '13:00', '14:00', 'Use Case Event', 77, 'no', 0, 'UMW', 'Green', 'Group'),
-(123, 'Ethan&#039;s Birthday Party', '2025-10-03', '07:30', '19:30', 'Ethan is going to eat my cake.', 2147483647, 'no', 0, 'Eagle 225', 'Pink', 'Party'),
-(124, 'Example event', '2025-09-11', '12:00', '14:00', 'This is a test event', 42, 'no', 0, 'UMW', 'Pink', 'A test'),
-(125, 'Pet Adoption', '2025-09-13', '11:00', '17:00', 'Pet Adoption', 50, 'no', 0, 'Fredericksburg, Virginia', 'None', 'Pet Adoption'),
-(126, 'Squirrel Watching', '2025-09-22', '06:00', '09:00', 'Watch the squirrels to make sure they do not eat the bird seed', 6, 'no', 0, '275 Butler Rd, Fredericksburg, VA 22405', 'Green', 'Squirrel'),
-(127, 'Whoosky Volar Tasting', '2025-09-15', '09:00', '13:00', 'Test Event', 42, 'no', 0, 'House', 'None', 'Get-Together'),
-(128, 'Event', '2025-12-01', '13:30', '14:00', 'Use Case Event', 77, 'no', 0, 'UMW', 'Orange', 'Person'),
-(129, 'Test event Woak', '2025-10-31', '15:00', '18:00', 'testing thsi woa', 99, 'no', 0, 'required but not listed', 'Green', 'not listed as req'),
-(130, 'Class Example', '2025-09-24', '12:00', '14:00', 'This is an example', 10, 'no', 0, 'Farmer', 'Green', 'Shit storm');
+INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `description`, `speaker`, `capacity`, `completed`, `restricted_signup`, `location`, `training_level_required`, `type`) VALUES
+(112, 'DOGGIE WALKIES', '2025-04-30', '13:00', '15:00', 'walking the doggies in the woods', NULL, 20, 'yes', 0, 'Miami, USA', 'None', 'blah'),
+(117, 'Color Test', '2025-05-02', '13:00', '14:00', 'Testing the colors in the calendar', NULL, 12, 'no', 0, 'Fred', 'Green', 'Test'),
+(118, 'Halloween Event', '2025-10-31', '18:00', '20:30', 'It is halloween!!', NULL, 50, 'no', 0, 'Fredericksburg, VA', 'Orange', 'Holiday'),
+(119, 'party :)', '2026-01-14', '01:00', '01:01', 'dancin', NULL, 1, 'no', 0, 'my house', 'Green', 'party :)'),
+(120, 'SDLFjkafs', '2025-09-10', '12:00', '14:00', 'j;aksdfj', NULL, 99999, 'no', 0, 'asdf;j', 'None', 'sadj'),
+(121, 'Whikey Valor Tasting', '2025-09-24', '15:00', '18:00', 'Come have a taste of fine barrel aged whiskey with fellow Vets.', NULL, 25, 'no', 0, 'Old Silk Mill', 'None', 'Tasting'),
+(122, 'Event', '2025-12-01', '13:00', '14:00', 'Use Case Event', NULL, 77, 'no', 0, 'UMW', 'Green', 'Group'),
+(123, 'Ethan&#039;s Birthday Party', '2025-10-03', '07:30', '19:30', 'Ethan is going to eat my cake.', NULL, 2147483647, 'no', 0, 'Eagle 225', 'Pink', 'Party'),
+(124, 'Example event', '2025-09-11', '12:00', '14:00', 'This is a test event', NULL, 42, 'no', 0, 'UMW', 'Pink', 'A test'),
+(125, 'Pet Adoption', '2025-09-13', '11:00', '17:00', 'Pet Adoption', NULL, 50, 'no', 0, 'Fredericksburg, Virginia', 'None', 'Pet Adoption'),
+(126, 'Squirrel Watching', '2025-09-22', '06:00', '09:00', 'Watch the squirrels to make sure they do not eat the bird seed', NULL, 6, 'no', 0, '275 Butler Rd, Fredericksburg, VA 22405', 'Green', 'Squirrel'),
+(127, 'Whoosky Volar Tasting', '2025-09-15', '09:00', '13:00', 'Test Event', NULL, 42, 'no', 0, 'House', 'None', 'Get-Together'),
+(128, 'Event', '2025-12-01', '13:30', '14:00', 'Use Case Event', NULL, 77, 'no', 0, 'UMW', 'Orange', 'Person'),
+(129, 'Test event Woak', '2025-10-31', '15:00', '18:00', 'testing thsi woa', NULL, 99, 'no', 0, 'required but not listed', 'Green', 'not listed as req'),
+(130, 'Class Example', '2025-09-24', '12:00', '14:00', 'This is an example', NULL, 10, 'no', 0, 'Farmer', 'Green', 'Shit storm');
 
 -- --------------------------------------------------------
 
@@ -507,10 +500,6 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 ('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
 ('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
 ('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
-('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
-('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
-('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv'),
-('vmsroot', '108', 'v', 'Skills: non | Dietary restrictions: ojnjo | Disabilities: jonoj | Materials: knock'),
 ('vmsroot', '101', 'v', 'Skills: rvwav | Dietary restrictions: varv | Disabilities: var | Materials: arv');
 
 -- --------------------------------------------------------
@@ -533,8 +522,6 @@ CREATE TABLE `dbpersonhours` (
 
 INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VALUES
 ('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
-('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
-('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00'),
 ('john_doe', 100, '2024-11-23 22:00:00', '2024-11-23 23:00:00');
 
 -- --------------------------------------------------------
@@ -549,33 +536,31 @@ CREATE TABLE `dbpersons` (
   `start_date` text DEFAULT NULL,
   `first_name` text NOT NULL,
   `last_name` text DEFAULT NULL,
-  `phone1` varchar(12) NOT NULL,
   `email` text DEFAULT NULL,
-  `status` text DEFAULT NULL,
-  `notes` text DEFAULT NULL,
   `password` text DEFAULT NULL,
+  `phone1` varchar(12) NOT NULL,
+  `organization` varchar(255) DEFAULT NULL,
+  `topic_summary` text NOT NULL,
+  `status` text DEFAULT NULL,
   `archived` tinyint(1) NOT NULL,
-  `event_topic_summary` text NOT NULL,
-  `organization` varchar(255) DEFAULT NULL
+  `notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `dbpersons`
 --
 
-INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `phone1`, `email`, `status`, `notes`, `password`, `archived`, `event_topic_summary`, `organization`) VALUES
-('ameyer123', '2025-05-01', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Inactive', NULL, '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', 0, '', NULL),
-('ameyer3', '2025-03-26', 'Aidan', 'Meyer', '4344222910', 'aidanmeyer32@gmail.com', 'Active', NULL, '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', 0, '', NULL),
-('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', '9806761234', 'fred54321@gmail.com', 'Active', NULL, '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', 0, '', NULL),
-('lukeg', '2025-04-29', 'Luke', 'Gibson', '1234567890', 'volunteer@volunteer.com', 'Active', NULL, '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', 0, '', NULL),
-('maddiev', '2025-04-28', 'maddie', 'van buren', '1234567890', 'mvanbure@mail.umw.edu', 'Active', NULL, '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', 0, '', NULL),
-('michael_smith', '2025-03-16', 'Michael', 'Smith', '4345559876', 'michaelsmith@email.com', 'Active', '', '$2y$10$XYZ789xyz456LMN123DEF', 0, '', NULL),
-('michellevb', '2025-04-29', 'Michelle', 'Van Buren', '1234567890', 'michelle.vb@gmail.com', 'Active', NULL, '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', 0, '', NULL),
-('test_acc', '2025-04-29', 'test', 'test', '5555555555', 'test@gmail.com', 'Active', NULL, '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', 0, '', NULL),
-('test5a2ef1a', NULL, 'test5', 'test5a', '5554444447', 'test5@gmail.com', 'Inactive', NULL, '$2y$10$mvvK1y0nHcwS3tsGyS6AxOz6Ydxy1iEATLuWcN3UBWmaoWcgQpIm6', 0, 'test5smmmay', NULL),
-('test6d41114', NULL, 'test6', 't6', '6666666666', 'test6@gmail.com', 'Inactive', NULL, '$2y$10$ne4ayEM/XEB/QEAtLl/KseGfeAs23ZmyIHh4WHt9NqC479dJECQfW', 0, 'test6summary', 'best org'),
-('vmsroot', NULL, 'vmsroot', '', '', '', 'Active', 'System root user account', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', 0, '', NULL),
-('Volunteer25', '2025-04-30', 'Volley', 'McTear', '9887765543', 'volly@gmail.com', 'Active', NULL, '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', 0, '', NULL);
+INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `email`, `password`, `phone1`, `organization`, `topic_summary`, `status`, `archived`, `notes`) VALUES
+('ameyer123', '2025-05-01', 'Aidan', 'Meyer', 'aidanmeyer32@gmail.com', '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', '4344222910', NULL, '', 'Inactive', 0, NULL),
+('ameyer3', '2025-03-26', 'Aidan', 'Meyer', 'aidanmeyer32@gmail.com', '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', '4344222910', NULL, '', 'Active', 0, NULL),
+('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', 'fred54321@gmail.com', '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', '9806761234', NULL, '', 'Active', 0, NULL),
+('lukeg', '2025-04-29', 'Luke', 'Gibson', 'volunteer@volunteer.com', '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', '1234567890', NULL, '', 'Active', 0, NULL),
+('maddiev', '2025-04-28', 'maddie', 'van buren', 'mvanbure@mail.umw.edu', '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', '1234567890', NULL, '', 'Active', 0, NULL),
+('michael_smith', '2025-03-16', 'Michael', 'Smith', 'michaelsmith@email.com', '$2y$10$XYZ789xyz456LMN123DEF', '4345559876', NULL, '', 'Active', 0, ''),
+('michellevb', '2025-04-29', 'Michelle', 'Van Buren', 'michelle.vb@gmail.com', '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', '1234567890', NULL, '', 'Active', 0, NULL),
+('test_acc', '2025-04-29', 'test', 'test', 'test@gmail.com', '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', '5555555555', NULL, '', 'Active', 0, NULL),
+('vmsroot', NULL, 'vmsroot', '', '', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', '', NULL, '', 'Active', 0, 'System root user account'),
+('Volunteer25', '2025-04-30', 'Volley', 'McTear', 'volly@gmail.com', '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', '9887765543', NULL, '', 'Active', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -727,7 +712,8 @@ ALTER TABLE `dbeventpersons`
 -- Indexes for table `dbevents`
 --
 ALTER TABLE `dbevents`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKspeakerID` (`speaker`);
 
 --
 -- Indexes for table `dbgroups`
@@ -789,7 +775,7 @@ ALTER TABLE `user_groups`
 -- AUTO_INCREMENT for table `dbevents`
 --
 ALTER TABLE `dbevents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT for table `dbmessages`
@@ -814,6 +800,16 @@ ALTER TABLE `discussion_replies`
 --
 ALTER TABLE `monthly_hours_snapshot`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `dbevents`
+--
+ALTER TABLE `dbevents`
+  ADD CONSTRAINT `FKspeakerID` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
