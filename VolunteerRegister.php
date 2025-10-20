@@ -189,7 +189,7 @@ require_once('header.php');
         }
 
         $newperson = new Person(
-            $id, $first_name, $last_name,
+            $id, $password, $first_name, $last_name, $status,
             $phone1, $email, $archived,
             $event_topic, $event_topic_summary
         );
