@@ -41,7 +41,6 @@
             $startTime = $args['start-time'] = $validated[0];
             $endTime = $args['end-time'] = $validated[1];
             $date = $args['date'] = validateDate($args["date"]);
-            $args["training_level_required"] = $_POST['training_level_required'];
     
             if (!$startTime || !$endTime || !$date > 11){
                 echo 'bad args';
