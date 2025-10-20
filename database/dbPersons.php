@@ -43,13 +43,17 @@ function add_person($person) {
         $password_val = mysqli_real_escape_string($con, $person->get_password());
         $status_val = mysqli_real_escape_string($con, $person->get_status());
         //$event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
-        $event_topic_summary_val = mysqli_real_escape_string($con, $person->get_event_topic_summary());
+        $topic_summary_val = mysqli_real_escape_string($con, $person->get_topic_summary());
         $archived_val = (int)$person->get_archived();
         $organization_val = mysqli_real_escape_string($con, $person->get_organization());
+        $organization_val =
+            empty($organization_val) ?
+                "null"
+            :   "'{$organization_val}'";
 
         // Note: ordering of columns must match the ordering of values below
         $insert_query = "INSERT INTO dbpersons (
-            id, password, first_name, last_name, phone1, email, status, event_topic_summary, archived, organization
+            id, password, first_name, last_name, phone1, email, status, topic_summary, archived, organization
         ) VALUES (" .
             "'" . $id_val . "', " .
             "'" . $password_val . "', " .
@@ -58,9 +62,9 @@ function add_person($person) {
             "'" . $phone1_val . "', " .
             "'" . $email_val . "', " .
             "'" . $status_val . "', " .
-            "'" . $event_topic_summary_val . "', " .
+            "'" . $topic_summary_val . "', " .
             $archived_val . ", " .
-            "'" . $organization_val . "'" .
+            $organization_val .
         ")";
 
         // Perform the insert
@@ -218,12 +222,12 @@ function archive_volunteer($volunteer_id) {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
                     id, first_name, last_name,
-                    phone1, notes, password, archived_date, email, status, event_topic_summary, archived, organization
+                    phone1, notes, password, archived_date, email, status, topic_summary, archived, organization
                  )
                  SELECT
                     id, first_name, last_name, 
                     phone1,
-                     notes, password, NOW(), email, status, event_topic_summary, archived, organization
+                     notes, password, NOW(), email, status, topic_summary, archived, organization
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -584,7 +588,7 @@ function make_a_person($result_row) {
         $result_row['phone1'],
         $result_row['email'],
         $result_row['archived'],
-        isset($result_row['event_topic_summary']) ? $result_row['event_topic_summary'] : '',
+        isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
         $result_row['organization']
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],

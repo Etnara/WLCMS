@@ -19,7 +19,7 @@
         <fieldset class="section-box mb-4">
 
             <h3 class="mt-2">Personal Information</h3>
-            <p class="mb-2">The following information will help us contact you and identify you within our system .</p>
+            <p class="mb-2">The following information will help us contact and identify you within our system .</p>
 	    <div class="blue-div"></div>
 
             <label for="first_name"><em>* </em>First Name</label>
@@ -34,8 +34,8 @@
             <label for="phone"><em>* </em>Phone Number</label>
             <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
 
-             <label for="organization"><em>* </em>Organization</label>
-             <input type="text" id="organization" name="organization" required placeholder="State your organization">
+             <label for="organization">Organization</label>
+             <input type="text" id="organization" name="organization" placeholder="Enter your organization's name">
 
         
 
@@ -47,7 +47,7 @@
             <p class="mb-2">Please provide information of the event topic.</p>
             <div class="blue-div"></div>
             <label for="event_topic"><em>* </em>Event Topic Summary</label>
-            <textarea id="event_topic_summary" name="event_topic_summary" required placeholder="Write a brief summary of the event topic" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
+            <textarea id="topic_summary" name="topic_summary" required placeholder="Write a brief summary of the event topic" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
             
             
 	    <div class="blue-div"></div>
