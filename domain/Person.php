@@ -24,7 +24,7 @@ class Person {
 
 	private $archived;
 	private $skills;
-	private $interests;
+	//private $interests;
 	private $event_topic;
 	private $event_topic_summary;
 	private $is_community_service_volunteer;

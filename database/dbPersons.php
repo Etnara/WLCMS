@@ -40,16 +40,27 @@ function add_person($person) {
         $last_name_val = mysqli_real_escape_string($con, $person->get_last_name());
         $phone1_val = mysqli_real_escape_string($con, $person->get_phone1());
         $email_val = mysqli_real_escape_string($con, $person->get_email());
+        $password_val = mysqli_real_escape_string($con, $person->get_password());
+        $status_val = mysqli_real_escape_string($con, $person->get_status());
         $event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
         $event_topic_summary_val = mysqli_real_escape_string($con, $person->get_event_topic_summary());
         $archived_val = (int)$person->get_archived();
 
         // Note: ordering of columns must match the ordering of values below
         $insert_query = "INSERT INTO dbpersons (
-            id, first_name, last_name, phone1, email, event_topic, event_topic_summary, archived
-        ) VALUES (
-            '$id_val', '$first_name_val', '$last_name_val', '$phone1_val', '$email_val', '$event_topic_val', '$event_topic_summary_val', $archived_val
-        )";
+            id, password, first_name, last_name, phone1, email, status, event_topic, event_topic_summary, archived
+        ) VALUES (" .
+            "'" . $id_val . "', " .
+            "'" . $password_val . "', " .
+            "'" . $first_name_val . "', " .
+            "'" . $last_name_val . "', " .
+            "'" . $phone1_val . "', " .
+            "'" . $email_val . "', " .
+            "'" . $status_val . "', " .
+            "'" . $event_topic_val . "', " .
+            "'" . $event_topic_summary_val . "', " .
+            $archived_val .
+        ")";
 
         // Perform the insert
         if (mysqli_query($con, $insert_query)) {
@@ -206,12 +217,12 @@ function archive_volunteer($volunteer_id) {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, type, notes, password, skills, interests, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    phone1, phone1type, type, notes, password, skills, archived_date,is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
                  )
                  SELECT
                     id, start_date, first_name, last_name, street_address, city, state, zip_code,
                     phone1, phone1type,type,
-                     notes, password, skills, interests, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                     notes, password, skills, NOW(), is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -795,13 +806,13 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     function update_person_required(
         $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
         $zip_code, $email, $phone1, $phone1type, $type,
-        $skills, $interests
+        $skills
     ) {
         $query = "update dbpersons set 
             first_name='$first_name', last_name='$last_name', birthday='$birthday',
             street_address='$street_address', city='$city', state='$state',
             zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', type='$type',
-            skills='$skills', interests='$interests'
+            skills='$skills'
         
             where id='$id'";
         $connection = connect();

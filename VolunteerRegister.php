@@ -133,7 +133,7 @@ require_once('header.php');
 
 
         $skills = isset($args['skills']) ? $args['skills'] : '';
-        $interests = isset($args['interests']) ? $args['interests'] : '';
+        //$interests = isset($args['interests']) ? $args['interests'] : '';
 
         $is_community_service_volunteer = isset($args['is_community_service_volunteer']) && $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
         $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
