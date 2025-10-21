@@ -1,5 +1,5 @@
 <!-- Hero Section with Title -->
-<header class="hero-header"> 
+<header class="hero-header">
     <div class="center-header">
         <h1>Interested Speaker Form</h1>
     </div>
@@ -15,7 +15,7 @@
               <p>An asterisk (<em>*</em>) indicates a required field.</p>
             </div>
 	</div>
-        
+
         <fieldset class="section-box mb-4">
 
             <h3 class="mt-2">Personal Information</h3>
@@ -45,11 +45,11 @@
             <div class="blue-div"></div>
             <label for="event_topic"><em>* </em>Event Topic Summary</label>
             <textarea id="topic_summary" name="topic_summary" required placeholder="Write a brief summary of the event topic" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
-            
-            
-	    <div class="blue-div"></div>            
+
+
+	    <div class="blue-div"></div>
         <!-- <p class="error-block">By pressing Submit below, you are sure that all entered information is correct</p> -->
         <input type="submit" name="registration-form" value="Submit" class="blue-button">
     </form>
-   </div> 
+   </div>
 </main>

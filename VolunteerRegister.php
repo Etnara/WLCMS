@@ -63,7 +63,7 @@ require_once('header.php');
         if (!validateEmail($email)) {
             $errors = true;
             echo "<p>Invalid email.</p>";
-        } elseif (($con = connect()) 
+        } elseif (($con = connect())
             && ($res = mysqli_query($con, "SELECT 1 FROM dbpersons WHERE email = '" . mysqli_real_escape_string($con, $email) . "' LIMIT 1"))
             && mysqli_num_rows($res) > 0) {
             $showPopup = true;
