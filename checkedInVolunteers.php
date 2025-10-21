@@ -137,8 +137,10 @@ require_once('header.php');
                                     echo "<td>{$topics}</td>";
                                     //added accept and reject buttons w/red exclamation to unapproved speakers
                                     echo "<td>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}')\">Accept</button>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}')\">Reject</button>";
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                                \">Accept</button>
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                                \">Reject</button>";
 
                                             // added, only shows icon if not approved or rejected
                                             if (!$isApproved && !$isRejected) {
@@ -266,10 +268,10 @@ require_once('header.php');
         });
     
     //added
-    function confirmAction(action, fullName) {
+    function confirmAction(action, fullName,id) {
     const target = action === 'accept'
-        ? `AcceptSpeaker.php?name=${fullName}`
-        : `RejectSpeaker.php?name=${fullName}`;
+        ? `AcceptSpeaker.php?name=${fullName}&id=${id}`
+        : `RejectSpeaker.php?name=${fullName}&id=${id}`;
     if (confirm(`Are you sure you want to ${action} ${fullName}?`)) {
         window.location.href = target;
     }

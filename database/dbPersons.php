@@ -203,6 +203,45 @@ function check_out($personID, $eventID, $end_time) {
     return $result;
 }
 
+function acceptSpeaker($volunteer_id){
+    $con = connect(); // Ensure this function connects to your database
+
+    // Start transaction to ensure data consistency
+    mysqli_begin_transaction($con);
+    try{
+        //updated query for new database
+        //$query = "UPDATE dbpersons SET accepted = 'true' WHERE id = ?";
+        
+        //nonsense query to demonstrate what accepting might look like
+        $query = "UPDATE dbpersons SET zip_code = '00000' WHERE id = ?";
+
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $volunteer_id);
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }
+
+        // Check if the row was inserted successfully
+        if ($stmt->affected_rows === 0) {
+            throw new Exception("Volunteer not found or already accepted.");
+        }
+
+        // Commit transaction
+        mysqli_commit($con);
+
+    }  catch (Exception $e) {
+        // Rollback if anything goes wrong
+        mysqli_rollback($con);
+        //echo "Error archiving volunteer: " . $e->getMessage();
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+    // Close connection
+    $stmt->close();
+    mysqli_close($con);
+    return ['success' => true, 'message' => 'Volunteer archived successfully.'];;
+
+}
+
 
 function archive_volunteer($volunteer_id) {
     $con = connect(); // Ensure this function connects to your database
@@ -221,7 +260,13 @@ function archive_volunteer($volunteer_id) {
                     phone1,
                      notes, password, NOW(), email, status, topic_summary, archived, organization
                  FROM dbpersons WHERE id = ?";
-
+        //updated query for new database
+        /*
+        $query = "INSERT INTO dbarchived_volunteers (
+            id, first_name, last_name, phone1, email, archived, event_topic, event summary)
+            SELECT id, first_name, last_name, phone1, email, archived, event_topic, event summary
+            FROM dbpersons WHERE id=?"
+        */
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $volunteer_id);
         if (!$stmt->execute()){
@@ -245,11 +290,12 @@ function archive_volunteer($volunteer_id) {
         // Commit transaction
         mysqli_commit($con);
 
-        echo "Speaker successfully archived.";
+        //echo "Volunteer successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        echo "Error archiving speaker: " . $e->getMessage();
+        //echo "Error archiving volunteer: " . $e->getMessage();
+        return ['success' => false, 'message' => $e->getMessage()];
     }
 
     // Close connection
