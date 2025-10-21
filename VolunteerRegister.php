@@ -42,20 +42,10 @@ require_once('header.php');
         $args = sanitize($_POST, $ignoreList);
 
         $required = array(
-            'first_name', 'last_name',
-            'email', 'phone',  'event_topic_summary', 'organization'
+          'first_name', 'last_name',
+          'email', 'phone',
+          'topic_summary',
         );
-
-        /* $required = array(
-            'first_name', 'last_name', 'birthdate',
-            'street_address', 'city', 'state', 'zip', 
-            'email', 'phone', 'phone_type',
-            'event_topic', 'event_topic_summary',
-            'username', 'password',
-            'is_community_service_volunteer',
-            'is_new_volunteer', 
-            'total_hours_volunteered'
-        ); */
 
         $errors = false;
 
@@ -65,30 +55,6 @@ require_once('header.php');
 
         $first_name = $args['first_name'];
         $last_name = $args['last_name'];
-        /*
-        $birthday = validateDate($args['birthdate']);
-        if (!$birthday) {
-            echo "<p>Invalid birthdate.</p>";
-            $errors = true;
-        }
-
-        $street_address = $args['street_address'];
-        $city = $args['city'];
-        $state = $args['state'];
-        if (!valueConstrainedTo($state, array(
-            'AK','AL','AR','AZ','CA','CO','CT','DC','DE','FL','GA','HI','IA','ID','IL','IN','KS','KY','LA','MA','MD','ME',
-            'MI','MN','MO','MS','MT','NC','ND','NE','NH','NJ','NM','NV','NY','OH','OK','OR','PA','RI','SC','SD','TN','TX',
-            'UT','VA','VT','WA','WI','WV','WY'))) {
-            echo "<p>Invalid state.</p>";
-            $errors = true;
-        }
-
-        $zip_code = $args['zip'];
-        if (!validateZipcode($zip_code)) {
-            echo "<p>Invalid ZIP code.</p>";
-            $errors = true;
-        }
-        */
 
         $email = strtolower($args['email']);
         if (!validateEmail($email)) {
@@ -102,63 +68,25 @@ require_once('header.php');
             $errors = true;
         }
 
-        /* $phone1type = $args['phone_type'];
-        if (!valueConstrainedTo($phone1type, array('cellphone', 'home', 'work'))) {
-            echo "<p>Invalid phone type.</p>";
-            $errors = true;
-        } */
-
-
-
-        // Event topic fields (speaker/topic information)
-     //   $event_topic = isset($args['event_topic']) ? trim(strip_tags($args['event_topic'])) : '';
-        $event_topic_summary = isset($args['event_topic_summary']) ? trim(strip_tags($args['event_topic_summary'])) : '';
+        $topic_summary = isset($args['topic_summary']) ? trim(strip_tags($args['topic_summary'])) : '';
 
         // Basic validation: topic required and reasonably bounded
-
-
-        if ($event_topic_summary === '') {
-            echo "<p>Event topic summary is required.</p>";
+        if ($topic_summary === '') {
+            echo "<p>A topic summary is required.</p>";
             $errors = true;
-        } elseif (strlen($event_topic_summary) > 4000) {
-            echo "<p>Event topic summary is too long (max 4000 characters).</p>";
+        } elseif (strlen($topic_summary) > 4000) {
+            echo "<p>The topic summary is too long (max 4000 characters).</p>";
             $errors = true;
         }
 
         $organization = isset($args['organization']) ? trim(strip_tags($args['organization'])) : '';
-        if ($organization === '') {
-            echo "<p>Organization is required.</p>";
-            $errors = true;
-        } elseif (strlen($organization) > 255) {
+        if (strlen($organization) > 255) {
             echo "<p>Organization is too long (max 255 characters).</p>";
             $errors = true;
         }
 
-
-       // $skills = isset($args['skills']) ? $args['skills'] : '';
-        //$interests = isset($args['interests']) ? $args['interests'] : '';
-
-       // $is_community_service_volunteer = isset($args['is_community_service_volunteer']) && $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
-      //  $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
-      //  $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
-
-      //  $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
         $archived = 0;
-        $status = "Inactive";
-       // $training_level = "None";
-
-        // Provide defaults for fields not present on the speaker interest form
-     //   $birthday = isset($args['birthdate']) ? validateDate($args['birthdate']) : '';
-       // $street_address = isset($args['street_address']) ? $args['street_address'] : '';
-       // $city = isset($args['city']) ? $args['city'] : '';
-       // $state = isset($args['state']) ? $args['state'] : '';
-       // $zip_code = isset($args['zip']) ? $args['zip'] : '';
-       // $phone1type = isset($args['phone_type']) ? $args['phone_type'] : '';
-       // $emergency_contact_first_name = isset($args['emergency_contact_first_name']) ? $args['emergency_contact_first_name'] : '';
-       // $emergency_contact_last_name = isset($args['emergency_contact_last_name']) ? $args['emergency_contact_last_name'] : '';
-        //$emergency_contact_phone = isset($args['emergency_contact_phone']) ? validateAndFilterPhoneNumber($args['emergency_contact_phone']) : '';
-       // $emergency_contact_phone_type = isset($args['emergency_contact_phone_type']) ? $args['emergency_contact_phone_type'] : '';
-      //  $emergency_contact_relation = isset($args['emergency_contact_relation']) ? $args['emergency_contact_relation'] : '';
+        $status = "Pending Speaker";
 
         // If username/password not provided by this simplified form, generate them so add_person can still create an account
         if (!empty($args['username'])) {
@@ -199,9 +127,13 @@ require_once('header.php');
         }
 
         $newperson = new Person(
-            $id, $password, $first_name, $last_name, $status,
-            $phone1, $email, $archived,
-            $event_topic_summary, $organization
+            $id, $password,
+            $first_name, $last_name,
+            $status,
+            $phone1, $email,
+            $archived,
+            $topic_summary,
+            $organization
         );
 
         $result = add_person($newperson);
