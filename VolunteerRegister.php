@@ -6,7 +6,7 @@
 <html>
 <head>
     <?php require_once('database/dbMessages.php'); ?>
-    <title>Fredericksburg SPCA | Register</title>
+    <title>WLCMS | Speaker Interest Form</title>
     <link href="css/normal_tw.css" rel="stylesheet">
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
@@ -42,16 +42,9 @@ require_once('header.php');
         $args = sanitize($_POST, $ignoreList);
 
         $required = array(
-            'first_name', 'last_name', 'birthdate',
-            'street_address', 'city', 'state', 'zip', 
-            'email', 'phone', 'phone_type',
-            'emergency_contact_first_name', 'emergency_contact_last_name',
-            'emergency_contact_relation', 'emergency_contact_phone',
-            'emergency_contact_phone_type',
-            'username', 'password',
-            'is_community_service_volunteer',
-            'is_new_volunteer', 
-            'total_hours_volunteered'
+          'first_name', 'last_name',
+          'email', 'phone',
+          'topic_summary',
         );
 
         $errors = false;
@@ -62,28 +55,6 @@ require_once('header.php');
 
         $first_name = $args['first_name'];
         $last_name = $args['last_name'];
-        $birthday = validateDate($args['birthdate']);
-        if (!$birthday) {
-            echo "<p>Invalid birthdate.</p>";
-            $errors = true;
-        }
-
-        $street_address = $args['street_address'];
-        $city = $args['city'];
-        $state = $args['state'];
-        if (!valueConstrainedTo($state, array(
-            'AK','AL','AR','AZ','CA','CO','CT','DC','DE','FL','GA','HI','IA','ID','IL','IN','KS','KY','LA','MA','MD','ME',
-            'MI','MN','MO','MS','MT','NC','ND','NE','NH','NJ','NM','NV','NY','OH','OK','OR','PA','RI','SC','SD','TN','TX',
-            'UT','VA','VT','WA','WI','WV','WY'))) {
-            echo "<p>Invalid state.</p>";
-            $errors = true;
-        }
-
-        $zip_code = $args['zip'];
-        if (!validateZipcode($zip_code)) {
-            echo "<p>Invalid ZIP code.</p>";
-            $errors = true;
-        }
 
         $email = strtolower($args['email']);
         if (!validateEmail($email)) {
@@ -97,48 +68,57 @@ require_once('header.php');
             $errors = true;
         }
 
-        $phone1type = $args['phone_type'];
-        if (!valueConstrainedTo($phone1type, array('cellphone', 'home', 'work'))) {
-            echo "<p>Invalid phone type.</p>";
+        $topic_summary = isset($args['topic_summary']) ? trim(strip_tags($args['topic_summary'])) : '';
+
+        // Basic validation: topic required and reasonably bounded
+        if ($topic_summary === '') {
+            echo "<p>A topic summary is required.</p>";
+            $errors = true;
+        } elseif (strlen($topic_summary) > 4000) {
+            echo "<p>The topic summary is too long (max 4000 characters).</p>";
             $errors = true;
         }
 
-        $emergency_contact_first_name = $args['emergency_contact_first_name'];
-        $emergency_contact_last_name = $args['emergency_contact_last_name'];
-        $emergency_contact_relation = $args['emergency_contact_relation'];
-
-        $emergency_contact_phone = validateAndFilterPhoneNumber($args['emergency_contact_phone']);
-        if (!$emergency_contact_phone) {
-            echo "<p>Invalid emergency contact phone.</p>";
+        $organization = isset($args['organization']) ? trim(strip_tags($args['organization'])) : '';
+        if (strlen($organization) > 255) {
+            echo "<p>Organization is too long (max 255 characters).</p>";
             $errors = true;
         }
 
-        $emergency_contact_phone_type = $args['emergency_contact_phone_type'];
-        if (!valueConstrainedTo($emergency_contact_phone_type, array('cellphone', 'home', 'work'))) {
-            echo "<p>Invalid emergency phone type.</p>";
-            $errors = true;
-        }
-
-        $skills = isset($args['skills']) ? $args['skills'] : '';
-        $interests = isset($args['interests']) ? $args['interests'] : '';
-
-        $is_community_service_volunteer = $args['is_community_service_volunteer'] === 'yes' ? 1 : 0;
-        $is_new_volunteer = isset($args['is_new_volunteer']) ? (int)$args['is_new_volunteer'] : 1;
-        $total_hours_volunteered = isset($args['total_hours_volunteered']) ? (float)$args['total_hours_volunteered'] : 0.00;
-
-        $type = ($is_community_service_volunteer === 1) ? 'volunteer' : 'participant';
         $archived = 0;
-        $status = "Inactive";
-        $training_level = "None";
+        $status = "Pending Speaker";
 
-        $id = $args['username'];
-
-        $password = isSecurePassword($args['password']);
-        if (!$password) {
-            echo "<p>Password is not secure enough.</p>";
-            $errors = true;
+        // If username/password not provided by this simplified form, generate them so add_person can still create an account
+        if (!empty($args['username'])) {
+            $id = $args['username'];
         } else {
-            $password = password_hash($args['password'], PASSWORD_BCRYPT);
+            // generate id from email prefix + uniqid
+            $prefix = '';
+            if (strpos($email, '@') !== false) {
+                $prefix = preg_replace('/[^a-z0-9]/', '', strtolower(strstr($email, '@', true)));
+            }
+            if ($prefix === '') $prefix = 'user';
+            $id = $prefix . substr(uniqid(), -6);
+        }
+
+        if (!empty($args['password'])) {
+            $password_ok = isSecurePassword($args['password']);
+            if (!$password_ok) {
+                echo "<p>Password is not secure enough.</p>";
+                $errors = true;
+            } else {
+                $password = password_hash($args['password'], PASSWORD_BCRYPT);
+            }
+        } else {
+            // generate a secure random password for the account
+            try {
+                $generated = bin2hex(random_bytes(8));
+            } catch (Exception $e) {
+                // fallback
+                $generated = bin2hex(openssl_random_pseudo_bytes(8));
+            }
+            $password = password_hash($generated, PASSWORD_BCRYPT);
+            // NOTE: consider emailing $generated to the user or require password reset on first login
         }
 
         if ($errors) {
@@ -147,16 +127,13 @@ require_once('header.php');
         }
 
         $newperson = new Person(
-            $id, $password, date("Y-m-d"),
-            $first_name, $last_name, $birthday,
-            $street_address, $city, $state, $zip_code,
-            $phone1, $phone1type, $email,
-            $emergency_contact_first_name, $emergency_contact_last_name,
-            $emergency_contact_phone, $emergency_contact_phone_type,
-            $emergency_contact_relation, $type, $status, $archived, 
-            $skills, $interests, $training_level,
-            $is_community_service_volunteer, $is_new_volunteer,
-            $total_hours_volunteered
+            $id, $password,
+            $first_name, $last_name,
+            $status,
+            $phone1, $email,
+            $archived,
+            $topic_summary,
+            $organization
         );
 
         $result = add_person($newperson);
@@ -164,7 +141,7 @@ require_once('header.php');
             $showPopup = true;
         } else {
             echo '<script>document.location = "login.php?registerSuccess";</script>';
-            $title = $id . " has been added as a volunteer";
+            $title = $id . " has been added as a speaker";
             $body = "New volunteer account has been created";
             system_message_all_admins($title, $body);
         }

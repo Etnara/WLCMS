@@ -55,7 +55,6 @@
                 });
 
                 $user = retrieve_person($userID);
-                $user_training_level = $user->get_training_level();
 
                 if (sizeof($upcomingEvents) > 0): ?>
                 <div class="table-wrapper">
@@ -245,3 +244,4 @@
 
     </body>
 </html>
+

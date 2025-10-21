@@ -34,53 +34,45 @@ function add_person($person) {
 
     // If the result is empty, it means the person doesn't exist, so we can add the person
     if (mysqli_num_rows($result) == 0) {
-        // Prepare the insert query
-        $insert_query = 'INSERT INTO dbpersons (
-            id, start_date, first_name, last_name, street_address, city, state, zip_code, 
-            phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, 
-            birthday, email, emergency_contact_first_name, emergency_contact_last_name, 
-            emergency_contact_relation, type, status, password, skills, interests, 
-            archived, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered, training_level
-        ) VALUES ("' .
-            $person->get_id() . '","' .
-            $person->get_start_date() . '","' .
-            $person->get_first_name() . '","' .
-            $person->get_last_name() . '","' .
-            $person->get_street_address() . '","' .
-            $person->get_city() . '","' .
-            $person->get_state() . '","' .
-            $person->get_zip_code() . '","' .
-            $person->get_phone1() . '","' .
-            $person->get_phone1type() . '","' .
-            $person->get_emergency_contact_phone() . '","' .
-            $person->get_emergency_contact_phone_type() . '","' .
-            $person->get_birthday() . '","' .
-            $person->get_email() . '","' .
-            $person->get_emergency_contact_first_name() . '","' .
-            $person->get_emergency_contact_last_name() . '","' .
-            $person->get_emergency_contact_relation() . '","' .
-            $person->get_type() . '","' .
-            $person->get_status() . '","' .
-            $person->get_password() . '","' .
-            $person->get_skills() . '","' .
-            $person->get_interests() . '","' .     
-            $person->get_archived() . '","' .                
-            $person->get_is_new_volunteer() . '","' .
-            $person->get_is_community_service_volunteer() . '","' .
-            $person->get_total_hours_volunteered() . '","' .
-            $person->get_training_level() . '");';
-    
-        // Check if the query is properly built
-        if (empty($insert_query)) {
-            die("Error: insert query is empty");
-        }
+        // Prepare and escape values for the insert query
+        $id_val = mysqli_real_escape_string($con, $person->get_id());
+        $first_name_val = mysqli_real_escape_string($con, $person->get_first_name());
+        $last_name_val = mysqli_real_escape_string($con, $person->get_last_name());
+        $phone1_val = mysqli_real_escape_string($con, $person->get_phone1());
+        $email_val = mysqli_real_escape_string($con, $person->get_email());
+        $password_val = mysqli_real_escape_string($con, $person->get_password());
+        $status_val = mysqli_real_escape_string($con, $person->get_status());
+        //$event_topic_val = mysqli_real_escape_string($con, $person->get_event_topic());
+        $topic_summary_val = mysqli_real_escape_string($con, $person->get_topic_summary());
+        $archived_val = (int)$person->get_archived();
+        $organization_val = mysqli_real_escape_string($con, $person->get_organization());
+        $organization_val =
+            empty($organization_val) ?
+                "null"
+            :   "'{$organization_val}'";
+
+        // Note: ordering of columns must match the ordering of values below
+        $insert_query = "INSERT INTO dbpersons (
+            id, password, first_name, last_name, phone1, email, status, topic_summary, archived, organization
+        ) VALUES (" .
+            "'" . $id_val . "', " .
+            "'" . $password_val . "', " .
+            "'" . $first_name_val . "', " .
+            "'" . $last_name_val . "', " .
+            "'" . $phone1_val . "', " .
+            "'" . $email_val . "', " .
+            "'" . $status_val . "', " .
+            "'" . $topic_summary_val . "', " .
+            $archived_val . ", " .
+            $organization_val .
+        ")";
 
         // Perform the insert
         if (mysqli_query($con, $insert_query)) {
             mysqli_close($con);
             return true;
         } else {
-            die("Error: " . mysqli_error($con)); // Debugging MySQL error
+            die("Error inserting person: " . mysqli_error($con) . " -- Query: " . $insert_query);
         }
     }
 
@@ -179,13 +171,7 @@ function update_hours($id, $new_hours) {
     return $result;
 }
 
-function update_birthday($id, $new_birthday) {
-	$con=connect();
-	$query = 'UPDATE dbpersons SET birthday = "' . $new_birthday . '" WHERE id = "' . $id . '"';
-	$result = mysqli_query($con,$query);
-	mysqli_close($con);
-	return $result;
-}
+
 
 /* update volunteer hours */ /* $original_start_time, $original_end_time,  */
 function update_volunteer_hours($eventname, $username, $new_start_time, $new_end_time) {
@@ -235,18 +221,13 @@ function archive_volunteer($volunteer_id) {
     try {
         // Move data from dbpersons to dbarchived_volunteers
         $query = "INSERT INTO dbarchived_volunteers (
-                    id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, birthday, email,
-                    emergency_contact_first_name, contact_num, emergency_contact_relation, contact_method, type,
-                    status, notes, password, skills, interests, archived_date, emergency_contact_last_name, 
-                    is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
-                 ) 
-                 SELECT 
-                    id, start_date, first_name, last_name, street_address, city, state, zip_code,
-                    phone1, phone1type, emergency_contact_phone, emergency_contact_phone_type, birthday, email,
-                    emergency_contact_first_name, contact_num, emergency_contact_relation, contact_method, type,
-                    status, notes, password, skills, interests, NOW(),
-                    emergency_contact_last_name, is_new_volunteer, is_community_service_volunteer, total_hours_volunteered
+                    id, first_name, last_name,
+                    phone1, notes, password, archived_date, email, status, topic_summary, archived, organization
+                 )
+                 SELECT
+                    id, first_name, last_name, 
+                    phone1,
+                     notes, password, NOW(), email, status, topic_summary, archived, organization
                  FROM dbpersons WHERE id = ?";
 
         $stmt = $con->prepare($query);
@@ -255,7 +236,7 @@ function archive_volunteer($volunteer_id) {
 
         // Check if the row was inserted successfully
         if ($stmt->affected_rows === 0) {
-            throw new Exception("Volunteer not found or already archived.");
+            throw new Exception("Speaker not found or already archived.");
         }
 
         // Delete the volunteer from dbpersons
@@ -267,11 +248,11 @@ function archive_volunteer($volunteer_id) {
         // Commit transaction
         mysqli_commit($con);
 
-        echo "Volunteer successfully archived.";
+        echo "Speaker successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        echo "Error archiving volunteer: " . $e->getMessage();
+        echo "Error archiving speaker: " . $e->getMessage();
     }
 
     // Close connection
@@ -390,16 +371,6 @@ function update_profile_pic($id, $link) {
  * Returns the age of the person by subtracting the 
  * person's birthday from the current date
 */
-
-function get_age($birthday) {
-
-  $today = date("Ymd");
-  // If month-day is before the person's birthday,
-  // subtract 1 from current year - birth year
-  $age = date_diff(date_create($birthday), date_create($today))->format('%y');
-
-  return $age;
-}
 
 function update_start_date($id, $new_start_date) {
 	$con=connect();
@@ -610,29 +581,16 @@ function make_a_person($result_row) {
 	 */
     $thePerson = new Person(
         $result_row['id'],
-        $result_row['password'],
-        $result_row['start_date'],
+        isset($result_row['password']) ? $result_row['password'] : '',
         $result_row['first_name'],
         $result_row['last_name'],
-        $result_row['birthday'],
-        $result_row['street_address'],
-        $result_row['city'],
-        $result_row['state'],
-        $result_row['zip_code'],
+        isset($result_row['status']) ? $result_row['status'] : '',
         $result_row['phone1'],
-        $result_row['phone1type'],
         $result_row['email'],
-        $result_row['emergency_contact_first_name'],
-        $result_row['emergency_contact_last_name'],
-        $result_row['emergency_contact_phone'],
-        $result_row['emergency_contact_phone_type'],
-        $result_row['emergency_contact_relation'],
-        $result_row['type'],
-        $result_row['status'],
         $result_row['archived'],
-        $result_row['skills'],
-        $result_row['interests'],
-        $result_row['training_level'],
+        isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
+        $result_row['organization']
+        //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],
         //$result_row['training_date'],
@@ -642,9 +600,6 @@ function make_a_person($result_row) {
         //$result_row['background_date'],
         //$result_row['gender'],
         //$result_row['race']
-	    $result_row['is_community_service_volunteer'],
-	    $result_row['is_new_volunteer'],
-	    $result_row['total_hours_volunteered']
     );
 
     return $thePerson;
@@ -729,17 +684,14 @@ function phone_edit($phone) {
 	else return "";
 }
 
-function get_people_for_export($attr, $first_name, $last_name, $type, $status, $start_date, $city, $zip, $phone, $email) {
+function get_people_for_export($attr, $first_name, $last_name, $type, $status, $phone, $email) {
 	$first_name = "'".$first_name."'";
 	$last_name = "'".$last_name."'";
 	$status = "'".$status."'";
-	$start_date = "'".$start_date."'";
-	$city = "'".$city."'";
-	$zip = "'".$zip."'";
 	$phone = "'".$phone."'";
 	$email = "'".$email."'";
 	$select_all_query = "'.'";
-	if ($start_date == $select_all_query) $start_date = $start_date." or start_date=''";
+	//if ($start_date == $select_all_query) $start_date = $start_date." or start_date=''";
 	if ($email == $select_all_query) $email = $email." or email=''";
     
 	$type_query = "";
@@ -749,8 +701,7 @@ function get_people_for_export($attr, $first_name, $last_name, $type, $status, $
     	$type_query = "'.*($type_query).*'";
     }
     
-    error_log("query for start date is ". $start_date);
-    error_log("query for type is ". $type_query);
+ 
     
    	$con=connect();
     $query = "SELECT ". $attr ." FROM dbpersons WHERE 
@@ -758,9 +709,6 @@ function get_people_for_export($attr, $first_name, $last_name, $type, $status, $
     			" and last_name REGEXP ". $last_name . 
     			" and (type REGEXP ". $type_query .")". 
     			" and status REGEXP ". $status . 
-    			" and (start_date REGEXP ". $start_date . ")" .
-    			" and city REGEXP ". $city .
-    			" and zip REGEXP ". $zip .
     			" and (phone1 REGEXP ". $phone ." or phone2 REGEXP ". $phone . " )" .
     			" and (email REGEXP ". $email .") ORDER BY last_name, first_name";
 	error_log("Querying database for exporting");
@@ -856,23 +804,14 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     // updates the required fields of a person's account
     function update_person_required(
         $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
-        $zip_code, $email, $phone1, $phone1type, $emergency_contact_first_name,
-        $emergency_contact_last_name, $emergency_contact_phone,
-        $emergency_contact_phone_type, $emergency_contact_relation, $type,
-        $skills, $interests
+        $zip_code, $email, $phone1, $phone1type, $type,
+        $skills,
     ) {
         $query = "update dbpersons set 
             first_name='$first_name', last_name='$last_name', birthday='$birthday',
             street_address='$street_address', city='$city', state='$state',
-            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', 
-            emergency_contact_first_name='$emergency_contact_first_name', 
-            emergency_contact_last_name='$emergency_contact_last_name', 
-            emergency_contact_phone='$emergency_contact_phone', 
-            emergency_contact_phone_type='$emergency_contact_phone_type', 
-            emergency_contact_relation='$emergency_contact_relation', type='$type',
-            
-           
-            skills='$skills', interests='$interests'
+            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', type='$type',
+            skills='$skills'
         
             where id='$id'";
         $connection = connect();
