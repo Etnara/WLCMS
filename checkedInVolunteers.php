@@ -75,7 +75,7 @@ require_once('header.php');
     </div>
 
     <main>
-        <div class="main-content-box w-full max-w-3xl p-6">
+        <div class="main-content-box w-full max-w-3xl p-6" style="max-width:80rem">
 
             <div class="flex justify-end mb-4">
                 <div id="bulk-actions" class="hidden space-x-4">
@@ -92,7 +92,7 @@ require_once('header.php');
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Organization</th>
-                            <th>Topics Of Interest</th>
+                            <th>Topic Summary</th>
                             <th>Accept/Reject</th>
                         </tr>
                     </thead>
@@ -129,7 +129,8 @@ require_once('header.php');
                                     
                                     $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars((string)($volunteer->get_organization())) 
                                         : 'Unknown Org';
-                                    $topics = method_exists($volunteer, 'get_topics') ? htmlspecialchars((string)($volunteer->get_topics())) : 'No topics listed';
+                                    $topics = method_exists($volunteer, 'get_topic_summary') ? htmlspecialchars((string)($volunteer->get_topic_summary())) 
+                                            : 'No topics listed';
                                     $isApproved = method_exists($volunteer, 'get_approved') ? $volunteer->get_approved() : false;
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
