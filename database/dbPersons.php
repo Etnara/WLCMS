@@ -203,6 +203,44 @@ function check_out($personID, $eventID, $end_time) {
     return $result;
 }
 
+//get pending speakers
+function getPendingSpeakers($offset, $limit){
+    $con=connect();
+
+    try{
+        $query = "";
+
+        //allow -1 to get all speakers
+        if ($limit == -1){
+            $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" and status="Pending Speaker" LIMIT ? OFFSET ?';
+        } else{
+            $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" and status="Pending Speaker" LIMIT ? OFFSET ?';
+        }
+
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $offset);
+        if ($limit != -1){
+            $stmt->bind_param("s", $limit);
+        }
+
+        /*
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }*/    
+
+        $result = mysqli_query($con,$query);
+        $thePersons = array();
+        while ($result_row = mysqli_fetch_assoc($result)) {
+            $thePerson = make_a_person($result_row);
+            $thePersons[] = $thePerson;
+        }
+
+        return ['array' => $thePersons, 'message' => "success"];
+    } catch (Exception $e){
+        return ['array' => [], 'message' => $e->getMessage()];
+    }
+}
+
 function acceptSpeaker($volunteer_id){
     $con = connect(); // Ensure this function connects to your database
 

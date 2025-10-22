@@ -99,22 +99,34 @@ require_once('header.php');
                     <tbody>
                         
 <?php
-                        $date = date('Y-m-d');
-                        $checkedInPersons = [];
-                        $all_volunteers = getall_volunteers();
 
-                        foreach ($all_volunteers as $volunteer) {
+function display ($pageNum){
+        $offset = $pageNum * 10;
+        $limit = 3;
+        $result = getPendingSpeakers($offset,$limit);
+        if ($result['message']=="success"){
+            return $result['array'];
+        }
+        echo "<script>console.error(" . json_encode($result['message']) . ");</script>";
+        return $result['array'];
+    }
+                        $date = date('Y-m-d');
+                        $checkedInPersons = display(0);
+                        //$all_volunteers = getall_volunteers();
+
+                        /*foreach ($all_volunteers as $volunteer) {
                             $status = $volunteer->get_status();
                             if ($status=="Pending Speaker"){
                                 $checkedInPersons[] = $volunteer;
                             }
+                        } */
                             /*$volunteer_id = $volunteer->get_id();
                             $shift_id = get_open_shift($volunteer_id, $date);
                             if ($shift_id) {
                                 $check_in_info = get_checkin_info_from_shift_id($shift_id);
                                 $checkedInPersons[] = $check_in_info;
                             } */
-                        }
+                        
                         
                         if (empty($checkedInPersons)) {
                             echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
