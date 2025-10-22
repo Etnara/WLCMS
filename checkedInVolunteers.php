@@ -146,11 +146,6 @@ require_once('header.php');
                                                 \">Accept</button>
                                             <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Reject</button>";
-
-                                            // added, only shows icon if not approved or rejected
-                                            if (!$isApproved && !$isRejected) {
-                                                echo "<span style='color: red; font-size: 18px; margin-left: 8px;' title='Unapproved speaker'>&#x26A0;</span>";
-                                            }
                                     echo "</td>";
                                     echo "</tr>";
                                 }
