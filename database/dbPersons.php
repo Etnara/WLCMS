@@ -210,10 +210,10 @@ function acceptSpeaker($volunteer_id){
     mysqli_begin_transaction($con);
     try{
         //updated query for new database
-        //$query = "UPDATE dbpersons SET accepted = 'true' WHERE id = ?";
+        $query = "UPDATE dbpersons SET archived = 1 WHERE id = ?";
         
         //nonsense query to demonstrate what accepting might look like
-        $query = "UPDATE dbpersons SET zip_code = '00000' WHERE id = ?";
+        //$query = "UPDATE dbpersons SET zip_code = '00000' WHERE id = ?";
 
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $volunteer_id);
@@ -251,7 +251,7 @@ function archive_volunteer($volunteer_id) {
 
     try {
         // Move data from dbpersons to dbarchived_volunteers
-        $query = "INSERT INTO dbarchived_volunteers (
+        /*$query = "INSERT INTO dbarchived_volunteers (
                     id, first_name, last_name,
                     phone1, notes, password, archived_date, email, status, topic_summary, archived, organization
                  )
@@ -259,14 +259,14 @@ function archive_volunteer($volunteer_id) {
                     id, first_name, last_name, 
                     phone1,
                      notes, password, NOW(), email, status, topic_summary, archived, organization
-                 FROM dbpersons WHERE id = ?";
+                 FROM dbpersons WHERE id = ?";*/
         //updated query for new database
-        /*
+        
         $query = "INSERT INTO dbarchived_volunteers (
-            id, first_name, last_name, phone1, email, archived, event_topic, event summary)
-            SELECT id, first_name, last_name, phone1, email, archived, event_topic, event summary
-            FROM dbpersons WHERE id=?"
-        */
+            id, start_date, first_name, last_name, email, password, phone1, organization, topic_summary, status, archived, notes)
+            SELECT id, start_date, first_name, last_name, email, password, phone1, organization, topic_summary, status, archived, notes
+            FROM dbpersons WHERE id=?";
+        
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $volunteer_id);
         if (!$stmt->execute()){
