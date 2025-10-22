@@ -73,6 +73,7 @@
     $query = "
         SELECT id, first_name, last_name
         FROM dbpersons
+        WHERE status='Accepted Speaker'
     ";
     $people = mysqli_query($con, $query);
 

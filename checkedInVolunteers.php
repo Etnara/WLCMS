@@ -14,14 +14,31 @@ if ($accessLevel < 2) {
     die();
 }
 include_once "database/dbPersons.php";
+
+//added
+//$hasUnapproved = count(get_unapproved_speakers()) > 0; // for when speakers have not been approved yet 
+$hasUnapproved = true; // default testing for when speakers have not been approved yet
+
 include_once "database/dbShifts.php";
 
+
+
+//added
+if (isset($_GET['status']) && isset($_GET['name'])) {
+    $action = $_GET['status'] === 'approved' ? 'approved' : 'rejected';
+    $name = htmlspecialchars($_GET['name']);
+    echo "<script>alert('You {$action} {$name}');</script>";
+}
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fredericksburg SPCA | Checked In Volunteers</title>
+    <title>WLCMS | Speaker Intrest Form Review</title>
   	<link href="css/normal_tw.css" rel="stylesheet">
 
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
@@ -52,12 +69,13 @@ require_once('header.php');
 
     <div class="hero-header">
         <div class="center-header">
-            <h1>View Checked In Volunteers</h1>
+            <!--<h1>View Checked In Volunteers</h1>-->
+            <h1>Speaker Interest Form Review</h1>
         </div>
     </div>
 
     <main>
-        <div class="main-content-box w-full max-w-3xl p-6">
+        <div class="main-content-box w-full max-w-3xl p-6" style="max-width:80rem">
 
             <div class="flex justify-end mb-4">
                 <div id="bulk-actions" class="hidden space-x-4">
@@ -73,40 +91,63 @@ require_once('header.php');
                             <th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Check-In Time</th>
-                            <th>Actions</th>
+                            <th>Organization</th>
+                            <th>Topic Summary</th>
+                            <th>Accept/Reject</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
+                        
+<?php
                         $date = date('Y-m-d');
                         $checkedInPersons = [];
                         $all_volunteers = getall_volunteers();
 
                         foreach ($all_volunteers as $volunteer) {
-                            $volunteer_id = $volunteer->get_id();
+                            $status = $volunteer->get_status();
+                            if ($status=="Pending Speaker"){
+                                $checkedInPersons[] = $volunteer;
+                            }
+                            /*$volunteer_id = $volunteer->get_id();
                             $shift_id = get_open_shift($volunteer_id, $date);
                             if ($shift_id) {
                                 $check_in_info = get_checkin_info_from_shift_id($shift_id);
                                 $checkedInPersons[] = $check_in_info;
-                            }
+                            } */
                         }
-
+                        
                         if (empty($checkedInPersons)) {
-                            echo "<tr><td colspan='5' class='text-center py-6'>No volunteers are currently checked in.</td></tr>";
+                            echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
-                                $volunteer = retrieve_person($check_in_info['person_id']);
+                                $volunteer = $check_in_info;
                                 if ($volunteer) {
-                                    $full_name = $volunteer->get_first_name() . " " . $volunteer->get_last_name();
-                                    $rowValue = htmlspecialchars($check_in_info['shift_id']) . '|' . htmlspecialchars($full_name);
+                                  $firstName = htmlspecialchars((string)($volunteer->get_first_name()));
+                                    $lastName = htmlspecialchars((string)($volunteer->get_last_name()));
+                                    $fullName = "{$firstName} {$lastName}";
+
+                                    
+                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars((string)($volunteer->get_organization())) 
+                                        : 'Unknown Org';
+                                    $topics = method_exists($volunteer, 'get_topic_summary') ? htmlspecialchars((string)($volunteer->get_topic_summary())) 
+                                            : 'No topics listed';
+                                    $isApproved = method_exists($volunteer, 'get_approved') ? $volunteer->get_approved() : false;
+                                    $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
                                     echo "<tr>";
-                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='$rowValue'></td>";
-                                    echo "<td>" . htmlspecialchars($volunteer->get_first_name()) . "</td>";
-                                    echo "<td>" . htmlspecialchars($volunteer->get_last_name()) . "</td>";
-                                    echo "<td>" . htmlspecialchars($check_in_info['startTime']) . "</td>";
-                                    echo "<td><button type='button' onclick=\"clockOut('{$check_in_info['shift_id']}')\" class='blue-button'>Check-Out</button></td>";
+                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
+                                    echo "<td>{$firstName}</td>";
+                                    echo "<td>{$lastName}</td>";
+                                    //added
+                                    echo "<td>{$organization}</td>";
+                                    echo "<td>{$topics}</td>";
+                                    //added accept and reject buttons w/red exclamation to unapproved speakers
+                                    echo "<td>
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                                \">Accept</button>
+                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                                \">Reject</button>";
+                                    echo "</td>";
                                     echo "</tr>";
                                 }
                             }
@@ -164,9 +205,33 @@ require_once('header.php');
             });
         }
 
-        function clockOut(shiftID) {
-            const description = prompt("Please enter a description for clocking out:");
-            if (description !== null && description.trim() !== "") {
+        function clockOut(personID) {
+            $doArchive = confirm("Are you sure you want to reject "+ personID +"?");
+            if ($doArchive){
+                fetch('clockOut.php',{
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `personID=${encodeURIComponent(personID)}`
+                }).then(response => response.text())
+                .then(data => {
+                    console.log("PHP response:", data);
+                    //alert("Response from PHP:\n" + data);
+                    if (data.trim() === 'success') {
+                        alert(personID + " was successfully archived!");
+                    } else {
+                        alert("Archiving failed for " + personID);
+                    }
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    //alert("There was an error rejecting "+personID);
+                    alert(error);
+                });
+            } else{
+                alert("Rejection cancelled.")
+            }
+            /*if (description !== null && description.trim() !== "") {
                 fetch('clockOut.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -183,7 +248,7 @@ require_once('header.php');
                 });
             } else {
                 alert("Clock out cancelled. Description is required.");
-            }
+            }*/
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -202,6 +267,18 @@ require_once('header.php');
                 document.getElementById('bulk-actions').style.display = anyChecked ? 'flex' : 'none';
             }
         });
+    
+    //added
+    function confirmAction(action, fullName,id) {
+    const target = action === 'accept'
+        ? `AcceptSpeaker.php?name=${fullName}&id=${id}`
+        : `RejectSpeaker.php?name=${fullName}&id=${id}`;
+    if (confirm(`Are you sure you want to ${action} ${fullName}?`)) {
+        window.location.href = target;
+    }
+}
+
+
     </script>
 
 </body>
