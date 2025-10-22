@@ -355,11 +355,12 @@ function archive_volunteer($volunteer_id) {
         // Commit transaction
         mysqli_commit($con);
 
-        echo "Speaker successfully archived.";
+        //echo "Volunteer successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        echo "Error archiving speaker: " . $e->getMessage();
+        //echo "Error archiving volunteer: " . $e->getMessage();
+        return ['success' => false, 'message' => $e->getMessage()];
     }
 
     // Close connection
