@@ -70,7 +70,7 @@ require_once('header.php');
     <div class="hero-header">
         <div class="center-header">
             <!--<h1>View Checked In Volunteers</h1>-->
-            <h1>Speaker Intrest Form Review</h1>
+            <h1>Speaker Interest Form Review</h1>
         </div>
     </div>
 
@@ -104,19 +104,23 @@ require_once('header.php');
                         $all_volunteers = getall_volunteers();
 
                         foreach ($all_volunteers as $volunteer) {
-                            $volunteer_id = $volunteer->get_id();
+                            $archived = $volunteer->get_archived();
+                            if ($archived!=1){
+                                $checkedInPersons[] = $volunteer;
+                            }
+                            /*$volunteer_id = $volunteer->get_id();
                             $shift_id = get_open_shift($volunteer_id, $date);
                             if ($shift_id) {
                                 $check_in_info = get_checkin_info_from_shift_id($shift_id);
                                 $checkedInPersons[] = $check_in_info;
-                            }
+                            } */
                         }
                         
                         if (empty($checkedInPersons)) {
                             echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
-                                $volunteer = retrieve_person($check_in_info['person_id']);
+                                $volunteer = $check_in_info;
                                 if ($volunteer) {
                                   $firstName = htmlspecialchars($volunteer->get_first_name());
                                     $lastName = htmlspecialchars($volunteer->get_last_name());
@@ -129,7 +133,7 @@ require_once('header.php');
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
                                     echo "<tr>";
-                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$check_in_info['shift_id']}|{$fullName}'></td>";
+                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
                                     echo "<td>{$firstName}</td>";
                                     echo "<td>{$lastName}</td>";
                                     //added
