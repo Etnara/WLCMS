@@ -104,8 +104,8 @@ require_once('header.php');
                         $all_volunteers = getall_volunteers();
 
                         foreach ($all_volunteers as $volunteer) {
-                            $archived = $volunteer->get_archived();
-                            if ($archived!=1){
+                            $status = $volunteer->get_status();
+                            if ($status=="Pending Speaker"){
                                 $checkedInPersons[] = $volunteer;
                             }
                             /*$volunteer_id = $volunteer->get_id();
@@ -122,13 +122,14 @@ require_once('header.php');
                             foreach ($checkedInPersons as $check_in_info) {
                                 $volunteer = $check_in_info;
                                 if ($volunteer) {
-                                  $firstName = htmlspecialchars($volunteer->get_first_name());
-                                    $lastName = htmlspecialchars($volunteer->get_last_name());
+                                  $firstName = htmlspecialchars((string)($volunteer->get_first_name()));
+                                    $lastName = htmlspecialchars((string)($volunteer->get_last_name()));
                                     $fullName = "{$firstName} {$lastName}";
 
                                     
-                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars($volunteer->get_organization()) : 'Unknown Org';
-                                    $topics = method_exists($volunteer, 'get_topics') ? htmlspecialchars($volunteer->get_topics()) : 'No topics listed';
+                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars((string)($volunteer->get_organization())) 
+                                        : 'Unknown Org';
+                                    $topics = method_exists($volunteer, 'get_topics') ? htmlspecialchars((string)($volunteer->get_topics())) : 'No topics listed';
                                     $isApproved = method_exists($volunteer, 'get_approved') ? $volunteer->get_approved() : false;
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 

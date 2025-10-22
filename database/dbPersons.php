@@ -210,7 +210,7 @@ function acceptSpeaker($volunteer_id){
     mysqli_begin_transaction($con);
     try{
         //updated query for new database
-        $query = "UPDATE dbpersons SET archived = 1 WHERE id = ?";
+        $query = "UPDATE dbpersons SET status = 'Accepted Speaker' WHERE id = ?";
         
         //nonsense query to demonstrate what accepting might look like
         //$query = "UPDATE dbpersons SET zip_code = '00000' WHERE id = ?";
@@ -262,10 +262,15 @@ function archive_volunteer($volunteer_id) {
                  FROM dbpersons WHERE id = ?";*/
         //updated query for new database
         
-        $query = "INSERT INTO dbarchived_volunteers (
+        //good query for updated dbarchived_volunteers
+        /*$query = "INSERT INTO dbarchived_volunteers (
             id, start_date, first_name, last_name, email, password, phone1, organization, topic_summary, status, archived, notes)
-            SELECT id, start_date, first_name, last_name, email, password, phone1, organization, topic_summary, status, archived, notes
+            SELECT id, start_date, first_name, last_name, email, password, phone1, organization, topic_summary, 'Rejected Speaker' AS status, archived, notes
             FROM dbpersons WHERE id=?";
+        */
+
+        //just update status
+        $query = "UPDATE dbpersons SET status = 'Rejected Speaker' WHERE id = ?";
         
         $stmt = $con->prepare($query);
         $stmt->bind_param("s", $volunteer_id);
@@ -275,10 +280,11 @@ function archive_volunteer($volunteer_id) {
 
         // Check if the row was inserted successfully
         if ($stmt->affected_rows === 0) {
-            throw new Exception("Speaker not found or already archived.");
+            throw new Exception("Speaker not found or already rejected.");
         }
 
         // Delete the volunteer from dbpersons
+        /*
         $query_delete = "DELETE FROM dbpersons WHERE id = ?";
         $stmt_delete = $con->prepare($query_delete);
         $stmt_delete->bind_param("s", $volunteer_id);
@@ -286,7 +292,7 @@ function archive_volunteer($volunteer_id) {
         if (!$stmt_delete->execute()){
             throw new Exception("Failed to properly delete.");
         }
-
+        */     
         // Commit transaction
         mysqli_commit($con);
 
@@ -300,7 +306,7 @@ function archive_volunteer($volunteer_id) {
 
     // Close connection
     $stmt->close();
-    $stmt_delete->close();
+    //$stmt_delete->close();
     mysqli_close($con);
     return ['success' => true, 'message' => 'Volunteer archived successfully.'];;
 }
