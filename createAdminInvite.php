@@ -27,7 +27,7 @@ if ($accessLevel < 2) { header('Location: index.php'); die(); }
     </p>
 
     <pre style="padding:10px;border:1px solid #ccc;border-radius:8px;background:#f9fafb;">
-https://WLCMS/accept_invite.php
+http://localhost/GitHub/WLCMS/addAdmin.php
     </pre>
 
     <p class="mt-2 text-sm text-center text-gray-200">
