@@ -621,6 +621,7 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['milestonepoints.php'] = 1;
         $permission_array['selectvotm.php'] = 1;
         $permission_array['volunteerviewgroupmembers.php'] = 1;
+        
         //pages only managers can view
         $permission_array['viewallevents.php'] = 0;
         $permission_array['personsearch.php'] = 2;
@@ -679,6 +680,9 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['requestfailed.php'] = 1;
         $permission_array['settimes.php'] = 1;
         $permission_array['eventfailurebaddeparturetime.php'] = 1;
+        $permission_array['createadmininvite.php'] = 2; 
+        $permission_array['accept_invite.php']     = 2; 
+
         
         // LOWERCASE
 
@@ -688,7 +692,8 @@ if (date("H:i:s") > "18:19:59") {
         $current_page = strtolower(substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '/') + 1));
         $current_page = substr($current_page, strpos($current_page,"/"));
         
-        if($permission_array[$current_page]>$_SESSION['access_level']){
+        $required_level = $permission_array[$current_page] ?? 0;
+        if ($required_level > $_SESSION['access_level']) {
             //in this case, the user doesn't have permission to view this page.
             //we redirect them to the index page.
             echo "<script type=\"text/javascript\">window.location = \"index.php\";</script>";
@@ -793,8 +798,31 @@ if (date("H:i:s") > "18:19:59") {
 
                     </div>
                </div>
+            
+               <div class="nav-item">Admin
+  <div class="dropdown">
+    <a href="createAdminInvite.php" style="text-decoration: none;">
+      <div class="in-nav">
+        <img src="images/plus-solid.svg">
+        <span>Create Admin Invite</span>
+      </div>
+    </a>
+    <a href="addAdmin.php" style="text-decoration: none;">
+      <div class="in-nav">
+        <img src="images/person-search.svg">
+        <span>Admin Invitation</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+
+
             </div>
         </div>
+
+            
+
 
         <!-- Right Section: Date & Icon -->
         <div class="right-section">
