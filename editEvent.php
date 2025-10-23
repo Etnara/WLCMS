@@ -79,14 +79,12 @@
     // Connect to database
     include_once('database/dbinfo.php'); 
     $con=connect();  
-    /*$sql = "SELECT * FROM `dbLocations`";
-    $all_locations = mysqli_query($con,$sql);
-    $sql = "SELECT * FROM `dbServices`";
-    $all_services = mysqli_query($con,$sql);
-
-    // get current selected services for event
-    $current_services = get_services($id);
-    */
+    $query = "
+        SELECT id, first_name, last_name
+        FROM dbpersons
+        WHERE status='Accepted Speaker'
+    ";
+    $people = mysqli_query($con, $query);
 ?>
 <!DOCTYPE html>
 <html>
