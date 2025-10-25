@@ -16,7 +16,7 @@
  */
 include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Person.php');
-
+include_once(dirname(__FILE__).'/../sendEmail.php');
 /*
  * add a person to dbPersons table: if already there, return false
  */
@@ -287,6 +287,24 @@ function acceptSpeaker($volunteer_id){
 
         // Commit transaction
         mysqli_commit($con);
+        
+        //Create Email
+        $query = "SELECT first_name, last_name, email FROM dbpersons WHERE id = ?";
+
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $volunteer_id);
+        if (!$stmt->execute()){
+            throw new Exception("Acceptance Emailing Issue.");
+        }
+        
+        $result = $stmt->get_result();
+        if ($result->num_rows === 0) {
+            throw new Exception("Acceptance Mailing Issue");
+        }
+        $row = $result->fetch_assoc();
+        sendFormApproved($row["email"], $row["first_name"], $row["last_name"]);
+        //Send Email
+        
 
     }  catch (Exception $e) {
         // Rollback if anything goes wrong
