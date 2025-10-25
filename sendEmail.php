@@ -36,29 +36,29 @@ function sendEmail($to, $name, $subject, $message) {
     $mail->send();
 }
 
-function sendFormConfirmation($to, $name) {
+function sendFormConfirmation($to, $first_name, $last_name) {
     global $mail;
-    $mail->addAddress($to, $name);
+    $mail->addAddress($to, $first_name . ' '. $last_name);
     $mail->Subject = "Interest Form Recieved";
     $mail->Body = "Thank you for your interest in speaking for the Women's Leadership Colloquium's Coffee Talks!
     We will let you know when your form has been reviewed and accepted.";
     $mail->send();
 }
 
-function sendFormApproved($to, $name) {
+function sendFormApproved($to, $first_name, $last_name) {
     global $mail;
-    $mail->addAddress($to, $name);
+    $mail->addAddress($to, $first_name . " " . $last_name);
     $mail->Subject = "Interest Form Approved";
     $mail->Body = "Your interest form for the Women's Leadership Coloquium Coffee Talks has been approved!
     You will be notified when you have been scheduled for a Coffee Talk.";
     $mail->send();
 }
 
-function sendScheduledSpeaker($to, $name, $date) {
+function sendScheduledSpeaker($to, $first_name, $last_name, $date) {
     global $mail;
-    $mail->addAddress($to, $name);
+    $mail->addAddress($to, $first_name. " " . $last_name);
     $mail->Subject = "Scheduled for Coffee Talk on **Date**";
-    $mail->Body = "You have been scheduled to speak on **Date**.
+    $mail->Body = "You have been scheduled to speak on " . $date . "
     Please email **real email** if you need to rechedule or cancel.";
     $mail->send();
 }
