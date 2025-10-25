@@ -102,12 +102,12 @@ require_once('header.php');
 
 function display ($pageNum){
         $offset = $pageNum * 10;
-        $limit = 3;
+        $limit = 10;
         $result = getPendingSpeakers($offset,$limit);
         if ($result['message']=="success"){
             return $result['array'];
         }
-        echo "<script>console.error(" . json_encode($result['message']) . ");</script>";
+        //echo "<script>console.error(" . json_encode($result['message']) . ");</script>";
         return $result['array'];
     }
                         $date = date('Y-m-d');
