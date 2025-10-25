@@ -35,6 +35,7 @@ require_once('header.php');
     require_once('domain/Person.php');
     require_once('database/dbPersons.php');
     require_once('database/dbinfo.php');
+    require_once('sendEmail.php');
 
     $showPopup = false;
     $popupText = "";
