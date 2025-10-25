@@ -23,7 +23,7 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
 $mail->Username = 'wlccoffeetalks@gmail.com';
-$mail->Password = '-------'; //10 minute fix to hide the password from the internet, will fix later
+$mail->Password = '----'; //10 minute fix to hide the password from the internet, will fix later
 
 
 $mail->setFrom('wlccoffeetalks@gmail.com','WLC Coffee Talks');
