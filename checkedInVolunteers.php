@@ -110,6 +110,14 @@ function display ($pageNum){
         //echo "<script>console.error(" . json_encode($result['message']) . ");</script>";
         return $result['array'];
     }
+
+    function pageExists($pageNum){
+        $arr = display($pageNum);
+        if (empty($arr)){
+            return false;
+        }
+        return true;
+    }
                         $date = date('Y-m-d');
                         $checkedInPersons = display(0);
                         //$all_volunteers = getall_volunteers();
