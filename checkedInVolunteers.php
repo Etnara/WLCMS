@@ -163,9 +163,10 @@ function display ($pageNum){
                                     echo "<td>{$topics}</td>";
                                     //added accept and reject buttons w/red exclamation to unapproved speakers
                                     echo "<td>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                    <div style='display: flex; gap: 8px;'>
+                                            <button type='button' style='background-color: blue; color: white;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Accept</button>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: red; color: white;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Reject</button>";
                                     echo "</td>";
                                     echo "</tr>";
