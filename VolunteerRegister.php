@@ -151,10 +151,10 @@ require_once('header.php');
             $showPopup = true;
         } else {
             sendFormConfirmation($email, $first_name, $last_name); //email speaker confirmation
+            $title = "New Interest Form to Review: " . $first_name . " " . $last_name;
+            message_all_users("vmsroot", $title, "");
+
             echo '<script>document.location = "login.php?registerSuccess";</script>';
-            $title = $id . " has been added as a speaker";
-            $body = "New volunteer account has been created";
-            system_message_all_admins($title, $body);
         }
     } else {
         require_once('registrationForm.php');
