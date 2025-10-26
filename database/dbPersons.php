@@ -287,7 +287,7 @@ function acceptSpeaker($volunteer_id){
 
         // Commit transaction
         mysqli_commit($con);
-        
+
         //Create Email
         $query = "SELECT first_name, last_name, email FROM dbpersons WHERE id = ?";
 
@@ -296,7 +296,7 @@ function acceptSpeaker($volunteer_id){
         if (!$stmt->execute()){
             throw new Exception("Acceptance Emailing Issue.");
         }
-        
+
         $result = $stmt->get_result();
         if ($result->num_rows === 0) {
             throw new Exception("Acceptance Mailing Issue");
@@ -304,7 +304,7 @@ function acceptSpeaker($volunteer_id){
         $row = $result->fetch_assoc();
         sendFormApproved($row["email"], $row["first_name"], $row["last_name"]);
         //Send Email
-        
+
 
     }  catch (Exception $e) {
         // Rollback if anything goes wrong
