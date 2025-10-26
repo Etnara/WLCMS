@@ -3,8 +3,6 @@
 Hollingworth's guide: "Send email with PHP | Create a Working Contact Form Using PHP" https://www.youtube.com/watch?v=fIYyemqKR58&t=206s
 Guide Realm's guide: "How To Set Up Gmail SMTP Server - Full Guide" https://www.youtube.com/watch?v=ZfEK3WP73eY
 
-Mail only works if the recipient's email is of "@gmail.com"
-
 All mailing functions created by Caleb Lineberry */
 
 require_once('vendor/autoload.php');
