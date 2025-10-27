@@ -37,10 +37,7 @@
              <label for="organization">Organization</label>
              <input type="text" id="organization" name="organization" placeholder="Enter your organization's name">
 
-        
-
         </fieldset>
-
 
         <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
@@ -50,40 +47,8 @@
             <textarea id="topic_summary" name="topic_summary" required placeholder="Write a brief summary of the event topic" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
             
             
-	    <div class="blue-div"></div>
-
-
-        </fieldset>
-
-        
-               
-
-                
-        <script>
-            
-
-            
-           
-
-            
-            
-
-             // Event listeners for changes in volunteer/participant selection and the complete statuses
-            //document.querySelectorAll('input[name="is_community_service_volunteer"]').forEach(radio => {
-              //  radio.addEventListener('change', toggleTrainingSection);
-            //});
-
-
-
-            
-            // Initial check on page load
-            
-        </script>
-
-
-        
-            
-        <p class="error-block">By pressing Submit below, you are sure that all entered information is correct</p>
+	    <div class="blue-div"></div>            
+        <!-- <p class="error-block">By pressing Submit below, you are sure that all entered information is correct</p> -->
         <input type="submit" name="registration-form" value="Submit" class="blue-button">
     </form>
    </div> 
