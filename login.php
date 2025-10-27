@@ -18,58 +18,59 @@
     $badLogin = false;
     $archivedAccount = false;
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        require_once('include/input-validation.php');
-        $ignoreList = array('password');
-        $args = sanitize($_POST, $ignoreList);
-        $required = array('username', 'password');
-        if (wereRequiredFieldsSubmitted($args, $required)) {
-            require_once('domain/Person.php');
-            require_once('database/dbPersons.php');
-            /*@require_once('database/dbMessages.php');*/
-            /*@dateChecker();*/
-            $username = strtolower($args['username']);
-            $password = $args['password'];
-            $user = retrieve_person($username);
-            if (!$user) {
-                $badLogin = true;
-            } else if ($user->get_status() === "Inactive") {
-                // If the user is archived, block login
-                $archivedAccount = true;
-            } else if (password_verify($password, $user->get_password())) {
-                $_SESSION['logged_in'] = true;
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require_once('include/input-validation.php');
+    $ignoreList = array('password');
+    $args = sanitize($_POST, $ignoreList);
+    // now expect email + password (no separate username)
+    $required = array('email', 'password');
+    if (wereRequiredFieldsSubmitted($args, $required)) {
+      require_once('domain/Person.php');
+      require_once('database/dbPersons.php');
+      /*@require_once('database/dbMessages.php');*/
+      /*@dateChecker();*/
+      $email = strtolower($args['email']);
+      $password = $args['password'];
 
-                $_SESSION['access_level'] = $user->get_access_level();
-                $_SESSION['f_name'] = $user->get_first_name();
-                $_SESSION['l_name'] = $user->get_last_name();
+      // Allow the special 'vmsroot' username to bypass email lookup
+      if (strtolower($email) === 'vmsroot') {
+        // retrieve by id (username)
+        $user = retrieve_person('vmsroot');
+      } else {
+        // Retrieve user by email only
+        $user = retrieve_person_by_email($email);
+      }
 
-                
-                $_SESSION['type'] = 'admin';
-                $_SESSION['_id'] = $user->get_id();
-                
-                 //hard code root privileges
-                 if ($user->get_id() == 'vmsroot') {
-                    $_SESSION['access_level'] = 3;
-		    $_SESSION['locked'] = false;
-                    header('Location: index.php');
-               }
-            
-                //if ($changePassword) {
-                //    $_SESSION['access_level'] = 0;
-                //    $_SESSION['change-password'] = true;
-                //    header('Location: changePassword.php');
-                //    die();
-                //} 
-                else {
-                    header('Location: index.php');
-                    die();
-                }
-                die();
-            } else {
-                $badLogin = true;
-            }
+      if (!$user) {
+        $badLogin = true;
+      } elseif ($user->get_status() === "Inactive") {
+        // If the user is archived, block login
+        $archivedAccount = true;
+      } elseif (password_verify($password, $user->get_password())) {
+        $_SESSION['logged_in'] = true;
+
+        $_SESSION['access_level'] = $user->get_access_level();
+        $_SESSION['f_name'] = $user->get_first_name();
+        $_SESSION['l_name'] = $user->get_last_name();
+
+        $_SESSION['type'] = 'admin';
+        $_SESSION['_id'] = $user->get_id();
+
+        // hard code root privileges
+        if ($user->get_id() == 'vmsroot') {
+          $_SESSION['access_level'] = 3;
+          $_SESSION['locked'] = false;
+          header('Location: index.php');
+        } else {
+          header('Location: index.php');
+          die();
         }
+        die();
+      } else {
+        $badLogin = true;
+      }
     }
+  }
     //<p>Or <a href="register.php">register as a new volunteer</a>!</p>
     //Had this line under login button, took user to register page
 ?>
@@ -130,8 +131,8 @@
 
       <form class="w-full" method="post">
                 <?php
-                    if ($badLogin) {
-                        echo '<span class="text-white bg-red-700 text-center block p-2 rounded-lg mb-2">No login with that username and password combination currently exists.</span>';
+        if ($badLogin) {
+          echo '<span class="text-white bg-red-700 text-center block p-2 rounded-lg mb-2">No login with that email and password combination currently exists.</span>';
                     }
                     if ($archivedAccount) {
                         echo '<span class="text-white bg-red-700 block p-2 rounded-lg mb-2">This account has either been archived or not yet approved by managment. For help, notify <a href="mailto:volunteer@fredspca.org">volunteer@fredspca.org</a>.</span>';
@@ -141,8 +142,8 @@
 		    } 
                 ?>
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2" for="username">Login</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="username" placeholder="Enter your username" required>
+          <label class="block text-gray-700 font-medium mb-2" for="email">Email or username</label>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="email" placeholder="Enter your email (or 'vmsroot')" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>

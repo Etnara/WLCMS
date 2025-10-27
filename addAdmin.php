@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Hash password
         $password_hashed = password_hash($pwd, PASSWORD_BCRYPT);
 
-        // Minimal admin account: status 'active'
-        $status = 'active';
+    // Minimal admin account: status 'admin' and access_level 2 (regular admin)
+    $status = 'Admin';
         $phone = ''; // no phone collected on this form
         $archived = 0;
         $topic_summary = '';
@@ -71,8 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = add_person($newperson);
         if ($result) {
-            // auto-login by storing the person's id
+            // // set access_level=2 in the database for this new admin
+            // $safe_id = mysqli_real_escape_string($con, $id);
+            // $upd = "UPDATE dbpersons SET access_level = 2 WHERE id = '" . $safe_id . "'";
+            // @mysqli_query($con, $upd);
+
+            // auto-login by storing the person's id and access level
             $_SESSION['_id'] = $id;
+            $_SESSION['access_level'] = 2;
             session_regenerate_id(true);
             $success = true;
         } else {

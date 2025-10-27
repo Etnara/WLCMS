@@ -129,6 +129,24 @@ function retrieve_person($id) { // (username! not id)
     return $thePerson;
 }
 
+/**
+ * Retrieve a person by email (case-insensitive).
+ */
+function retrieve_person_by_email($email) {
+    $con = connect();
+    $email_esc = mysqli_real_escape_string($con, $email);
+    $query = "SELECT * FROM dbpersons WHERE LOWER(email) = '" . strtolower($email_esc) . "'";
+    $result = mysqli_query($con, $query);
+    if ($result == null || mysqli_num_rows($result) !== 1) {
+        mysqli_close($con);
+        return false;
+    }
+    $result_row = mysqli_fetch_assoc($result);
+    $thePerson = make_a_person($result_row);
+    mysqli_close($con);
+    return $thePerson;
+}
+
 // Name is first concat with last name. Example 'James Jones'
 // return array of Persons.
 function retrieve_persons_by_name ($name) {
@@ -646,7 +664,8 @@ function make_a_person($result_row) {
         $result_row['email'],
         $result_row['archived'],
         isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
-        $result_row['organization']
+        $result_row['organization'],
+        isset($result_row['access_level']) ? $result_row['access_level'] : null
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],
