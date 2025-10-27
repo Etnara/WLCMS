@@ -18,7 +18,7 @@
   <p class="text-white bg-green-700 text-center p-2 rounded-lg mb-4">
     Admin account created! You’re signed in.
   </p>
-  <div class="text-center"><a class="blue-button" href="groupManagement.php">Go to Admin Area</a></div>
+  <div class="text-center"><a class="blue-button" href="index.php"></a></div>
 <?php else: ?>
   <?php if ($error): ?><p class="error-block"><?=htmlspecialchars($error)?></p><?php endif; ?>
   <form method="post">
