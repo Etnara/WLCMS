@@ -11,6 +11,7 @@ if ($accessLevel < 2) { header('Location: index.php'); die(); }
 <html lang="en">
 <head>
   <link href="css/normal_tw.css" rel="stylesheet">
+    <title>Invite Admin</title>
   <?php $tailwind_mode = true; require_once('header.php'); ?>
 </head>
 <body>
