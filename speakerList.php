@@ -14,7 +14,7 @@ $persons = [];
 $where = 'where ';
 include_once('database/dbinfo.php');
 $con = connect();
-$query = "SELECT * FROM dbpersons";
+$query = "SELECT * FROM dbpersons WHERE status='Accepted Speaker'";
 $people = mysqli_query($con, $query);
 $query = "SELECT count(*) FROM dbpersons WHERE status='Pending Speaker'";
 $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];

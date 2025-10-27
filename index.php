@@ -7,7 +7,7 @@
     session_start();
 
     date_default_timezone_set("America/New_York");
-    
+
     if (!isset($_SESSION['access_level']) || $_SESSION['access_level'] < 1) {
         if (isset($_SESSION['change-password'])) {
             header('Location: changePassword.php');
@@ -16,7 +16,7 @@
         }
         die();
     }
-        
+
     include_once('database/dbPersons.php');
     include_once('domain/Person.php');
     // Get date?
@@ -465,13 +465,13 @@
         <div class="small-text">Let’s have some fun!</div>
         <div class="large-text">Event Management</div>
 <button class="circle-arrow-button" onclick="window.location.href='eventManagement.php'">
-    <span class="button-text"><?php 
+    <span class="button-text"><?php
                         require_once('database/dbEvents.php');
                         require_once('database/dbPersons.php');
                         $pendingsignups = all_pending_names();
                         if (sizeof($pendingsignups) > 0) {
                             echo '<span class="colored-box">' . sizeof($pendingsignups) . '</span>';
-                        }   
+                        }
                     ?> Sign-Ups </span>
     <div class="circle">&gt;</div>
 </button>
@@ -503,6 +503,15 @@
             <button class="arrow-button">→</button>
         </div>
 
+        <div class="content-box-test" onclick="window.location.href='speakerList.php'">
+            <div class="icon-overlay">
+                <img style="border-radius: 5px;" src="images/group.svg" alt="Speakers Icon">
+            </div>
+            <img class="background-image" src="images/blank-white-background.jpg" />
+            <div class="large-text-sub">Speaker List</div>
+            <div class="graph-text">View all speakers</div>
+            <button class="arrow-button">→</button>
+        </div>
 
         <div class="content-box-test" onclick="window.location.href='resources.php'">
             <div class="icon-overlay">
@@ -526,7 +535,7 @@
                 <img style="border-radius: 5px;" src="images/<?php echo $inboxIcon ?>" alt="Notification Icon">
             </div>
             <img class="background-image" src="images/blank-white-background.jpg" />
-            <div class="large-text-sub">System Notifications<?php 
+            <div class="large-text-sub">System Notifications<?php
                         if ($unreadMessageCount > 0) {
                             echo ' (' . $unreadMessageCount . ')';
                         }
@@ -566,7 +575,7 @@
     </div>
 
 
-    
+
 
 <div style="width: 90%; /* Stops before page ends */
             height: 100%;
