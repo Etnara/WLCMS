@@ -807,7 +807,7 @@ if (date("H:i:s") > "18:19:59") {
         <span>Create Admin Invite</span>
       </div>
     </a>
-    <a href="addAdmin.php" style="text-decoration: none;">
+    <a href="AdminForm.php" style="text-decoration: none;">
       <div class="in-nav">
         <img src="images/person-search.svg">
         <span>Admin Invitation</span>
