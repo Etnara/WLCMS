@@ -99,7 +99,7 @@ require_once('header.php');
                     <tbody>
                         
 <?php
-
+$pageNum = isset($_GET['page']) ? intval($_GET['page']) : 0;
 function display ($pageNum){
         $offset = $pageNum * 10;
         $limit = 10;
@@ -118,8 +118,15 @@ function display ($pageNum){
         }
         return true;
     }
+
                         $date = date('Y-m-d');
-                        $checkedInPersons = display(0);
+                        //$checkedInPersons = display(0);
+                        
+                        $checkedInPersons = display($pageNum);
+                        $nextExists = pageExists($pageNum+1);
+                        $prevExists = pageExists($pageNum-1);
+                        
+                        
                         //$all_volunteers = getall_volunteers();
 
                         /*foreach ($all_volunteers as $volunteer) {
@@ -184,10 +191,26 @@ function display ($pageNum){
             <div class="flex justify-center mt-6">
                 <a href="index.php" class="return-button">Return to Dashboard</a>
             </div>
+    
     <div class="info-section">
         <div class="blue-div"></div>
         <p class="info-text">
+            <!--
             Use this tool to filter and search for volunteers or participants by their role, event involvement, and status. Mailing list support is built in.
+                    -->
+           <?php if ($prevExists): ?>
+    <a href="?page=<?= $pageNum - 1 ?>" class="page-link">Previous</a>
+<?php else: ?>
+    <span class="disabled-link"><- Previous</span>
+<?php endif; ?>
+
+        <span class="current-page">|Page <?= $pageNum + 1 ?>|</span>
+
+        <?php if ($nextExists): ?>
+            <a href="?page=<?= $pageNum + 1 ?>" class="page-link">Next</a>
+        <?php else: ?>
+    <span class="disabled-link">Next -></span>
+<?php endif; ?>
         </p>
     </div>
     </main>
