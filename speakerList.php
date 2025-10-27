@@ -13,16 +13,33 @@ if (isset($_SESSION['_id'])) {
 $persons = [];
 $where = 'where ';
 include_once('database/dbinfo.php');
-$con=connect();
-$query = "
-SELECT *
-FROM dbpersons
-";
+$con = connect();
+$query = "SELECT * FROM dbpersons";
 $people = mysqli_query($con, $query);
+$query = "SELECT count(*) FROM dbpersons WHERE status='Pending Speaker'";
+$numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
 ?>
 
 <!DOCTYPE html>
 <html>
+    <style>
+    .notification {
+        position: absolute;
+        right: 13rem;
+        top: -0.5rem;
+        min-width: 1.6em;
+        height: 1.6em;
+        border-radius: 0.8em;
+        border: 0.05em solid white;
+        background-color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8em;
+        color: white;
+    }
+    </style>
+
     <head>
         <title>Speaker List</title>
         <link rel="icon" type="image/x-icon" href="images/real-women-logo.webp">
@@ -44,8 +61,18 @@ $people = mysqli_query($con, $query);
         <main>
             <div class="main-content-box w-[80%] p-8 mb-8">
                 <div class="flex justify-center mb-8">
-                    <a href="index.php" class="return-button" style="margin-right: 2rem;">Return to Dashboard</a>
-                    <a href="checkedInVolunteers.php" class="return-button">View Pending Speakers</a>
+                    <a href="index.php" class="return-button">Return to Dashboard</a>
+
+                    <?php
+                    if ($numPending) {
+                        echo "
+                            <a href=\"checkedInVolunteers.php\" class=\"return-button\" style=\"position: relative; margin-left: 2rem;\">
+                            View Pending Speakers
+                            <div class=\"notification\" role=\"status\">{$numPending}</div>
+                            </a>
+                        ";
+                    }
+                    ?>
                 </div>
 
            
