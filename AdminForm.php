@@ -53,7 +53,7 @@ require_once('header.php');
         }   
 
 </style>
-<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
+<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXE -->
 
 </div>
 </main>
