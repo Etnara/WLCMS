@@ -79,12 +79,13 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
             <form id="person-search" class="space-y-6" method="get">
                 <div>
                 <label for="name">Search Speaker Name. Search Nothing to Return to Full List</label>
-                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the user's first and/or last name.">
-            </div>
-            
-            <div class="text-center pt-4">
+                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the speaker's name">
                 <input type="submit" value="Search" class="blue-button">
             </div>
+            
+            <!--<div class="text-center pt-4">
+                <input type="submit" value="Search" class="blue-button">
+            </div> -->
                 <?php
                     if (isset($_GET['name'])){
                         require_once('include/input-validation.php');
@@ -93,7 +94,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         $name = $args['name'];
                         
                         if (!$name) {
-                            echo '<div class="error-block">Returned to Full List.</div>';
+                            //echo '<div class="error-block">Returned to Full List.</div>';
                         } else if ($name) {
                             echo "<h3>Search Results</h3>";
                              $persons = find_users($name);
