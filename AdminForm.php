@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <link href="css/normal_tw.css" rel="stylesheet">
+    <title>Admin Form</title>
   <?php $tailwind_mode = true; require_once('header.php'); ?>
   <style>
     .form-row{margin-bottom:.75rem}

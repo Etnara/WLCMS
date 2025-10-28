@@ -805,13 +805,13 @@ if (date("H:i:s") > "18:19:59") {
     <a href="createAdminInvite.php" style="text-decoration: none;">
       <div class="in-nav">
         <img src="images/plus-solid.svg">
-        <span>Create Admin Invite</span>
+        <span>Send Admin Invite</span>
       </div>
     </a>
     <a href="AdminForm.php" style="text-decoration: none;">
       <div class="in-nav">
         <img src="images/person-search.svg">
-        <span>Admin Invitation</span>
+        <span>Admin Form</span>
       </div>
     </a>
   </div>
