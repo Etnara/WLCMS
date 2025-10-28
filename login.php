@@ -142,8 +142,8 @@
 		    } 
                 ?>
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2" for="email">Email or username</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="email" placeholder="Enter your email (or 'vmsroot')" required>
+          <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="email" placeholder="Enter your email" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
