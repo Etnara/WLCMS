@@ -96,7 +96,7 @@ require_once('header.php');
         <div class="text-center mt-6">
           <div style="display: flex; justify-content: center; gap: 15px;">
             <button type="button" class="blue-button">Send Invite</button>
-            <a href="http://localhost/GitHub/WLCMS/AdminForm.php" class="blue-button">Or go to the form</a>
+            <a href="http://localhost/GitHub/WLCMS/AdminForm.php" class="blue-button">Go to Form</a>
           </div>
         </div>
 
