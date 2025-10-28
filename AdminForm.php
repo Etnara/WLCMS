@@ -1,4 +1,3 @@
-
 <?php require_once 'addAdmin.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
