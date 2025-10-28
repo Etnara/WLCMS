@@ -984,9 +984,9 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
         return $thePersons;
     }
 
-    function find_users($name, $id, $phone, $zip, $type, $status) {
+    function find_users($name, /*$id, $phone, $zip, $type, $status*/) {
     $where = 'where ';
-    if (!($name || $id || $phone || $zip || $type || $status)) {  // ✅ Fixed parentheses
+    if (!($name /*|| $id || $phone || $zip || $type || $status*/)) {  // ✅ Fixed parentheses
         return [];
     }
         $first = true;
@@ -1001,7 +1001,7 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
             }
             $first = false;
         }
-        if ($id) {
+        /*if ($id) {
             if (!$first) {
                 $where .= ' and ';
             }
@@ -1035,7 +1035,8 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
             }
             $where .= "status='$status'";
             $first = false;
-        }
+        }*/
+            
         //if ($photo_release) {
           //  if (!$first) {
             //    $where .= ' and ';
