@@ -60,7 +60,7 @@ http://localhost/GitHub/WLCMS/addAdmin.php
   </div>
 
   <div class="text-center mt-6">
-    <a href="groupManagement.php" class="return-button">Back to Group Management</a>
+    <a href="index.php" class="return-button">Back to Dashboard</a>
   </div>
 </main>
 </body>
