@@ -45,8 +45,8 @@
     $safeID = mysqli_real_escape_string($con, $id);
 
     $update = mysqli_query($con, "
-        UPDATE dbpersons 
-        SET total_hours_volunteered = $newHours 
+        UPDATE dbpersons
+        SET total_hours_volunteered = $newHours
         WHERE id = '$safeID'
     ");
 
@@ -66,7 +66,7 @@
     } else {
         echo '<div class="absolute left-[40%] top-[15%] z-50 bg-red-800 p-4 text-white rounded-xl text-xl">Failed to update hours.</div>';
     }
-  
+
 }
 
     $viewingOwnProfile = $id == $userID;
@@ -80,6 +80,12 @@
         }
       }
     }
+    $con = connect();
+    $person = mysqli_query($con, "
+        SELECT *
+        FROM dbpersons
+        WHERE id = '$id'
+    ")->fetch_assoc();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,8 +113,8 @@
 
     window.onload = () => showSection('personal');
   </script>
-  <?php 
-    require_once('header.php'); 
+  <?php
+    require_once('header.php');
     require_once('include/output.php');
   ?>
 
@@ -149,19 +155,21 @@
 	</div>
         <div class="space-y-2 divide-y divide-gray-300">
           <div class="flex justify-between py-2">
-            <span class="font-medium">Joined</span><span>Jan 2022</span>
+            <?php echo '<span class="font-medium">Organisation</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
           </div>
           <div class="flex justify-between py-2">
-            <span class="font-medium">Role</span><span>Volunteer</span>
+            <?php echo"<span class=\"font-medium\">Email</span><span>{$person["email"]}</span>"; ?>
+          </div>
+          <div class="flex justify-between py-2">
+            <?php
+            require_once('include/output.php');
+            echo "<span class=\"font-medium\">Phone Number</span><span>" . formatPhoneNumber($person['phone1']) . "</span>";
+            ?>
           </div>
           <div class="flex justify-between py-2">
             <span class="font-medium">Status</span><span><?php
-                 if ($user->get_archived()) {
-                     echo 'Archived';
-                 } else {
-                     echo 'Active';
-                 }
-                     ?></span>
+                echo $person["status"];
+          ?></span>
           </div>
         </div>
       </div>
@@ -170,23 +178,13 @@
 
 <!-- -->
             <?php if ($id != $userID): ?>
-                <?php if (($accessLevel == 2 && $user->get_access_level() == 1) || $accessLevel >= 3): ?>
-        <button onclick="window.location.href='resetPassword.php?id=<?php echo htmlspecialchars($_GET['id']) ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Change Password</button>
-                <?php endif ?>
-        <button onclick="window.location.href='volunteerReport.php?id=<?php echo htmlspecialchars($_GET['id']) ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">View Volunteer Hours</button>
-        <button onclick="window.location.href='personSearch.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to User Search</button>
-            <?php else: ?>
-        <button onclick="window.location.href='changePassword.php';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Change Password</button>
-        <button onclick="window.location.href='volunteerReport.php';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">View Volunteer Hours</button>
-        <button onclick="window.location.href='milestonePoints.php';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">View Milestones &amp Points</button>
+        <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Speaker List</button>
             <?php endif ?>
 <!-- -->
 
 
 <?php if ($accessLevel < 2) : ?>
         <button onclick="window.location.href='volunteerReport.php?id=<?php echo $user->get_id() ?>';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">My Volunteering Report</button>
-<?php else : ?>
-        <button onclick="window.location.href='volunteerReport.php?id=<?php echo $user->get_id() ?>';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer"><?php echo $user->get_first_name() ?> <?php echo $user->get_last_name() ?>'s Volunteering Report</button>
 <?php endif ?>
         <button onclick="window.location.href='index.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Dashboard</button>
       </div>
@@ -243,7 +241,7 @@
           <span class="block text-sm font-medium text-blue-900">Emergency Contact Phone Number</span>
           <p class="text-gray-900 font-medium text-xl"><a href="tel:<?php echo $user->get_emergency_contact_phone() ?>"><?php echo formatPhoneNumber($user->get_emergency_contact_phone()) ?></a> (<?php echo ucfirst($user->get_emergency_contact_phone_type()) ?>)</p>
         </div>
- 
+
       </div>
 
       <!-- Volunteer Section -->
@@ -272,7 +270,7 @@
             <form method="POST" class="mt-2 flex items-center gap-4">
               <input type="number" step="0.01" name="new_hours" min="0" value="<?= htmlspecialchars($user->get_total_hours_volunteered()) ?>" required
                     class="border border-gray-300 px-3 py-1 rounded-md w-32 shadow-sm">
-            
+
 
               <button type="submit" class="bg-blue-900 text-white px-4 py-1 rounded-md hover:bg-blue-700">
                 Update
@@ -285,7 +283,7 @@
           <?php endif; ?>
         </div>
 
-	      
+
       </div>
     </div>
   </div>
