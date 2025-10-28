@@ -1,3 +1,4 @@
+
 <?php require_once 'addAdmin.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +19,7 @@
   <p class="text-white bg-green-700 text-center p-2 rounded-lg mb-4">
     Admin account created! You’re signed in.
   </p>
-  <div class="text-center"><a class="blue-button" href="index.php"></a></div>
+  <div class="text-center"><a class="blue-button" href="index.php">Go to dashboard</a></div>
 <?php else: ?>
   <?php if ($error): ?><p class="error-block"><?=htmlspecialchars($error)?></p><?php endif; ?>
   <form method="post">
@@ -30,6 +31,29 @@
     <div class="text-center mt-6"><button class="blue-button">Create Admin Account</button></div>
   </form>
 <?php endif; ?>
+<!-- BANDAID FIX FOR HEADER BEING WEIRD -->
+<?php
+$tailwind_mode = true;
+require_once('header.php');
+?>
+<style>
+        .date-box {
+            background: #274471;
+            padding: 7px 30px;
+            border-radius: 50px;
+            box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }   
+        .dropdown {
+            padding-right: 50px;
+        }   
+
+</style>
+<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
+
 </div>
 </main>
 </body>
