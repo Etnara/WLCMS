@@ -7,6 +7,29 @@ $accessLevel = $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
 
 if ($accessLevel < 2) { header('Location: index.php'); die(); }
 ?>
+<!-- BANDAID FIX FOR HEADER BEING WEIRD -->
+<?php
+$tailwind_mode = true;
+require_once('header.php');
+?>
+<style>
+        .date-box {
+            background: #274471;
+            padding: 7px 30px;
+            border-radius: 50px;
+            box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }   
+        .dropdown {
+            padding-right: 50px;
+        }   
+
+</style>
+<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
