@@ -171,9 +171,9 @@ function display ($pageNum){
                                     //added accept and reject buttons w/red exclamation to unapproved speakers
                                     echo "<td>
                                     <div style='display: flex; gap: 8px;'>
-                                            <button type='button' style='background-color: blue; color: white;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: blue; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Accept</button>
-                                            <button type='button' style='background-color: red; color: white;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: red; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Reject</button>";
                                     echo "</td>";
                                     echo "</tr>";
@@ -198,19 +198,19 @@ function display ($pageNum){
             <!--
             Use this tool to filter and search for volunteers or participants by their role, event involvement, and status. Mailing list support is built in.
                     -->
-           <?php if ($prevExists): ?>
-    <a href="?page=<?= $pageNum - 1 ?>" class="page-link">Previous</a>
-<?php else: ?>
-    <span class="disabled-link"><- Previous</span>
-<?php endif; ?>
+            <?php if ($prevExists): ?>
+                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+            <?php else: ?>
+                <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
+            <?php endif; ?>
 
-        <span class="current-page">|Page <?= $pageNum + 1 ?>|</span>
+            <span class="current-page" style="font-weight: bold; color: navy">Page <?= $pageNum + 1 ?></span>
 
-        <?php if ($nextExists): ?>
-            <a href="?page=<?= $pageNum + 1 ?>" class="page-link">Next</a>
-        <?php else: ?>
-    <span class="disabled-link">Next -></span>
-<?php endif; ?>
+                <?php if ($nextExists): ?>
+                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                <?php else: ?>
+                    <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
+            <?php endif; ?>
         </p>
     </div>
     </main>
