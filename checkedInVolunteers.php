@@ -16,7 +16,7 @@ if ($accessLevel < 2) {
 include_once "database/dbPersons.php";
 
 //added
-//$hasUnapproved = count(get_unapproved_speakers()) > 0; // for when speakers have not been approved yet 
+//$hasUnapproved = count(get_unapproved_speakers()) > 0; // for when speakers have not been approved yet
 $hasUnapproved = true; // default testing for when speakers have not been approved yet
 
 include_once "database/dbShifts.php";
@@ -97,7 +97,7 @@ require_once('header.php');
                         </tr>
                     </thead>
                     <tbody>
-                        
+
 <?php
 $pageNum = isset($_GET['page']) ? intval($_GET['page']) : 0;
 function display ($pageNum){
@@ -121,12 +121,12 @@ function display ($pageNum){
 
                         $date = date('Y-m-d');
                         //$checkedInPersons = display(0);
-                        
+
                         $checkedInPersons = display($pageNum);
                         $nextExists = pageExists($pageNum+1);
                         $prevExists = pageExists($pageNum-1);
-                        
-                        
+
+
                         //$all_volunteers = getall_volunteers();
 
                         /*foreach ($all_volunteers as $volunteer) {
@@ -141,11 +141,11 @@ function display ($pageNum){
                                 $check_in_info = get_checkin_info_from_shift_id($shift_id);
                                 $checkedInPersons[] = $check_in_info;
                             } */
-                        
-                        
+
+
                         if (empty($checkedInPersons)) {
                             echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
-                            
+
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
                                 $volunteer = $check_in_info;
@@ -154,10 +154,10 @@ function display ($pageNum){
                                     $lastName = htmlspecialchars((string)($volunteer->get_last_name()));
                                     $fullName = "{$firstName} {$lastName}";
 
-                                    
-                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars((string)($volunteer->get_organization())) 
+
+                                    $organization = method_exists($volunteer, 'get_organization') ? htmlspecialchars((string)($volunteer->get_organization()))
                                         : 'Unknown Org';
-                                    $topics = method_exists($volunteer, 'get_topic_summary') ? htmlspecialchars((string)($volunteer->get_topic_summary())) 
+                                    $topics = method_exists($volunteer, 'get_topic_summary') ? htmlspecialchars((string)($volunteer->get_topic_summary()))
                                             : 'No topics listed';
                                     $isApproved = method_exists($volunteer, 'get_approved') ? $volunteer->get_approved() : false;
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
@@ -191,8 +191,9 @@ function display ($pageNum){
 
             <div class="flex justify-center mt-6">
                 <a href="index.php" class="return-button">Return to Dashboard</a>
+                <a href="speakerList.php" class="return-button" style="margin-left: 2rem;">Return to Speaker List</a>
             </div>
-    
+
     <div class="info-section">
         <div class="blue-div"></div>
         <p class="info-text" style="margin-bottom:3rem">
@@ -312,7 +313,7 @@ function display ($pageNum){
                 document.getElementById('bulk-actions').style.display = anyChecked ? 'flex' : 'none';
             }
         });
-    
+
     //added
     function confirmAction(action, fullName,id) {
     const target = action === 'accept'

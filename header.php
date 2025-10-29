@@ -2,12 +2,12 @@
 <?php
 date_default_timezone_set('America/New_York');
 /*
- * Copyright 2013 by Allen Tucker. 
- * This program is part of RMHP-Homebase, which is free software.  It comes with 
- * absolutely no warranty. You can redistribute and/or modify it under the terms 
+ * Copyright 2013 by Allen Tucker.
+ * This program is part of RMHP-Homebase, which is free software.  It comes with
+ * absolutely no warranty. You can redistribute and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation
  * (see <http://www.gnu.org/licenses/ for more information).
- * 
+ *
 if (date("H:i:s") > "18:19:59") {
 	require_once 'database/dbShifts.php';
 	auto_checkout_missing_shifts();
@@ -15,7 +15,7 @@ if (date("H:i:s") > "18:19:59") {
  */
 
 // check if we are in locked mode, if so,
-// user cannot access anything else without 
+// user cannot access anything else without
 // logging back in
 ?>
 <head>
@@ -463,7 +463,7 @@ if (date("H:i:s") > "18:19:59") {
             filter: none;
             background-color: #cbe0ff;
         }
-       
+
         .icon .dropdown{
             top: 130%;
             left: -415%;
@@ -575,7 +575,7 @@ if (date("H:i:s") > "18:19:59") {
 
         <!-- Right Section: Date & Icon -->
         <div class="right-section">
-            <div class="date-box">'); echo date('l, F j, Y'); echo('</div>           
+            <div class="date-box">'); echo date('l, F j, Y'); echo('</div>
         </div>
     </div>');
 
@@ -621,7 +621,7 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['milestonepoints.php'] = 1;
         $permission_array['selectvotm.php'] = 1;
         $permission_array['volunteerviewgroupmembers.php'] = 1;
-        
+
         //pages only managers can view
         $permission_array['viewallevents.php'] = 0;
         $permission_array['personsearch.php'] = 2;
@@ -652,7 +652,7 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['vieweventsignups.php'] = 2;
         $permission_array['viewalleventsignups.php'] = 2;
         $permission_array['resources.php'] = 2;
-        $permission_array['uploadresources.php'] = 2;        
+        $permission_array['uploadresources.php'] = 2;
         $permission_array['deleteresources.php'] = 2;
         $permission_array['creategroup.php'] = 2;
         $permission_array['showgroups.php'] = 2;
@@ -680,10 +680,9 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['requestfailed.php'] = 1;
         $permission_array['settimes.php'] = 1;
         $permission_array['eventfailurebaddeparturetime.php'] = 1;
-        $permission_array['createadmininvite.php'] = 3; 
-        $permission_array['accept_invite.php']     = 2; 
-
-        
+        $permission_array['createadmininvite.php'] = 3;
+        $permission_array['accept_invite.php']     = 2;
+        $permission_array['speakerlist.php'] = 2;
         // LOWERCASE
 
 
@@ -691,7 +690,7 @@ if (date("H:i:s") > "18:19:59") {
         //Check if they're at a valid page for their access level.
         $current_page = strtolower(substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '/') + 1));
         $current_page = substr($current_page, strpos($current_page,"/"));
-        
+
         $required_level = $permission_array[$current_page] ?? 0;
         if ($required_level > $_SESSION['access_level']) {
             //in this case, the user doesn't have permission to view this page.
@@ -704,7 +703,7 @@ if (date("H:i:s") > "18:19:59") {
         //This line gives us the path to the html pages in question, useful if the server isn't installed @ root.
         $path = strrev(substr(strrev($_SERVER['SCRIPT_NAME']), strpos(strrev($_SERVER['SCRIPT_NAME']), '/')));
 		$venues = array("portland"=>"RMH Portland");
-        
+
         //they're logged in and session variables are set.
 	//
 	// SUPER ADMIN ONLY HEADER
@@ -719,7 +718,7 @@ if (date("H:i:s") > "18:19:59") {
             <div class="nav-links">
                 <div class="nav-item">Volunteers
                     <div class="dropdown">
-            
+
 <a href="VolunteerRegister.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/add-person.svg">
@@ -739,7 +738,7 @@ if (date("H:i:s") > "18:19:59") {
     <span>Review Interested Speakers</span>
   </div>
 </a>
-			
+
                     </div>
                 </div>
                 <div class="nav-item">Events
@@ -798,8 +797,8 @@ if (date("H:i:s") > "18:19:59") {
 
                     </div>
                </div>
-            
- 
+
+
                <div class="nav-item">Admin
   <div class="dropdown">
     <a href="createAdminInvite.php" style="text-decoration: none;">
@@ -816,14 +815,14 @@ if (date("H:i:s") > "18:19:59") {
     </a>
   </div>
 </div>
- 
+
 
 
 
             </div>
         </div>
 
-            
+
 
 
         <!-- Right Section: Date & Icon -->
@@ -864,7 +863,7 @@ if (date("H:i:s") > "18:19:59") {
             <div class="nav-links">
                 <div class="nav-item">Volunteers
                     <div class="dropdown">
-            
+
 <a href="VolunteerRegister.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/add-person.svg">
@@ -884,7 +883,7 @@ if (date("H:i:s") > "18:19:59") {
     <span>View Check-Ins</span>
   </div>
 </a>
-			
+
                     </div>
                 </div>
                 <div class="nav-item">Events
@@ -943,14 +942,14 @@ if (date("H:i:s") > "18:19:59") {
 
                     </div>
                </div>
-            
- 
+
+
 
 
             </div>
         </div>
 
-            
+
 
 
         <!-- Right Section: Date & Icon -->
@@ -1105,7 +1104,7 @@ document.querySelectorAll(".icon-butt").forEach(el => {
     el.style.display = "none";
   } else {
     el.style.display = "";
-  } 
+  }
 });
 
 
