@@ -164,7 +164,7 @@ function display ($pageNum){
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
                                     echo "<tr>";
-                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
+                                    //echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
                                     echo "<td>{$firstName}</td>";
                                     echo "<td>{$lastName}</td>";
                                     //added
