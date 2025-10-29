@@ -57,12 +57,12 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                 <h1>Speaker List</h1>
             </div>
         </header>
-        <!-- Link to Review Speakers Page -->
         <main>
             <div class="main-content-box w-[80%] p-8 mb-8">
                 <div class="flex justify-center mb-8">
                     <a href="index.php" class="return-button">Return to Dashboard</a>
 
+                    <!-- Link to Review Speakers Page -->
                     <?php
                     if ($numPending) {
                         echo "
@@ -75,14 +75,14 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                     ?>
                 </div>
 
-           
+
             <form id="person-search" class="space-y-6" method="get">
-                <div>
-                <label for="name">Search Speaker Name. Search Nothing to Return to Full List</label>
+            <div>
+                <label for="name">Search Speakers by name</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the speaker's name">
                 <input type="submit" value="Search" class="blue-button">
             </div>
-            
+
             <!--<div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div> -->
@@ -92,7 +92,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         require_once('database/dbPersons.php');
                         $args = sanitize($_GET);
                         $name = $args['name'];
-                        
+
                         if (!$name) {
                             //echo '<div class="error-block">Returned to Full List.</div>';
                         } else if ($name) {
@@ -115,20 +115,22 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         </thead>
                         <tbody>';
                      foreach ($persons as $person) {
+                        /* TODO: Add this function to person class or raw dog it */
+                        /* <td>' . $person->get_notes() . '</td> */
                         echo '
                             <tr>
                             <td>' . $person->get_first_name() . " " . $person->get_last_name() . '</td>
                             <td><a href="mailto:' . $person->get_email() . '" class="text-blue-700 underline">' . $person->get_email() . '</a></td>
                             <td><a href="tel:' . $person->get_phone1() . '" class="text-blue-700 underline">' . formatPhoneNumber($person->get_phone1()) . '</a></td>
                             <td>' . '</td>
-                            
-                            <td><<a href="viewProfile.php?id=' . $person->get_id() . '" class="text-blue-700 underline">Edit</a></td>
+                            <td>' . "" . '</td>
+                            <td><a href="viewProfile.php?id=' . $person->get_id() . '" class="text-blue-700 underline">Edit</a></td>
                             </tr>';
                      }echo '
                             </tbody>
                             </table>
                         </div>';
-    
+
                     }elseif($name==''){
 
                     }else {
@@ -149,7 +151,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             </tr>
                         </thead>
                         <tbody>';
-                            
+
                             require_once('include/output.php');
                             foreach ($people as $person) {
                             echo '
@@ -162,14 +164,14 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <td><a href="viewProfile.php?id=' . $person["id"] . '" class="text-blue-700 underline">Edit</a></td>
                             </tr>';
                             }echo'
-                            
+
                         </tbody>
                     </table>
                 </div>';
                     }
 
                 ?>
-            
+
             </form>
 
             <!--
@@ -186,7 +188,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                         removed php start tag here!!
                             require_once('include/output.php');
                             foreach ($people as $person) {
@@ -204,7 +206,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         </tbody>
                     </table>
                 </div>
-                        -->      
+                        -->
             </div>
         </main>
     </body>
