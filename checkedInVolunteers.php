@@ -88,7 +88,7 @@ require_once('header.php');
                 <table>
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>
+                            <!--<th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>-->
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Organization</th>
@@ -99,25 +99,53 @@ require_once('header.php');
                     <tbody>
                         
 <?php
-                        $date = date('Y-m-d');
-                        $checkedInPersons = [];
-                        $all_volunteers = getall_volunteers();
+$pageNum = isset($_GET['page']) ? intval($_GET['page']) : 0;
+function display ($pageNum){
+        $offset = $pageNum * 10;
+        $limit = 10;
+        $result = getPendingSpeakers($offset,$limit);
+        if ($result['message']=="success"){
+            return $result['array'];
+        }
+        //echo "<script>console.error(" . json_encode($result['message']) . ");</script>";
+        return $result['array'];
+    }
 
-                        foreach ($all_volunteers as $volunteer) {
+    function pageExists($pageNum){
+        $arr = display($pageNum);
+        if (empty($arr)){
+            return false;
+        }
+        return true;
+    }
+
+                        $date = date('Y-m-d');
+                        //$checkedInPersons = display(0);
+                        
+                        $checkedInPersons = display($pageNum);
+                        $nextExists = pageExists($pageNum+1);
+                        $prevExists = pageExists($pageNum-1);
+                        
+                        
+                        //$all_volunteers = getall_volunteers();
+
+                        /*foreach ($all_volunteers as $volunteer) {
                             $status = $volunteer->get_status();
                             if ($status=="Pending Speaker"){
                                 $checkedInPersons[] = $volunteer;
                             }
+                        } */
                             /*$volunteer_id = $volunteer->get_id();
                             $shift_id = get_open_shift($volunteer_id, $date);
                             if ($shift_id) {
                                 $check_in_info = get_checkin_info_from_shift_id($shift_id);
                                 $checkedInPersons[] = $check_in_info;
                             } */
-                        }
+                        
                         
                         if (empty($checkedInPersons)) {
                             echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
+                            
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
                                 $volunteer = $check_in_info;
@@ -135,7 +163,7 @@ require_once('header.php');
                                     $isRejected = function_exists('is_person_rejected') ? is_person_rejected($volunteer->get_id()) : false;
 
                                     echo "<tr>";
-                                    echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
+                                    //echo "<td><input type='checkbox' class='rowCheckbox w-4 h-4' value='{$fullName}'></td>";
                                     echo "<td>{$firstName}</td>";
                                     echo "<td>{$lastName}</td>";
                                     //added
@@ -143,9 +171,10 @@ require_once('header.php');
                                     echo "<td>{$topics}</td>";
                                     //added accept and reject buttons w/red exclamation to unapproved speakers
                                     echo "<td>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                    <div style='display: flex; gap: 8px;'>
+                                            <button type='button' style='background-color: #294877; color: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 1rem;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Accept</button>
-                                            <button type='button' class='blue-button' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: #db393b; color: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 1rem;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Reject</button>";
                                     echo "</td>";
                                     echo "</tr>";
@@ -163,10 +192,26 @@ require_once('header.php');
             <div class="flex justify-center mt-6">
                 <a href="index.php" class="return-button">Return to Dashboard</a>
             </div>
+    
     <div class="info-section">
         <div class="blue-div"></div>
-        <p class="info-text">
+        <p class="info-text" style="margin-bottom:3rem">
+            <!--
             Use this tool to filter and search for volunteers or participants by their role, event involvement, and status. Mailing list support is built in.
+                    -->
+            <?php if ($prevExists): ?>
+                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+            <?php else: ?>
+                <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
+            <?php endif; ?>
+
+            <span class="current-page" style="font-weight: bold; color: navy">Page <?= $pageNum + 1 ?></span>
+
+                <?php if ($nextExists): ?>
+                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                <?php else: ?>
+                    <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
+            <?php endif; ?>
         </p>
     </div>
     </main>
