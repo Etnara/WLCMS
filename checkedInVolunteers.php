@@ -88,7 +88,8 @@ require_once('header.php');
                 <table>
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>
+                            <!--<th><input type="checkbox" id="selectAll" class="w-4 h-4"></th>-->
+                            <th><div class="w-4 h-4"></div></th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Organization</th>
