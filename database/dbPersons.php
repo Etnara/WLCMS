@@ -51,6 +51,14 @@ function add_person($person) {
                 "null"
             :   "'{$organization_val}'";
 
+        // prevent duplicate email across speakers/admins
+        $dup_email_query = "SELECT 1 FROM dbpersons WHERE email = '" . $email_val . "' LIMIT 1";
+        $dup_email_result = mysqli_query($con, $dup_email_query);
+        if (mysqli_num_rows($dup_email_result) > 0) {
+            mysqli_close($con);
+            return false;
+        }
+
         // Note: ordering of columns must match the ordering of values below
         $insert_query = "INSERT INTO dbpersons (
             id, password, first_name, last_name, phone1, email, status, topic_summary, archived, organization
@@ -79,6 +87,7 @@ function add_person($person) {
     mysqli_close($con);
     return false;
 }
+
 
 function add_hours_to_person($person_id, $hours) {
     $con = connect();
