@@ -67,14 +67,17 @@ require_once('header.php');
       background: #1f365a;
     }
     .return-button {
-      display: inline-block;
-      padding: 10px 18px;
-      border-radius: 8px;
-      background: #274471;
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-gray-500);
+    padding-inline: calc(var(--spacing) * 6);
+    padding-block: calc(var(--spacing) * 2);
+    color: var(--color-white);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-600);
+      }
     }
+  }
   </style>
 </head>
 <body>
