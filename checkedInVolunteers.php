@@ -145,6 +145,7 @@ function display ($pageNum){
                         
                         if (empty($checkedInPersons)) {
                             echo "<tr><td colspan='6' class='text-center py-6'>No speakers awaiting review.</td></tr>";
+                            
                         } else {
                             foreach ($checkedInPersons as $check_in_info) {
                                 $volunteer = $check_in_info;
@@ -171,9 +172,9 @@ function display ($pageNum){
                                     //added accept and reject buttons w/red exclamation to unapproved speakers
                                     echo "<td>
                                     <div style='display: flex; gap: 8px;'>
-                                            <button type='button' style='background-color: blue; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: #294877; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Accept</button>
-                                            <button type='button' style='background-color: red; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: #db393b; color: white; border: 2px solid black; padding: 8px 16px; border-radius: 4px;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Reject</button>";
                                     echo "</td>";
                                     echo "</tr>";
