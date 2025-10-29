@@ -26,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter your first and last name.';
     } elseif (!validateEmail($email)) {
         $error = 'Please enter a valid email address.';
+    } elseif (($res = mysqli_query($con, "SELECT 1 FROM dbpersons WHERE email = '" . mysqli_real_escape_string($con, strtolower($email)) . "' LIMIT 1"))
+        && mysqli_num_rows($res) > 0) {
+        $error = 'That email is already in use.';
     } elseif ($pwd === '' || $pwd2 === '') {
         $error = 'Please enter and confirm a password.';
     } elseif ($pwd !== $pwd2) {
@@ -48,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Hash password
         $password_hashed = password_hash($pwd, PASSWORD_BCRYPT);
 
-    // Minimal admin account: status 'admin' and access_level 2 (regular admin)
-    $status = 'Admin';
+        // Minimal admin account: status 'admin' and access_level 2 (regular admin)
+        $status = 'Admin';
         $phone = ''; // no phone collected on this form
         $archived = 0;
         $topic_summary = '';
@@ -86,3 +89,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+?>
