@@ -718,7 +718,7 @@ if (date("H:i:s") > "18:19:59") {
 <a href="VolunteerRegister.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/add-person.svg">
-    <span style="font-size:24px;">Register Volunteer</span>
+    <span style="font-size:24px;">Speaker Interest Form</span>
   </div>
 </a>
 
@@ -731,7 +731,7 @@ if (date("H:i:s") > "18:19:59") {
 <a href="checkedInVolunteers.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/clipboard-regular.svg">
-    <span>View Check-Ins</span>
+    <span>Review Interested Speakers</span>
   </div>
 </a>
 			
