@@ -62,12 +62,12 @@
                     <table class="general">
                         <thead>
                             <tr>
-                                <th style="width:1px">Training Required</th>
-                                <th>Title</th>
+                                <th style="width:1px">Title</th>
                                 <th>Event Type</th>
+                                <th>Description</th>
                                 <th style="width:1px">Date</th>
-                                <th style="width:1px">Capacity</th>
-                                <th style="width:1px"></th>
+                                
+                            
                             </tr>
                         </thead>
                         <tbody class="standout">
@@ -99,29 +99,28 @@
 
                                     echo "
                                     <tr data-event-id='$eventID'>
-                                        <td>$training_level_required</td>
                                         <td><a href='event.php?id=$eventID'>$title</a></td>
                                         <td>$type</td>
-                                        <td>$date</td>
-                                        <td>$numSignups / $capacity</td>";
+                                        <td>$description</td>
+                                        <td>$date</td>";
+                                        
                                     
                                     // Display Sign Up or Cancel button based on user sign-up status
-                                        if ($user_training_level != $training_level_required) {
-                                            echo "
-                                            <td><a class='button sign-up' style='background-color:#c73d06'>Training Not Met!</a></td>";
-                                        }
-                                        elseif ($isSignedUp) {
-                                            echo "
-                                            <td>
-                                            <a class='button cancel' href='viewMyUpcomingEvents.php' >Already Signed Up!</a>
-                                            </td>";
-                                        } elseif($numSignups >= $capacity) {
-                                            echo "
-                                                <td><a class='button sign-up' style='background-color:#c73d06'>Sign Ups Closed!</a></td>";
-                                        } else {
-                                        echo "<td><a class='button sign-up' href='eventSignUp.php?event_name=" . urlencode($title) . "&restricted=" . urlencode($restricted_signup) . "'>Sign Up</a></td>";
-                                        }
-                                    echo "</tr>";
+                                       // if ($user_training_level != $training_level_required) {
+                                        //    echo "
+                                       //     <td><a class='button sign-up' style='background-color:#c73d06'>Training Not Met!</a></td>";
+                                       // }
+                                       // elseif ($isSignedUp) {
+                                       //     echo "
+                                       //     <td>
+                                      //      <a class='button cancel' href='viewMyUpcomingEvents.php' >Already Signed Up!</a>
+                                       //     </td>";
+                                       // } elseif($numSignups >= $capacity) {
+                                       //     echo "
+                                       // } else {
+                                       // echo "<td><a class='button sign-up' href='eventSignUp.php?event_name=" . urlencode($title) . "&restricted=" . urlencode($restricted_signup) . "'>Sign Up</a></td>";
+                                      //  }
+                                   // echo "</tr>";
 
                                     /*echo "
                                         <td>
@@ -180,10 +179,10 @@
                     <table class="general">
                         <thead>
                             <tr>
-                                <th style="width:1px">Restricted</th>
-                                <th>Title</th>
+                                <th style="width:1px">Title</th>
+                               <th style="width:1px">Event Type</th>
+                               <th style="width:1px">Description</th>
                                 <th style="width:1px">Date</th>
-                                <th style="width:1px">Capacity</th>
                                 <th style="width:1px"></th>
                             </tr>
                         </thead>
@@ -202,6 +201,7 @@
                                     $capacity = $event->getCapacity();
                                     $completed = $event->getCompleted();
                                     $restricted_signup = $event->getRestrictedSignup();
+                                    $type = $event->getEventType();
                                     if ($restricted_signup == 0) {
                                         $restricted_signup = "No";
                                     } else {
@@ -214,11 +214,11 @@
                                     //if($accessLevel < 3) {
                                         echo "
                                         <tr data-event-id='$eventID'>
-                                            <td>$restricted_signup</td>
                                             <td><a href='event.php?id=$eventID'>$title</a></td>
+                                            <td>$type</td>
+                                            <td>$description</td>
                                             <td>$date</td>
-                                            <td>$numSignups / $capacity</td>
-                                            <td><a class='button sign-up' href='eventSignUp.php?event_name=" . urlencode($title) . '&restricted=' . urlencode($restricted_signup) . "'>Sign Up</a></td>
+                                            
                                         </tr>";
                                     //} else {
                                         /*echo "
