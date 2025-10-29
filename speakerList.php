@@ -80,14 +80,21 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
             <div>
                 <label for="name">Search Speakers by name</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the speaker's name">
-                <input type="submit" value="Search" class="blue-button">
+                        <table style="border: 0">
+                            <td>
+                                <input type="submit" name="submit" value="Search" class="blue-button">
+                            </td>
+                            <td>
+                                <input type="submit" name="submit" value="Clear" class="blue-button">
+                            </td>
+                        </table>
             </div>
 
             <!--<div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div> -->
                 <?php
-                    if (isset($_GET['name'])){
+                    if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear") && isset($_GET['name']) ) {
                         require_once('include/input-validation.php');
                         require_once('database/dbPersons.php');
                         $args = sanitize($_GET);
@@ -137,7 +144,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         echo '<div class="error-block">Your search returned no results.</div>';
                     }
 
-                    }if (!isset($_GET['name']) || $_GET['name']==''){
+                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "Clear") || !isset($_GET['name']) || $_GET['name']=='' ) {
                        echo' <div class="overflow-x-auto">
                     <table>
                         <thead class="bg-blue-400">
