@@ -195,7 +195,7 @@ function display ($pageNum){
     
     <div class="info-section">
         <div class="blue-div"></div>
-        <p class="info-text">
+        <p class="info-text" style="margin-bottom:3rem">
             <!--
             Use this tool to filter and search for volunteers or participants by their role, event involvement, and status. Mailing list support is built in.
                     -->
