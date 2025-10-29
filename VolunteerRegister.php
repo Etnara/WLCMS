@@ -34,8 +34,10 @@ require_once('header.php');
 <?php
     require_once('domain/Person.php');
     require_once('database/dbPersons.php');
+    require_once('database/dbinfo.php');
 
     $showPopup = false;
+    $popupText = "";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ignoreList = array('password', 'password-reenter');
@@ -56,10 +58,16 @@ require_once('header.php');
         $first_name = $args['first_name'];
         $last_name = $args['last_name'];
 
-        $email = strtolower($args['email']);
+        // email validation and duplicate check
+        $email = strtolower(trim($args['email']));
         if (!validateEmail($email)) {
-            echo "<p>Invalid email.</p>";
             $errors = true;
+            echo "<p>Invalid email.</p>";
+        } elseif (($con = connect()) 
+            && ($res = mysqli_query($con, "SELECT 1 FROM dbpersons WHERE email = '" . mysqli_real_escape_string($con, $email) . "' LIMIT 1"))
+            && mysqli_num_rows($res) > 0) {
+            $showPopup = true;
+            $popupText = "That email is already registered.";
         }
 
         $phone1 = validateAndFilterPhoneNumber($args['phone']);
@@ -123,27 +131,30 @@ require_once('header.php');
 
         if ($errors) {
             echo '<p class="error">Your form submission contained unexpected or invalid input.</p>';
-            die();
-        }
-
-        $newperson = new Person(
-            $id, $password,
-            $first_name, $last_name,
-            $status,
-            $phone1, $email,
-            $archived,
-            $topic_summary,
-            $organization
-        );
-
-        $result = add_person($newperson);
-        if (!$result) {
-            $showPopup = true;
+        } elseif ($showPopup) {
+            require_once('registrationForm.php');
         } else {
-            echo '<script>document.location = "login.php?registerSuccess";</script>';
-            $title = $id . " has been added as a speaker";
-            $body = "New volunteer account has been created";
-            system_message_all_admins($title, $body);
+            $newperson = new Person(
+                $id, $password,
+                $first_name, $last_name,
+                $status,
+                $phone1, $email,
+                $archived,
+                $topic_summary,
+                $organization
+            );
+
+            $result = add_person($newperson);
+            if (!$result) {
+                $showPopup = true;
+                $popupText = "That email is already taken.";
+                require_once('registrationForm.php');
+            } else {
+                echo '<script>document.location = "login.php?registerSuccess";</script>';
+                $title = $id . " has been added as a speaker";
+                $body = "New volunteer account has been created";
+                system_message_all_admins($title, $body);
+            }
         }
     } else {
         require_once('registrationForm.php');
@@ -152,7 +163,7 @@ require_once('header.php');
 
 <?php if ($showPopup): ?>
 <div id="popupMessage" class="absolute left-[40%] top-[20%] z-50 bg-red-800 p-4 text-white rounded-xl text-xl shadow-lg">
-    That username is already taken.
+    That email is already taken.
 </div>
 <?php endif; ?>
 

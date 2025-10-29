@@ -51,6 +51,14 @@ function add_person($person) {
                 "null"
             :   "'{$organization_val}'";
 
+        // prevent duplicate email across speakers/admins
+        $dup_email_query = "SELECT 1 FROM dbpersons WHERE email = '" . $email_val . "' LIMIT 1";
+        $dup_email_result = mysqli_query($con, $dup_email_query);
+        if (mysqli_num_rows($dup_email_result) > 0) {
+            mysqli_close($con);
+            return false;
+        }
+
         // Note: ordering of columns must match the ordering of values below
         $insert_query = "INSERT INTO dbpersons (
             id, password, first_name, last_name, phone1, email, status, topic_summary, archived, organization
@@ -79,6 +87,7 @@ function add_person($person) {
     mysqli_close($con);
     return false;
 }
+
 
 function add_hours_to_person($person_id, $hours) {
     $con = connect();
@@ -126,6 +135,24 @@ function retrieve_person($id) { // (username! not id)
     // var_dump($result_row);
     $thePerson = make_a_person($result_row);
 //    mysqli_close($con);
+    return $thePerson;
+}
+
+/**
+ * Retrieve a person by email (case-insensitive).
+ */
+function retrieve_person_by_email($email) {
+    $con = connect();
+    $email_esc = mysqli_real_escape_string($con, $email);
+    $query = "SELECT * FROM dbpersons WHERE LOWER(email) = '" . strtolower($email_esc) . "'";
+    $result = mysqli_query($con, $query);
+    if ($result == null || mysqli_num_rows($result) !== 1) {
+        mysqli_close($con);
+        return false;
+    }
+    $result_row = mysqli_fetch_assoc($result);
+    $thePerson = make_a_person($result_row);
+    mysqli_close($con);
     return $thePerson;
 }
 
@@ -328,12 +355,11 @@ function archive_volunteer($volunteer_id) {
         // Commit transaction
         mysqli_commit($con);
 
-        //echo "Volunteer successfully archived.";
+        echo "Speaker successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
-        //echo "Error archiving volunteer: " . $e->getMessage();
-        return ['success' => false, 'message' => $e->getMessage()];
+        echo "Error archiving speaker: " . $e->getMessage();
     }
 
     // Close connection
@@ -679,7 +705,8 @@ function make_a_person($result_row) {
         $result_row['email'],
         $result_row['archived'],
         isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
-        $result_row['organization']
+        $result_row['organization'],
+        isset($result_row['access_level']) ? $result_row['access_level'] : null
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
         //$result_row['training_complete'],

@@ -59,7 +59,17 @@ class Person {
 		//$this->event_topic = $event_topic;
 		$this->topic_summary = $topic_summary;
 
-		$this->access_level = ($id === 'vmsroot') ? 3 : 1;
+		// Determine access level:
+		// - vmsroot has full access (3)
+		// - status 'admin' maps to access level 2 (regular admin)
+		// - otherwise default to standard user (1)
+		if ($id === 'vmsroot') {
+			$this->access_level = 3;
+		} elseif (isset($status) && strtolower($status) === 'admin') {
+			$this->access_level = 2;
+		} else {
+			$this->access_level = 1;
+		}
 	}
 
 	// Getters used by dbPersons and other code
