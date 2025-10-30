@@ -74,6 +74,8 @@ table, td, tr, th, form, fieldset, em, button, a {
     --button-font-color: #ffffff;
     --button-padding: 0.5rem 1.5rem;
     --button-border-radius: 0.25rem;
+    --button-bg-color: #C13C33;
+    --button-hover-color: #D9463D;
 
     --standard-border: 1px solid #333333;
     --light-border: 1px solid var(--shadow-and-border-color);
@@ -290,6 +292,15 @@ label {
 }
 
 /* Login Form */
+.btn-primary {
+  background-color: var(--button-bg-color);
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--button-hover-color);
+}
+
 main.login > form {
     display: flex;
     justify-content: center;

@@ -79,6 +79,7 @@
     <head>
 	<script src="https://cdn.tailwindcss.com"></script>
     	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link  href="css/base.css">
 	<style>
 /* Found this on codepen :D */
 .wave {
@@ -101,7 +102,7 @@
 }
 * { font-family: Quicksand, sans-serif; }
 	</style>
-        <title>Fredericksburg SPCA Volunteer System | Log In</title>
+        <title>Women's Leadership Colloquium | Log In</title>
     </head>
     <body>
 <div class="h-screen flex">
@@ -153,7 +154,7 @@
           <a href="#" class="text-blue-500 text-sm hover:underline">Forgot password?</a>
           <a href="https://www.umw.edu/lcpw/coffee-talk/" class="text-blue-500 text-sm hover:underline">Women's Leadership Colloquium</a>
         </div>
-        <button class="cursor-pointer w-full bg-[#345284] hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
+        <button class="cursor-pointer w-full btn-primary">Login</button>
       </form>
 
       <!-- Divider -->
