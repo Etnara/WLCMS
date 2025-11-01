@@ -39,8 +39,11 @@ function sendFormConfirmation($to, $first_name, $last_name) {
     global $mail;
     $mail->addAddress($to, $first_name . ' '. $last_name);
     $mail->Subject = "Interest Form Recieved";
-    $mail->Body = "Thank you for your interest in speaking for the Women's Leadership Colloquium's Coffee Talks! 
-    We will let you know when your form has been reviewed and accepted.";
+
+    $mail->Body =   
+"Thank you for your interest in speaking for the Women's Leadership Colloquium's Coffee Talks! 
+We will let you know when your form has been reviewed and accepted.";
+
     $mail->send();
 }
 
@@ -48,8 +51,11 @@ function sendFormApproved($to, $first_name, $last_name) {
     global $mail;
     $mail->addAddress($to, $first_name . " " . $last_name);
     $mail->Subject = "Interest Form Approved";
-    $mail->Body = "Your interest form for the Women's Leadership Coloquium Coffee Talks has been approved!
-    You will be notified when you have been scheduled for a Coffee Talk.";
+
+    $mail->Body = 
+"Your interest form for the Women's Leadership Coloquium Coffee Talks has been approved!
+You will be notified when you have been scheduled for a Coffee Talk.";
+
     $mail->send();
 }
 
@@ -57,8 +63,24 @@ function sendScheduledSpeaker($to, $first_name, $last_name, $date) {
     global $mail;
     $mail->addAddress($to, $first_name. " " . $last_name);
     $mail->Subject = "Scheduled for Coffee Talk on **Date**";
-    $mail->Body = "You have been scheduled to speak on " . $date . " 
-    Please email **real email** if you need to rechedule or cancel.";
+
+    $mail->Body = 
+"You have been scheduled to speak on " . $date . "
+Please email bwilli22@umw.edu if you need to rechedule or cancel.";
+
+    $mail->send();
+}
+
+function sendAdminInvite($to){
+    global $mail;
+    $mail->addAddress($to);
+    $mail->Subject = "Invite for Admin Account Creation";
+
+    $mail->Body = 
+"Welcome to the Coffee Talks Management System!
+    
+Please create your admin account here: http://localhost/wlcms-2/AdminForm.php";
+
     $mail->send();
 }
 
