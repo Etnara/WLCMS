@@ -1001,7 +1001,14 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
         mysqli_close($connection);
         return $thePersons;
     }
-
+    function find_all_speakers(){
+        $query = "Select first_name, last_name, email from dbpersons where status='Accepted Speaker'";
+        $connection = connect();
+        $result = mysqli_query($connection, $query);
+        $connection->close();
+        return $result->fetch_all();
+    }
+    
     function find_users($name, /*$id, $phone, $zip, $type, $status*/) {
     $where = "where status='Accepted Speaker' AND ";
     if (!($name /*|| $id || $phone || $zip || $type || $status*/)) {  // ✅ Fixed parentheses

@@ -1,4 +1,5 @@
 <?php
+include_once("sendEmail.php");
 session_cache_expire(30);
 session_start();
 
