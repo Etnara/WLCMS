@@ -6,6 +6,41 @@ $loggedIn = isset($_SESSION['_id']);
 $accessLevel = $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
 
 if ($accessLevel < 2) { header('Location: index.php'); die(); }
+
+// email sending helper file:
+require_once __DIR__ . '/sendInvite.php';
+
+$statusMsg = null;
+$statusErr = null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $statusErr = 'Please enter a valid email address.';
+    } else {
+        try {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://';
+            $base   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            $inviteLink = $scheme . $_SERVER['HTTP_HOST'] . $base . '/AdminForm.php';
+
+            $subject = 'WLCMS Admin Invitation';
+            $body = "Hello,
+
+You have been invited to create an admin account for the Women's Leadership Colloquium Management System (WLCMS).
+
+To get started, please visit:
+$inviteLink
+
+If you did not expect this email, you can kindly ignore it.";
+
+            sendInvite($email, $subject, $body);
+            $statusMsg = 'Invite sent to ' . htmlspecialchars($email) . '.';
+        } catch (Throwable $e) {
+            $statusErr = 'There was a problem sending the invite.';
+        }
+    }
+}
 ?>
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
@@ -78,6 +113,14 @@ require_once('header.php');
       }
     }
   }
+  .status-ok {
+    background: #e6ffed; color: #056b34; border: 1px solid #9de7b4;
+    padding: 10px 12px; border-radius: 8px; margin-bottom: 12px;
+  }
+  .status-err {
+    background: #ffecec; color: #8a1f11; border: 1px solid #f5a3a3;
+    padding: 10px 12px; border-radius: 8px; margin-bottom: 12px;
+  }
   </style>
 </head>
 <body>
@@ -89,16 +132,25 @@ require_once('header.php');
 
 <main>
   <div class="main-content-box w-full max-w-3xl p-8">
+
+    <!-- show status messages -->
+    <?php if (!empty($statusMsg)): ?>
+      <div class="status-ok"><?php echo $statusMsg; ?></div>
+    <?php endif; ?>
+    <?php if (!empty($statusErr)): ?>
+      <div class="status-err"><?php echo $statusErr; ?></div>
+    <?php endif; ?>
+
     <form method="post" action="#">
       <div class="form-row">
         <label>Admin Email</label>
         <input type="email" name="email" placeholder="name@example.com" required>
       </div>
 
-      <!-- SEND BUTTON NOT IMPLEMENTED YET!!!!! WILL NOT WORK!!!! -->
+      <!-- SEND BUTTON IMPLEMENTED IT WORKS!!! after you download stuff composer/mailer sigh -->
         <div class="text-center mt-6">
           <div style="display: flex; justify-content: center; gap: 15px;">
-            <button type="button" class="blue-button">Send Invite</button>
+            <button type="submit" class="blue-button">Send Invite</button>
             <a href="AdminForm.php" class="blue-button">Go to Form</a>
           </div>
         </div>
