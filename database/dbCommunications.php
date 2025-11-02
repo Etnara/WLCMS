@@ -26,11 +26,11 @@ function getAllCommunicationsFor($speaker_email){
 }
 
 function addCommunication($admin_email, $speaker_email){
-    $date = date('y-m-d');
-    $query = 'Select * from dbcommunications where admin_email = ? and speaker_email = ? and date = ' . $date;
+    $date = date('Y-m-d');
+    $query = 'SELECT * FROM dbcommunications WHERE admin_email = ? AND speaker_email = ? AND date = ?';
     $conn = connect();
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('s', $admin_email, $speaker_email);
+    $stmt->bind_param('sss', $admin_email, $speaker_email, $date);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -40,9 +40,9 @@ function addCommunication($admin_email, $speaker_email){
         return;
     }
 
-    $query = 'insert into dbcommunications values(?, ?, '. $date . ')';
+    $query = 'INSERT INTO dbcommunications(admin_email, speaker_email, date) VALUES (?, ?, ?)';
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('s', $admin_email, $speaker_email);
+    $stmt->bind_param('sss', $admin_email, $speaker_email, $date);
     $stmt->execute();
 
     $stmt->close();

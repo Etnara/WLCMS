@@ -256,32 +256,35 @@ $person = mysqli_query($con, "
             </div>
 
             <!-- Past Communications Section -->
-             <div id="communications" class="profile-section space-y-4 hidden">
-
-                <h1 class="mb-4" style="text-align: center">
-                    History of all contact with <?php echo $user->get_first_name() . ' ' . $user->get_last_name() ?>
-                </h1>
-                <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
-                    <tr>
-                        <th>Date</th>
-                        <th>Contacted By</th>
-                    </tr>
+             <div id="communications" class="profile-section space-y-4 hidden">             
                     <?php
                         $communications = getAllCommunicationsFor($user->get_email());
-                        //$communications = getAllCommunicationsFor('speaker_test');  
                         if(count($communications)==0){
-                            echo 'There has been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name();                        
+                            echo '<p style="text-align: center";>
+                            There have been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
+                            '</p>';                       
                         }else{
+                            echo
+                            '<h1 class="mb-4" style="text-align: center">
+                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name(). 
+                            '</h1>
+                            <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Contacted By</th>
+                                </tr>';
                             foreach($communications as $communication){
+                                
                                 $admin = retrieve_person_by_email( $communication[0]);
                                 echo '<tr>' . 
                                 '<td>' . $communication[1] . '</td>' . 
                                 '<td>' . $admin->get_first_name() . ' ' . $admin->get_last_name() . '</td>'
                                 . '</tr>';
                             }
+                            echo '</table>';
                         }                
                     ?>
-                </table>
+                
              </div>
 
         </div>
