@@ -79,7 +79,6 @@
     <head>
 	<script src="https://cdn.tailwindcss.com"></script>
     	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
-      <link  href="css/base.css">
 	<style>
 /* Found this on codepen :D */
 .wave {
@@ -154,7 +153,7 @@
           <a href="#" class="text-blue-500 text-sm hover:underline">Forgot password?</a>
           <a href="https://www.umw.edu/lcpw/coffee-talk/" class="text-blue-500 text-sm hover:underline">Women's Leadership Colloquium</a>
         </div>
-        <button class="cursor-pointer w-full btn-primary">Login</button>
+        <button class="cursor-pointer w-full bg-[#C43C4A] hover:bg-red-500 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
       </form>
 
       <!-- Divider -->
@@ -166,8 +165,8 @@
 
       <!-- Sign Up Section -->
       <p class="text-center text-gray-700">
-        Don’t have an account?
-        <a href="VolunteerRegister.php" class="text-blue-500 font-semibold hover:underline">Want to be a speaker?</a>
+        Want to be a speaker?
+        <a href="VolunteerRegister.php" class="text-red-800 font-semibold hover:underline">Sign up here!</a>
       </p>
 
     </div>
