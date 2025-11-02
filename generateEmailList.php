@@ -102,7 +102,7 @@ require_once('header.php');
                 $role = $args['role'];
                 $status = $args['status'];
                 $event = $args['event'];
-                $group_name = $args['group'];
+                $topic_name = $args['topic'];
 
 
                 /*if (!valueConstrainedTo($role, ['admin', 'participant', 'superadmin', 'volunteer', '']) ||
@@ -220,17 +220,18 @@ require_once('header.php');
                     } */?>
                 </select>
             </div>
-            
+            -->
             <div>
-                <label for="group">Group</label>
-                <select id="group" name="group">
+                <label for="topic">Group</label>
+                <select id="topic" name="topic">
                     <option value="">Any</option>
-                    <?php /*foreach ($groups as $group) {
-                        echo '<option value="' . $group->get_group_name() . '">' . htmlspecialchars($group->get_group_name()) . '</option>';
-                    } */?>
+                    <?php 
+                        foreach ($topics as $topic) {
+                        echo '<option value="' . $group . '">' . htmlspecialchars($topic) . '</option>';
+                    } ?>
                 </select>
             </div>
-                -->
+                
             <div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div>
