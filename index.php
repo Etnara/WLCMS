@@ -51,7 +51,7 @@
 
         .full-width-bar {
             width: 100%;
-            background: #294877;
+            background: #C43C4A;
             padding: 17px 5%;
             display: flex;
             flex-wrap: wrap;
@@ -68,10 +68,34 @@
             gap: 20px;
         }
 
-        .content-box {
-            flex: 1 1 280px; /* Adjusts width dynamically */
+        .content-box img,
+        .content-box-sub img {
+            width: 100%;           /* fills container width */
+            aspect-ratio: 3 / 2;   /* consistent shape across browsers */
+            object-fit: cover;     /* crops instead of squishing */
+            background: white;
+            border-radius: 5px;
+            border-bottom-right-radius: 50px;
+            border: 0.5px solid #828282;
+            display: block;        /* prevents baseline alignment issues */
+        }
+
+        .content-box,
+        .content-box-sub {
+            flex: 1 1 300px;
             max-width: 375px;
-            padding: 10px 2px; /* Altered padding to make closer */
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        /*
+        .content-box {
+            flex: 1 1 280px; 
+            max-width: 375px;
+            padding: 10px 2px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -80,9 +104,9 @@
         }
 
         .content-box-sub {
-            flex: 1 1 300px; /* Adjusts width dynamically */
+            flex: 1 1 300px; 
             max-width: 470px;
-            padding: 10px 10px; /* Altered padding to make closer */
+            padding: 10px 10px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -91,8 +115,9 @@
         }
 
         .content-box img {
-            width: 100%;
-            height: auto;
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
             background: white;
             border-radius: 5px;
             border-bottom-right-radius: 50px;
@@ -100,21 +125,22 @@
         }
 
         .content-box-sub img {
-            width: 105%;
-            height: auto;
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
             background: white;
             border-radius: 5px;
             border-bottom-right-radius: 50px;
             border: 1px solid #828282;
         }
-
+*/
         .small-text {
             position: absolute;
             top: 20px;
             left: 30px;
             font-size: 14px;
             font-weight: 700;
-            color: #294877;
+            color: #C43C4A;
         }
 
         .large-text {
@@ -144,7 +170,7 @@
             left: 10%;
             font-size: 14px;
             font-weight: 700;
-            color: #294877;
+            color: #C43C4A;
             max-width: 90%;
         }
 
@@ -172,7 +198,7 @@
 
         /* Logo */
         .logo-container {
-            background: #294877;
+            background: #C43C4A;
             padding: 10px 20px;
             border-radius: 50px;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -206,7 +232,7 @@
         }
 
         .date-box {
-            background: #274471;
+            background: #C43C4A;
             padding: 10px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -259,7 +285,7 @@
     .circle {
         width: 30px;
         height: 30px;
-        background-color: #294877; /* Blue color */
+        background-color: #800000; /* Red color */
         color: white;
         border-radius: 50%;
         display: flex;
@@ -274,7 +300,7 @@
     }
 .colored-box {
     display: inline-block; /* Ensures it wraps tightly around the text */
-    background-color: #294877; /* Change to any color */
+    background-color: #C43C4A; /* Change to any color */
     color: white; /* Text color */
     padding: 1px 5px; /* Adds space inside the box */
     border-radius: 5px; /* Optional: Rounds the corners */
@@ -285,7 +311,7 @@
         /* Footer */
         .footer {
             width: 100%;
-            background: #294877;
+            background: #C43C4A;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -301,7 +327,8 @@
         }
 
         .footer-logo {
-            width: 150px; /* Adjust logo size */
+            width: 200px; /* Adjust logo size */
+            height: auto;
             margin-bottom: 15px;
         }
 
@@ -439,9 +466,9 @@
 
     <div class="full-width-bar">
     <div class="content-box">
-        <img src="images/VolM.png" />
-        <div class="small-text">Make a difference.</div>
-        <div class="large-text">Volunteer Management</div>
+        <img src="images/speakers1.png"/>
+        <div class="small-text">Register and Review Speakers.</div>
+        <div class="large-text">Speaker Management</div>
 <button class="circle-arrow-button" onclick="window.location.href='volunteerManagement.php'">
     <span class="button-text">Go</span>
     <div class="circle">&gt;</div>
@@ -461,7 +488,7 @@
     </div>
 
     <div class="content-box">
-        <img src="images/EvM.png" />
+        <img src="images/events1.jpg" />
         <div class="small-text">Let’s have some fun!</div>
         <div class="large-text">Event Management</div>
 <button class="circle-arrow-button" onclick="window.location.href='eventManagement.php'">
@@ -478,10 +505,10 @@
     </div>
 
     <div class="content-box">
-        <img src="images/GrM.png" />
+        <img src="images/admin1.webp" />
         <div class="small-text">Our team makes this all possible.</div>
-        <div class="large-text">Group Management</div>
-<button class="circle-arrow-button" onclick="window.location.href='groupManagement.php'">
+        <div class="large-text">Admin Management</div>
+<button class="circle-arrow-button" onclick="window.location.href='AdminForm.php'">
     <span class="button-text">Go</span>
     <div class="circle">&gt;</div>
 </button>
@@ -512,7 +539,7 @@
             <div class="graph-text">View all speakers</div>
             <button class="arrow-button">→</button>
         </div>
-
+<!--
         <div class="content-box-test" onclick="window.location.href='resources.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/file-regular.svg" alt="Document Icon">
@@ -522,6 +549,8 @@
             <div class="graph-text">Resources for volunteers.</div>
             <button class="arrow-button">→</button>
         </div>
+                    -->
+        
                 <?php
                     require_once('database/dbMessages.php');
                     $unreadMessageCount = get_user_unread_count($person->get_id());
@@ -530,6 +559,7 @@
                         $inboxIcon = 'inbox-unread.svg';
                     }
                 ?>
+         <!--       
         <div class="content-box-test" onclick="window.location.href='inbox.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/<?php echo $inboxIcon ?>" alt="Notification Icon">
@@ -543,7 +573,8 @@
             <div class="graph-text">Stay up to date.</div>
             <button class="arrow-button">→</button>
         </div>
-
+                    -->
+        <!--
         <div class="content-box-test" onclick="window.location.href='generateReport.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/clipboard-regular.svg" alt="Report Icon">
@@ -553,6 +584,7 @@
             <div class="graph-text">From this quarter or annual.</div>
             <button class="arrow-button">→</button>
         </div>
+                    -->
     <div class="content-box-test" onclick="window.location.href='generateEmailList.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/clipboard-regular.svg" alt="Report Icon">
@@ -562,7 +594,7 @@
             <div class="graph-text">Volunteer Emails</div>
             <button class="arrow-button">→</button>
         </div>
-
+<!--
         <div class="content-box-test" onclick="window.location.href='viewDiscussions.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/clipboard-regular.svg" alt="Report Icon">
@@ -573,7 +605,7 @@
             <button class="arrow-button">→</button>
         </div>
     </div>
-
+                    -->
 
 
 
@@ -589,16 +621,19 @@
     <footer class="footer" style="margin-top: 100px;">
         <!-- Left Side: Logo & Socials -->
         <div class="footer-left">
-            <img src="images/actual_log.png" alt="Logo" class="footer-logo">
+            <img src="images/real-women-logo.webp" alt="Logo" class="footer-logo">
+            <!--
             <div class="social-icons">
                 <a href="#"><i class="fab fa-facebook"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
                 <a href="#"><i class="fab fa-instagram"></i></a>
                 <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
+                    -->
         </div>
 
         <!-- Right Side: Page Links -->
+         <!--
         <div class="footer-right">
             <div class="footer-section">
                 <div class="footer-topic">Connect</div>
@@ -612,6 +647,7 @@
                 <a href="tel:5408981500">540-898-1500 (ext 117)</a>
             </div>
         </div>
+                    -->
     </footer>
     <p>_</p>
 
