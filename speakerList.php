@@ -13,11 +13,13 @@ if (isset($_SESSION['_id'])) {
 $persons = [];
 $where = 'where ';
 include_once('database/dbinfo.php');
+include_once('database/dbPersons.php');
 $con = connect();
 $query = "SELECT * FROM dbpersons WHERE status='Accepted Speaker'";
 $people = mysqli_query($con, $query);
 $query = "SELECT count(*) FROM dbpersons WHERE status='Pending Speaker'";
 $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
+$admin = retrieve_person($_SESSION['_id']);
 ?>
 
 <!DOCTYPE html>
@@ -97,6 +99,8 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                     if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear") && isset($_GET['name']) ) {
                         require_once('include/input-validation.php');
                         require_once('database/dbPersons.php');
+                        require_once('database/dbCommunications.php');
+
                         $args = sanitize($_GET);
                         $name = $args['name'];
 
@@ -160,11 +164,16 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         <tbody>';
 
                             require_once('include/output.php');
+                            //$admin = retrieve_person($_SESSION['_id']);
                             foreach ($people as $person) {
                             echo '
                             <tr>
                             <td>' . $person["first_name"] . " " . $person["last_name"] . '</td>
-                            <td><a href="mailto:' . $person["email"] . '" class="text-blue-700 underline">' . $person["email"] . '</a></td>
+                            <td><a href="mailto:' . $person["email"] . '" 
+               class="text-blue-700 underline" 
+               onclick="addNewCommunication(\'' . $admin->get_email() . '\', \'' . $person["email"] . '\'); return false;">
+               ' . $person["email"] . '
+            </a></td>
                             <td><a href="tel:' . $person["phone1"] . '" class="text-blue-700 underline">' . formatPhoneNumber($person["phone1"]) . '</a></td>
                             <td>' . '</td>
                             <td>' . $person["notes"] . '</td>
@@ -216,6 +225,17 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         -->
             </div>
         </main>
+        <script> 
+    function addNewCommunication(admin_email, speaker_email) {
+  if (confirm(`Are you sure you want to email ${speaker_email}?`)) {
+    window.location.href =
+      'addCommunication.php?admin_email=' +
+      encodeURIComponent(admin_email) +
+      '&speaker_email=' +
+      encodeURIComponent(speaker_email);
+  }
+}
+</script>
     </body>
 </html>
 
