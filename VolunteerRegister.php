@@ -147,7 +147,7 @@ require_once('header.php');
             $result = add_person($newperson);
             if (!$result) {
                 $showPopup = true;
-                $popupText = "That username is already taken.";
+                $popupText = "That email is already taken.";
                 require_once('registrationForm.php');
             } else {
                 echo '<script>document.location = "login.php?registerSuccess";</script>';
@@ -163,7 +163,7 @@ require_once('header.php');
 
 <?php if ($showPopup): ?>
 <div id="popupMessage" class="absolute left-[40%] top-[20%] z-50 bg-red-800 p-4 text-white rounded-xl text-xl shadow-lg">
-    That username is already taken.
+    That email is already taken.
 </div>
 <?php endif; ?>
 
