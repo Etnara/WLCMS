@@ -152,6 +152,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Contact</th>
                                 <th>Topics</th>
                                 <th>Notes</th>
                                 <th></th>
@@ -166,6 +167,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <td>' . $person["first_name"] . " " . $person["last_name"] . '</td>
                             <td><a href="mailto:' . $person["email"] . '" class="text-blue-700 underline">' . $person["email"] . '</a></td>
                             <td><a href="tel:' . $person["phone1"] . '" class="text-blue-700 underline">' . formatPhoneNumber($person["phone1"]) . '</a></td>
+                            <td>' . '</td>
                             <td>' . '</td>
                             <td>' . $person["notes"] . '</td>
                             <td><a href="viewProfile.php?id=' . $person["id"] . '" class="text-blue-700 underline">Edit</a></td>
