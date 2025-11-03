@@ -119,9 +119,34 @@
                 <select id="speaker" name="speaker">
                   <option value="null">None</option>
                   <?php
+                    $sortBy = "name";
+                    if ($sortBy === "name") {
+                        usort($people, function($a, $b) {
+                        $nameA = strtolower($a['last_name'] . ' ' . $a['first_name']);
+                        $nameB = strtolower($b['last_name'] . ' ' . $b['first_name']);
+                    return strcmp($nameA, $nameB);
+                        });
+                    } elseif ($sortBy === "topic") {
+                        usort($people, function($a, $b) {
+                        $topicA = strtolower($a['topic_summary']);
+                        $topicB = strtolower($b['topic_summary']);
+                        $topicCompare = strcmp($topicA, $topicB);
+                        if ($topicCompare !== 0) {
+                            return $topicCompare;
+                    }
+                    // uses name if topics are the same
+                    $nameA = strtolower($a['last_name'] . ' ' . $a['first_name']);
+                    $nameB = strtolower($b['last_name'] . ' ' . $b['first_name']);
+                    return strcmp($nameA, $nameB);
+                     });
+                    }
+
                     foreach ($people as $person) {
-                      $selected = $person['id'] == $event['speaker'] ? "selected" : "";
-                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";
+                      /*$selected = $person['id'] == $event['speaker'] ? "selected" : "";
+                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";*/
+                      $selected = ($person['id'] == $event['speaker'] || $person['id'] == $event['topic_summary']) ? "selected" : "";
+                      //sorts by name and topic
+                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']} - {$person['topic_summary']}</option>\n";
                     }
                   ?>
                 </select>
