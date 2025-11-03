@@ -564,7 +564,7 @@
     border-color: var(--color-gray-300);
   }
   .bg-\[\#345284\] {
-    background-color: #345284;
+    background-color: #800000;
   }
   .bg-blue-400 {
     background-color: var(--color-blue-400);
@@ -1031,7 +1031,7 @@
     z-index: 0;
     height: calc(var(--spacing) * 52);
     width: 100%;
-    background-color: #294877;
+    background-color: #800000;
     background-position: center;
   }
   .center-header {
