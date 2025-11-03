@@ -81,19 +81,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$con = connect();
+
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_topic'])) {
-    var_dump($_POST['delete_topic']);
+    $topic = $_POST['delete_topic'];
+    mysqli_execute_query($con, "
+        DELETE
+        FROM speaker_topics
+        WHERE speaker='$id'
+        AND topic=?
+    ", [$topic]);
 }
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_topic_dropdown'])) {
-    var_dump($_POST['add_topic_dropdown']);
+    $topic = $_POST['add_topic_dropdown'] == 'New' ?
+        $_POST['add_topic_text']
+    :   $_POST['add_topic_dropdown'];
+    if ($topic)
+        mysqli_execute_query($con, "
+            INSERT INTO speaker_topics
+            SELECT '$id', ?
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM speaker_topics
+                WHERE speaker='$id'
+                AND topic=?
+            )
+        ", [$topic, $topic]);
 }
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_notes'])) {
-    var_dump($_POST['update_notes']);
+    $notes = empty($_POST['update_notes']) ?
+        null
+    :   $_POST['update_notes'];
+    mysqli_execute_query($con, "
+        UPDATE dbpersons
+        SET notes=?
+        WHERE id='$id'
+    ", [$notes]);
 }
 
-$con = connect();
 $person = mysqli_query($con, "
     SELECT *
     FROM dbpersons
@@ -291,3 +318,4 @@ $other_topics = mysqli_query($con, "
     </div>
 </body>
 </html>
+
