@@ -80,6 +80,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_topic'])) {
+    var_dump($_POST['delete_topic']);
+}
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_topic_dropdown'])) {
+    var_dump($_POST['add_topic_dropdown']);
+}
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_notes'])) {
+    var_dump($_POST['update_notes']);
+}
+
 $con = connect();
 $person = mysqli_query($con, "
     SELECT *
@@ -220,9 +233,9 @@ $other_topics = mysqli_query($con, "
                     foreach ($speaker_topics as $topic) {
                         echo "
                             <tr>
-                                <form action=\"speakerList.php\" method=\"post\">
+                                <form action=\"viewProfile.php?id={$id}\" method=\"post\">
                                     <td align=\"center\">
-                                        <button type=\"submit\" class=\"link-button\" name=\"removed\" value=\"{$topic['topic']}\" style=\"font-size:1.5rem;\">ⓧ</button>
+                                        <button type=\"submit\" name=\"delete_topic\" value=\"{$topic['topic']}\" style=\"font-size:1.5rem;\">ⓧ</button>
                                     </td>
                                 </form>
                                 <td>{$topic['topic']}</td>
@@ -234,14 +247,16 @@ $other_topics = mysqli_query($con, "
                 </div>
                 <div>
 
+                    <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
+
                         <table style="border: 0">
                         <tr>
                             <td>
-                                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Add Topic</button>
+                                <input type="submit" value="Add Topic" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer"/>
                             </td>
                             <td>
-                                <select id="speaker" name="speaker" style="padding: 1rem; border-radius:1rem">
-                                    <option value="new">New</option>
+                                <select name="add_topic_dropdown" style="padding: 1rem; border-radius:1rem">
+                                    <option value="New">New</option>
                                     <?php
                                     foreach ($other_topics as $topic) {
                                         echo "<option value=\"{$topic['topic']}\">{$topic['topic']}</option>\n";
@@ -250,10 +265,12 @@ $other_topics = mysqli_query($con, "
                                 </select>
                             </td>
                             <td>
-                                <input type="text" id="topic" name="topic" placeholder="Topic" style="background-color: #e9e9ed; border-radius: 1rem; padding: 0.5rem;">
+                                <input type="text" name="add_topic_text" placeholder="Topic" style="background-color: #e9e9ed; border-radius: 1rem; padding: 0.5rem;">
                             </td>
                         </tr>
                         </table>
+
+                    </form>
 
                 </div>
             </div>
@@ -261,8 +278,10 @@ $other_topics = mysqli_query($con, "
             <!-- Notes Section -->
             <div id="contact" class="profile-section space-y-4 hidden">
                 <div>
-                    <textarea id="notes" name="notes" required="" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
-                    <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Save</button>
+                    <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
+                        <textarea name="update_notes" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"><?php echo $person['notes']; ?></textarea>
+                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer"/>
+                    </form>
                 </div>
 
             </div>
