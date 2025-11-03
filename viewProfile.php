@@ -85,7 +85,21 @@ $person = mysqli_query($con, "
     SELECT *
     FROM dbpersons
     WHERE id = '$id'
-    ")->fetch_assoc();
+")->fetch_assoc();
+$speaker_topics = mysqli_query($con, "
+    SELECT topic
+    FROM speaker_topics
+    WHERE speaker = '$id'
+");
+$other_topics = mysqli_query($con, "
+    SELECT distinct(topic)
+    FROM `speaker_topics`
+    WHERE topic NOT IN (
+        SELECT topic
+        FROM speaker_topics
+        WHERE speaker='$id'
+    )
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -202,43 +216,43 @@ $person = mysqli_query($con, "
             <div id="personal" class="profile-section space-y-4">
                 <div>
 <table>
-    <tr>
-        <form action="speakerList.php" method="post">
-            <td align="center">
-                <button type="submit" class="link-button" name="removed" value="{{ show }}" style="font-size:1.5rem;">ⓧ</button>
-            </td>
-        </form>
-        <td>Topic 1</td>
-    </tr>
-    <tr>
-        <form action="speakerList.php" method="post">
-            <td align="center">
-                <button type="submit" class="link-button" name="removed" value="{{ show }}" style="font-size:1.5rem;">ⓧ</button>
-            </td>
-        </form>
-        <td>Topic 2</td>
-    </tr>
+                    <?php
+                    foreach ($speaker_topics as $topic) {
+                        echo "
+                            <tr>
+                                <form action=\"speakerList.php\" method=\"post\">
+                                    <td align=\"center\">
+                                        <button type=\"submit\" class=\"link-button\" name=\"removed\" value=\"{$topic['topic']}\" style=\"font-size:1.5rem;\">ⓧ</button>
+                                    </td>
+                                </form>
+                                <td>{$topic['topic']}</td>
+                            </tr>
+                        ";
+                    }
+                    ?>
 </table>
                 </div>
                 <div>
 
                         <table style="border: 0">
-                            <td>
-                                <select id="speaker" name="speaker" style="padding: 1rem; border-radius:1rem">
-                                    <option value="null">None</option>
-                                    <?php
-                                    echo "<option value=\"topic1\">Topic 1</option>\n";
-                                    echo "<option value=\"topic2\">Topic 2</option>\n";
-                                    /* foreach ($people as $person) { */
-                                    /*   echo "<option value=\"{$person['id']}\">{$person['first_name']} {$person['last_name']}</option>\n"; */
-                                    /* } */
-                                    ?>
-                                    <option value="new">New</option>
-                                </select>
-                            </td>
+                        <tr>
                             <td>
                                 <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Add Topic</button>
                             </td>
+                            <td>
+                                <select id="speaker" name="speaker" style="padding: 1rem; border-radius:1rem">
+                                    <option value="new">New</option>
+                                    <?php
+                                    foreach ($other_topics as $topic) {
+                                        echo "<option value=\"{$topic['topic']}\">{$topic['topic']}</option>\n";
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" id="topic" name="topic" placeholder="Topic" style="background-color: #e9e9ed; border-radius: 1rem; padding: 0.5rem;">
+                            </td>
+                        </tr>
                         </table>
 
                 </div>
