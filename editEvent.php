@@ -117,6 +117,27 @@
                 <input type="text" id="end-time" name="end-time" value="<?php echo time24hto12h($event['endTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 12:00 PM">
                 <label for="name">* Speaker </label>
 
+                <?php
+
+$people = [];
+$result = mysqli_query($con, "SELECT * FROM dbpersons");
+while ($row = mysqli_fetch_assoc($result)) {
+    $people[] = $row;
+}
+
+
+foreach ($people as &$person) {
+    $person_id = $person['id'];
+    $topics_result = mysqli_query($con, "
+        SELECT GROUP_CONCAT(topic SEPARATOR ', ') AS topic_summary
+        FROM speaker_topics
+        WHERE speaker = '$person_id'
+    ");
+    $topics_row = mysqli_fetch_assoc($topics_result);
+    $person['topic_summary'] = $topics_row['topic_summary'] ?? 'No topic';
+}
+unset($person); 
+?>
                 <select id="speaker" name="speaker">
                    
                   <option value="null">None</option>
@@ -135,8 +156,14 @@
                 </select>
                 <script>
                     const select = document.getElementById("speaker");
-                    const options = Array.from(select.options).slice(1); 
-                    options.sort((a, b) => a.text.localeCompare(b.text));
+                    const options = Array.from(select.options).slice(1); // skip "None"
+
+                    options.sort((a, b) => {
+                        const topicA = a.text.split(" - ")[1] || "";
+                        const topicB = b.text.split(" - ")[1] || "";
+                        return topicA.localeCompare(topicB);
+                    });
+
                     options.forEach(option => select.appendChild(option));
                 </script>
 
