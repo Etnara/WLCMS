@@ -163,9 +163,17 @@ $other_topics = mysqli_query($con, "
         const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
         activeTab.classList.add('border-b-4', 'border-blue-900');
         activeTab.classList.remove('hover:border-b-2', 'hover:border-blue-700');
+        localStorage.setItem('activeTab', sectionId);
         }
 
-        window.onload = () => showSection('personal');
+        window.onload = () => {
+            if (document.referrer.includes(window.location.href)) {
+                const activeTab = localStorage.getItem('activeTab');
+                showSection(activeTab ? activeTab : 'personal');
+            } else {
+                showSection('personal'); // Load 'personal' if coming from a different page
+            }
+        };
         </script>
         <?php
         require_once('header.php');
