@@ -75,10 +75,13 @@ function sendAdminInvite($to){
     $mail->addAddress($to);
     $mail->Subject = "Invite for Admin Account Creation";
 
+    $link = $_SERVER['HTTP_REFERER'];
+    $link = substr($link, 0, strrpos($link, "/")) . "/AdminForm.php";
+
     $mail->Body =
 "Welcome to the Coffee Talks Management System!
 
-Please create your admin account here: http://localhost/wlcms-2/AdminForm.php";
+Please create your admin account here: {$link}";
 
     $mail->send();
 }
