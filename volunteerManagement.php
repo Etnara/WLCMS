@@ -26,7 +26,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Volunteer Management Page</title>
+  <title>Speaker Management Page</title>
   <link href="css/management_tw.css" rel="stylesheet">
 
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
@@ -36,7 +36,7 @@ require_once('header.php');
 ?>
 <style>
         .date-box {
-            background: #274471;
+            /* background: #274471; */
             padding: 7px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -67,22 +67,22 @@ require_once('header.php');
       <div class="button-section">
         <button onclick="window.location.href='VolunteerRegister.php';">
 	  <div class="button-left-gray"></div>
-	  <div>Register Volunteer</div>
+	  <div>Register Speaker</div>
 	  <img class="button-icon" src="images/add-person.svg" alt="Person Icon">
         </button>
 
         <button onclick="window.location.href='personSearch.php';">
 	  <div class="button-left-gray"></div>
-	  <div>Search Volunteers</div>
+	  <div>Search Speakers</div>
 	  <img class="button-icon" src="images/person-search.svg" alt="Person Icon">
         </button>
 
 	<button onclick="window.location.href='checkedInVolunteers.php';">
 	  <div class="button-left-gray"></div>
-	  <div>Checked-In Volunteers</div>
+	  <div>Review Interest Forms</div>
 	  <img class="button-icon h-10 w-10 left-5" src="images/clipboard-regular.svg" alt="Person Icon">
         </button>
-
+<!--
 	<button onclick="window.location.href='selectVOTM.php';">
 	  <div class="button-left-gray"></div>
 	  <div>Volunteer of the Month</div>
@@ -94,7 +94,7 @@ require_once('header.php');
 	  <div>Leaderboard</div>
 	  <img class="button-icon h-10 w-10 left-5" src="images/crown.svg.png" alt="Person Icon">
         </button>
-	
+-->
 	<div class="text-center mt-6">
         	<a href="index.php" class="return-button">Return to Dashboard</a>
 	</div>
@@ -103,10 +103,11 @@ require_once('header.php');
 
       <!-- Text Section -->
       <div class="text-section">
-        <h1>Volunteer Management</h1>
+        <h1>Speaker Management</h1>
         <div class="div-blue"></div>
         <p>
-          Welcome to the management hub. Use the controls on the left to manage users, content, access, and view important analytics and logs. Everything you need to control and configure your platform is just a click away.
+          Welcome to the management hub. Use the controls on the left to manage users, content, access, and view important analytics and logs. 
+          Everything you need to control and configure your platform is just a click away.
         </p>
       </div>
 

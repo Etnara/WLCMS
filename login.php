@@ -153,7 +153,7 @@
           <a href="#" class="text-blue-500 text-sm hover:underline">Forgot password?</a>
           <a href="https://www.umw.edu/lcpw/coffee-talk/" class="text-blue-500 text-sm hover:underline">Women's Leadership Colloquium</a>
         </div>
-        <button class="cursor-pointer w-full bg-[#C43C4A] hover:bg-red-500 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
+        <button class="cursor-pointer w-full bg-[#800000] hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
       </form>
 
       <!-- Divider -->

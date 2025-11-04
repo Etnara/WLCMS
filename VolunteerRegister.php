@@ -7,12 +7,13 @@
 <head>
     <?php require_once('database/dbMessages.php'); ?>
     <title>WLCMS | Speaker Interest Form</title>
-    <link href="css/normal_tw.css" rel="stylesheet">
+    
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
 $tailwind_mode = true;
 require_once('header.php');
 ?>
+<link href="css/normal_tw.css" rel="stylesheet">
 <style>
     .date-box {
         background: #800000;
@@ -24,9 +25,15 @@ require_once('header.php');
         font-weight: 700;
         text-align: center;
     }
+    /*
+    .hero-header{
+        background-color: #800000; 
+    }*/
+    
     .dropdown {
         padding-right: 50px;
     }
+    
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 </head>

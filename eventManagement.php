@@ -36,7 +36,7 @@ require_once('header.php');
 ?>
 <style>
         .date-box {
-            background: #274471;
+            /*background: #274471; */
             padding: 7px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -79,13 +79,13 @@ require_once('header.php');
 	  <div>View Events</div>
 	  <img class="button-icon left-4" src="images/new-event.svg" alt="Calendar Icon">
         </button>
-
+<!--
         <button onclick="window.location.href='editHours.php';">
 	  <div class="button-left-gray"></div>
 	  <div>Change Event Hours</div>
 	  <img class="button-icon h-10 w-10 left-5" src="images/list-solid.svg" alt="Calendar Icon">
         </button>
-
+-->
         <button onclick="window.location.href='viewAllEventSignUps.php';">
 	  <div class="button-left-gray"></div>
 	  <div>Pending Sign-Ups <?php 
