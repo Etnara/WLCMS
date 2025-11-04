@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2025 at 04:11 PM
+-- Generation Time: Nov 02, 2025 at 03:06 PM
 -- Server version: 10.11.14-MariaDB
 -- PHP Version: 8.4.13
 
@@ -667,6 +667,18 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `speaker_topics`
+--
+
+DROP TABLE IF EXISTS `speaker_topics`;
+CREATE TABLE `speaker_topics` (
+  `speaker` varchar(256) NOT NULL,
+  `topic` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_groups`
 --
 
@@ -762,6 +774,12 @@ ALTER TABLE `monthly_hours_snapshot`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `speaker_topics`
+--
+ALTER TABLE `speaker_topics`
+  ADD PRIMARY KEY (`speaker`,`topic`);
+
+--
 -- Indexes for table `user_groups`
 --
 ALTER TABLE `user_groups`
@@ -810,6 +828,12 @@ ALTER TABLE `monthly_hours_snapshot`
 --
 ALTER TABLE `dbevents`
   ADD CONSTRAINT `FKspeakerID` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `speaker_topics`
+--
+ALTER TABLE `speaker_topics`
+  ADD CONSTRAINT `speaker_id` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
