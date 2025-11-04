@@ -236,7 +236,7 @@ $other_topics = mysqli_query($con, "
                 </div>
             </div>
             <div class="mt-6 space-y-2">
-                <button onclick="window.location.href='speakerList.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Edit Profile</button>
+                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Edit Profile</button>
 
                 <!-- -->
                 <?php if ($id != $userID): ?>
