@@ -116,40 +116,29 @@
                 <label for="name">End Time </label>
                 <input type="text" id="end-time" name="end-time" value="<?php echo time24hto12h($event['endTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 12:00 PM">
                 <label for="name">* Speaker </label>
+
                 <select id="speaker" name="speaker">
+                   
                   <option value="null">None</option>
                   <?php
-                    $sortBy = "name";
-                    if ($sortBy === "name") {
-                        usort($people, function($a, $b) {
-                        $nameA = strtolower($a['last_name'] . ' ' . $a['first_name']);
-                        $nameB = strtolower($b['last_name'] . ' ' . $b['first_name']);
-                    return strcmp($nameA, $nameB);
-                        });
-                    } elseif ($sortBy === "topic") {
-                        usort($people, function($a, $b) {
-                        $topicA = strtolower($a['topic_summary']);
-                        $topicB = strtolower($b['topic_summary']);
-                        $topicCompare = strcmp($topicA, $topicB);
-                        if ($topicCompare !== 0) {
-                            return $topicCompare;
-                    }
-                    // uses name if topics are the same
-                    $nameA = strtolower($a['last_name'] . ' ' . $a['first_name']);
-                    $nameB = strtolower($b['last_name'] . ' ' . $b['first_name']);
-                    return strcmp($nameA, $nameB);
-                     });
-                    }
-
                     foreach ($people as $person) {
+                        $selected = $person['id'] == $event['speaker'] ? "selected" : "";
+                        echo "<option value=\"{$person['id']}\" {$selected}>"
+                        . htmlspecialchars("{$person['first_name']} {$person['last_name']} - {$person['topic_summary']}")
+                        . "</option>\n";
                       /*$selected = $person['id'] == $event['speaker'] ? "selected" : "";
-                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";*/
-                      $selected = ($person['id'] == $event['speaker'] || $person['id'] == $event['topic_summary']) ? "selected" : "";
-                      //sorts by name and topic
-                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']} - {$person['topic_summary']}</option>\n";
-                    }
-                  ?>
+                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";
+                      /*$selected = ($person['id'] == $event['speaker'] || $person['id'] == $event['topic']) ? "selected" : "";
+                      echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']} - {$person['topic_summary']}</option>\n";*/
+                    } 
+                  ?> 
                 </select>
+                <script>
+                    const select = document.getElementById("speaker");
+                    const options = Array.from(select.options).slice(1); 
+                    options.sort((a, b) => a.text.localeCompare(b.text));
+                    options.forEach(option => select.appendChild(option));
+                </script>
 
 <!--
                 <label for="name">Location </label>
