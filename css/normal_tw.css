@@ -1002,7 +1002,7 @@
     line-height: var(--tw-leading, var(--text-lg--line-height));
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-blue-900);
+    color: var(--color-red-800);
   }
   input:not([type="radio"]), select {
     margin-bottom: calc(var(--spacing) * 2);
@@ -1111,7 +1111,7 @@
     margin-top: calc(var(--spacing) * 1);
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-blue-700);
+    color: var(--color-red-800);
   }
   .error-block {
     margin-bottom: calc(var(--spacing) * 2);
