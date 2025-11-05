@@ -301,7 +301,7 @@ $other_topics = mysqli_query($con, "
                                 <input
                                     type="submit"
                                     value="Add Topic"
-                                    class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 hover:border-blue-700 cursor-pointer"
+                                    class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 hover:border-red-800 cursor-pointer"
                                     style="border-radius: 1rem 0 0 1rem;"
                                 />
                             </td>
@@ -358,7 +358,7 @@ $other_topics = mysqli_query($con, "
                 <div>
                     <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
                         <textarea name="update_notes" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"><?php echo $person['notes']; ?></textarea>
-                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer"/>
+                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-800 cursor-pointer"/>
                     </form>
                 </div>
             </div>

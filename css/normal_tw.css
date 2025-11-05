@@ -1099,7 +1099,7 @@
   .blue-div {
     margin-bottom: calc(var(--spacing) * 4);
     height: 1px;
-    background-color: var(--color-blue-900);
+    background-color: var(--color-red-800);
   }
   .info-text {
     font-size: var(--text-lg);

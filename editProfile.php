@@ -99,7 +99,7 @@
 <html>
 <head>
     <?php require_once('universal.inc'); ?>
-    <title>Fredericksburg SPCA | Manage Profile</title>
+    <title>Women's Leadership Colloquium | Manage Profile</title>
 </head>
 <body>
     <?php
