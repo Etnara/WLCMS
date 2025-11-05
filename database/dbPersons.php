@@ -920,16 +920,14 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
 */
     // updates the required fields of a person's account
     function update_person_required(
-        $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
-        $zip_code, $email, $phone1, $phone1type, $type,
-        $skills,
+        $id, $first_name, $last_name,
+        $email, $phone1,
+        $status, $archived
     ) {
         $query = "update dbpersons set
-            first_name='$first_name', last_name='$last_name', birthday='$birthday',
-            street_address='$street_address', city='$city', state='$state',
-            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', type='$type',
-            skills='$skills'
-
+            first_name='$first_name', last_name='$last_name',
+            email='$email', phone1='$phone1',
+            status='$status', archived='$archived'
             where id='$id'";
         $connection = connect();
         $result = mysqli_query($connection, $query);
