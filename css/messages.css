@@ -7,12 +7,7 @@
 }
 
 tr.message {
-    cursor: pointer;
-    transition: filter .3s;
-    background-color: inherit;
-}
-tr.message {
-    cursor: pointer;
+    cursor: default;
     transition: filter .3s;
     background-color: inherit;
 }

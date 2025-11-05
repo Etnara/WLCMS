@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 02, 2025 at 03:06 PM
--- Server version: 10.11.14-MariaDB
--- PHP Version: 8.4.13
+-- Generation Time: Nov 05, 2025 at 02:14 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -66,6 +66,29 @@ CREATE TABLE `dbarchived_volunteers` (
 
 INSERT INTO `dbarchived_volunteers` (`id`, `start_date`, `first_name`, `last_name`, `street_address`, `city`, `state`, `zip_code`, `phone1`, `phone1type`, `emergency_contact_phone`, `emergency_contact_phone_type`, `birthday`, `email`, `emergency_contact_first_name`, `contact_num`, `emergency_contact_relation`, `contact_method`, `type`, `status`, `notes`, `password`, `skills`, `interests`, `archived_date`, `emergency_contact_last_name`, `is_new_volunteer`, `is_community_service_volunteer`, `total_hours_volunteered`) VALUES
 ('stephen_davies', '2022-05-10', 'Stephen', 'Davies', '456 Maple Avenue', 'Fredericksburg', 'VA', '22401', '5405557890', 'mobile', '5405551111', 'home', '1988-11-02', 'stephendavies@email.com', 'Robert', '5405551111', 'Father', 'phone', 'volunteer', 'Inactive', 'Archived due to relocation', '$2y$10$ABC789xyz456LMN123DEF', 'Music, Painting', 'Event Coordination', '2025-03-18 16:56:44', 'Davies', 0, 1, 0.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dbcommunications`
+--
+
+DROP TABLE IF EXISTS `dbcommunications`;
+CREATE TABLE `dbcommunications` (
+  `admin_email` varchar(127) NOT NULL,
+  `speaker_email` varchar(127) NOT NULL,
+  `date` varchar(127) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dbcommunications`
+--
+
+INSERT INTO `dbcommunications` (`admin_email`, `speaker_email`, `date`) VALUES
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2004-11-05'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-03-22'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-02'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-03');
 
 -- --------------------------------------------------------
 
@@ -706,6 +729,12 @@ INSERT INTO `user_groups` (`user_id`, `group_name`) VALUES
 --
 ALTER TABLE `dbarchived_volunteers`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dbcommunications`
+--
+ALTER TABLE `dbcommunications`
+  ADD PRIMARY KEY (`admin_email`,`speaker_email`,`date`);
 
 --
 -- Indexes for table `dbdiscussions`

@@ -79,21 +79,21 @@ require_once('header.php');
 
 <header class="hero-header">
     <div class="center-header">
-        <h1>Volunteer/Participant Search</h1>
+        <h1>Search for Speaker Emails</h1>
     </div>
 </header>
 
 <main>
     <div class="main-content-box w-[80%] p-8">
         <div class="text-center mb-8">
-            <h2>Generate an email list of volunteers or participants</h2>
-            <p class="sub-text">Use filters below to find people and create a mailing list.</p>
+            <h2>Generate an email list of speakers</h2>
+            <p class="sub-text">Use filters below to find speakers and their emails.</p>
         </div>
 
         <form id="person-search" method="get" class="space-y-6">
 
         <?php
-            if (isset($_GET['role']) || isset($_GET['status']) || isset($_GET['event']) || isset($_GET['group_name']) || isset($_GET['event_name'])) {
+            //if (isset($_GET['role']) || isset($_GET['status']) || isset($_GET['event']) || isset($_GET['group_name']) || isset($_GET['event_name'])) {
                 require_once('include/input-validation.php');
                 require_once('database/dbPersons.php');
                 require_once('domain/Person.php');
@@ -102,19 +102,19 @@ require_once('header.php');
                 $role = $args['role'];
                 $status = $args['status'];
                 $event = $args['event'];
-                $group_name = $args['group'];
+                $topic_name = $args['topic'];
 
 
-                if (!valueConstrainedTo($role, ['admin', 'participant', 'superadmin', 'volunteer', '']) ||
+                /*if (!valueConstrainedTo($role, ['admin', 'participant', 'superadmin', 'volunteer', '']) ||
                     !valueConstrainedTo($status, ['Active', 'Inactive', ''])) {
                     echo '<div class="error-block">The system did not understand your request.</div>';
                 } else {
-                    echo "<h3>Search Results</h3>";
+                    */echo "<h3>Search Results</h3>"; 
 
                     $persons = [];
                     $filteredPersons = [];
                     /* fetch persons who match the give role and status criteria */
-                    if ($role  == '' && $status == '') { // if looking for all people, or by event / group, start with everyone, then filter
+                    /*if ($role  == '' && $status == '') { // if looking for all people, or by event / group, start with everyone, then filter
                         // name, id, phone, zip, type, status
                         $persons_active = find_users('', '', '', '', $role, 'Active');
                         $persons_inactive = find_users('', '', '', '', $role, 'Inactive');
@@ -124,13 +124,13 @@ require_once('header.php');
                         $persons = find_users('', '', '', '', $role, $status);
                         $filteredPersons = array_merge($persons, $filteredPersons);
                     }
-
+                    */
                     /* if group was set, get members of group */
-                    if ($group_name != "") {
+                   /* if ($group_name != "") {
                         $members = get_users_in_group($group_name);
 
                         /* move only people of group */
-                        foreach ($persons as $person) { // person objects
+                        /*foreach ($persons as $person) { // person objects
                             foreach ($members as $member) { // associate arrays with some person data
                                 if ($person->get_id() == $member["id"]) {
                                     $filteredPersons[] = $person;
@@ -138,12 +138,12 @@ require_once('header.php');
                                 }
                             }
                         }
-                    }
+                    //}*/
 
-
+                    
                     require_once('include/output.php');
-
-                    if (count($persons) > 0) {
+                    $persons = find_all_speakers();
+                    if(count($persons) > 0) {
                         echo '
                         <div class="overflow-x-auto">
                             <table>
@@ -151,32 +151,28 @@ require_once('header.php');
                                     <tr>
                                         <th>First</th>
                                         <th>Last</th>
-                                        <th>Username</th>
                                         <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Archive Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
                         // Create Mailing List String
                         $mailingList = '';
                         $notFirst = false;
-                        foreach ($filteredPersons as $person) {
+                        foreach ($persons as $person) {
 
-                            if ($notFirst) {
+
+                            /*if ($notFirst) {
                                 $mailingList .= ', ';
                             } else {
                                 $notFirst = true;
-                            }
-                            $mailingList .= $person->get_email();
+                            }*/
+                            //$mailingList .= $person[0] . " " . $person[1];
+
                             echo '
                                 <tr>
-                                    <td>' . $person->get_first_name() . '</td>
-                                    <td>' . $person->get_last_name() . '</td>
-                                    <td>' . $person->get_id() . '</td>
-                                    <td><a href="mailto:' . $person->get_email() . '" class="text-blue-700 underline">' . $person->get_email() . '</a></td>
-                                    <td>' . ucfirst($person->get_type()) . '</td>
-                                    <td>' . ucfirst($person->get_status()) . '</td>
+                                    <td>' . $person[0] . '</td>
+                                    <td>' . $person[1] . '</td>
+                                    <td><a href="mailto:' . $person[2] . '" class="text-blue-700 underline">' . $person[2] . '</a></td>
                                 </tr>';
                         }
                         echo '
@@ -184,24 +180,24 @@ require_once('header.php');
                             </table>
                         </div>';
 
-                        echo '
+                        /*echo '
                         <div class="mt-4">
                             <label>Result Mailing List:</label>
                             <p class="text-gray-700 break-words">' . $mailingList . '</p>
-                        </div>';
+                        </div>'; */
                     } else {
                         echo '<div class="error-block">Your search returned no results.</div>';
                     }
                     echo '<h3>Search Again</h3>';
-                }
-            }
+               /// }
+           // }
         ?>
-
+            <!--
             <div>
                 <label for="role">Role</label>
                 <select id="role" name="role">
                     <option value="">Any</option>
-                    <option value="volunteer" <?php if (isset($role) && $role == 'volunteer') echo 'selected' ?>>Volunteer</option>
+                    <option value="volunteer" <?php /*if (isset($role) && $role == 'volunteer') echo 'selected' ?>>Volunteer</option>
                     <option value="participant" <?php if (isset($role) && $role == 'participant') echo 'selected' ?>>Participant</option>
                 </select>
             </div>
@@ -210,31 +206,32 @@ require_once('header.php');
                 <label for="status">Archive Status</label>
                 <select id="status" name="status">
                     <option value="">Any</option>
-                    <option value="Active" <?php if (isset($status) && $status == 'Active') echo 'selected' ?>>Active</option>
+                    <option value="Active" <?php /*if (isset($status) && $status == 'Active') echo 'selected' ?>>Active</option>
                     <option value="Inactive" <?php if (isset($status) && $status == 'Inactive') echo 'selected' ?>>Archived</option>
                 </select>
             </div>
-
+            
             <div>
                 <label for="event">Event</label>
                 <select id="event" name="event">
                     <option value="">Any</option>
-                    <?php foreach ($filteredEvents as $event) {
+                    <?php /*foreach ($filteredEvents as $event) {
                         echo '<option value="' . $event->get_id() . '">' . htmlspecialchars($event->get_name()) . ' - ' . (new DateTime($event->getDate()))->format('M d, Y') . '</option>';
-                    } ?>
+                    } */?>
                 </select>
             </div>
-
+            -->
             <div>
-                <label for="group">Group</label>
-                <select id="group" name="group">
+                <label for="topic">Group</label>
+                <select id="topic" name="topic">
                     <option value="">Any</option>
-                    <?php foreach ($groups as $group) {
-                        echo '<option value="' . $group->get_group_name() . '">' . htmlspecialchars($group->get_group_name()) . '</option>';
+                    <?php 
+                        foreach ($topics as $topic) {
+                        echo '<option value="' . $group . '">' . htmlspecialchars($topic) . '</option>';
                     } ?>
                 </select>
             </div>
-
+                
             <div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div>

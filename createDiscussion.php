@@ -24,14 +24,15 @@ include_once 'database/dbMessages.php';
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST['title']) || empty($_POST['body'])) {
-        $error = "Error: Title and Body are required fields.";
+    if (empty($_POST['title']) || empty($_POST['body']) || empty($_POST['message_to'])) {
+        $error = "Error: Missing required fields.";
     } else {
+        $message_to = trim($_POST["message_to"]);
         $title = trim($_POST['title']);
         $body = trim($_POST['body']);
         $time = date("Y-m-d-H:i");
 
-        if (discussion_exists($title)) {
+        if (discussion_exists($title)) { ///change to if message_to has a discussion with title
             $error = "Error: A discussion with this title already exists.";
         } else {
             $discussion = new Discussion($userID, $title, $body, $time);
@@ -39,12 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $from = "vmsroot";
                 $msgTitle = "A new discussion has been created. View under discussions page.";
                 $msgBody = "New Discussion";
-                message_all_users($from, $msgTitle, $msgBody);
+                //message_all_users($from, $msgTitle, $msgBody);
+                $message = send_message($userID, $message_to, $title, $body);
+                echo "yuh";
                 header("Location: viewDiscussions.php");
                 exit();
             } else {
                 $error = "Error: Failed to add discussion. A discussion with this title and author might already exist.";
             }
+            
         }
     }
 }
@@ -135,6 +139,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
 
         <form method="POST" action="createDiscussion.php">
+            
+            <label for="message_to">To:</label>
+            <input type="text" id="message_to" name="message_to" required>
+
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
 

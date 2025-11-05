@@ -35,6 +35,7 @@ require_once('header.php');
     require_once('domain/Person.php');
     require_once('database/dbPersons.php');
     require_once('database/dbinfo.php');
+    require_once('sendEmail.php');
 
     $showPopup = false;
     $popupText = "";
@@ -131,30 +132,29 @@ require_once('header.php');
 
         if ($errors) {
             echo '<p class="error">Your form submission contained unexpected or invalid input.</p>';
-        } elseif ($showPopup) {
-            require_once('registrationForm.php');
-        } else {
-            $newperson = new Person(
-                $id, $password,
-                $first_name, $last_name,
-                $status,
-                $phone1, $email,
-                $archived,
-                $topic_summary,
-                $organization
-            );
+            die();
+        }
 
-            $result = add_person($newperson);
-            if (!$result) {
-                $showPopup = true;
-                $popupText = "That email is already taken.";
-                require_once('registrationForm.php');
-            } else {
-                echo '<script>document.location = "login.php?registerSuccess";</script>';
-                $title = $id . " has been added as a speaker";
-                $body = "New volunteer account has been created";
-                system_message_all_admins($title, $body);
-            }
+        $newperson = new Person(
+            $id, $password,
+            $first_name, $last_name,
+            $status,
+            $phone1, $email,
+            $archived,
+            $topic_summary,
+            $organization
+        );
+
+        $result = add_person($newperson);
+
+        if (!$result) {
+            $showPopup = true;
+        } else {
+            sendFormConfirmation($email, $first_name, $last_name); //email speaker confirmation
+            $title = "New Interest Form to Review: " . $first_name . " " . $last_name;
+            message_all_users("vmsroot", $title, "");
+
+            echo '<script>document.location = "login.php?registerSuccess";</script>';
         }
     } else {
         require_once('registrationForm.php');
