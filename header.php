@@ -731,7 +731,7 @@ if (date("H:i:s") > "18:19:59") {
   </div>
 </a>
 
-<a href="personSearch.php" style="text-decoration: none;">
+<a href="speakerList.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/person-search.svg">
     <span>Search Speakers</span>
@@ -761,6 +761,7 @@ if (date("H:i:s") > "18:19:59") {
     <span>View Events</span>
   </div>
 </a>
+<!--
 <a href="editHours.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/clock-regular.svg">
@@ -779,7 +780,7 @@ if (date("H:i:s") > "18:19:59") {
     <span>Edit Event</span>
   </div>
 </a>
-
+-->
 
                     </div>
                 </div>

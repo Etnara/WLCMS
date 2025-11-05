@@ -15,7 +15,7 @@ require_once('header.php');
 ?>
 <style>
   .date-box {
-      background: #274471;
+      /*background: #274471;*/
       padding: 7px 30px;
       border-radius: 50px;
       box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -55,7 +55,7 @@ require_once('header.php');
       border-radius: 8px;
     }
     .blue-button {
-      background: #274471;
+      /*background: #274471;*/
       color: #fff;
       font-weight: 600;
       border: none;
@@ -65,7 +65,7 @@ require_once('header.php');
       text-decoration: none;
     }
     .blue-button:hover {
-      background: #1f365a;
+      /*background: #1f365a;*/
     }
     .return-button {
     border-radius: var(--radius-lg);

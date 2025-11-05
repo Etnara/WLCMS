@@ -48,7 +48,7 @@ require_once('header.php');
 ?>
 <style>
         .date-box {
-            background: #274471;
+            /*background: #274471;*/
             padding: 7px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -189,10 +189,7 @@ function display ($pageNum){
 
         </div>
 
-            <div class="flex justify-center mt-6">
-                <a href="index.php" class="return-button">Return to Dashboard</a>
-                <a href="speakerList.php" class="return-button" style="margin-left: 2rem;">Return to Speaker List</a>
-            </div>
+            
 
     <div class="info-section">
         <div class="blue-div"></div>
@@ -215,6 +212,11 @@ function display ($pageNum){
             <?php endif; ?>
         </p>
     </div>
+
+    <div class="flex justify-center mt-6">
+                <a href="index.php" class="return-button">Return to Dashboard</a>
+                <a href="speakerList.php" class="return-button" style="margin-left: 2rem;">Return to Speaker List</a>
+            </div>
     </main>
 
     <script>

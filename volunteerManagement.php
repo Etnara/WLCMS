@@ -71,7 +71,7 @@ require_once('header.php');
 	  <img class="button-icon" src="images/add-person.svg" alt="Person Icon">
         </button>
 
-        <button onclick="window.location.href='personSearch.php';">
+        <button onclick="window.location.href='speakerList.php';">
 	  <div class="button-left-gray"></div>
 	  <div>Search Speakers</div>
 	  <img class="button-icon" src="images/person-search.svg" alt="Person Icon">

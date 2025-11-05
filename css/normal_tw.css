@@ -1068,13 +1068,13 @@
   .blue-button {
     cursor: pointer;
     border-radius: var(--radius-lg);
-    background-color: var(--color-blue-900);
+    background-color: var(--color-red-800);
     padding-inline: calc(var(--spacing) * 6);
     padding-block: calc(var(--spacing) * 2);
     color: var(--color-white);
     &:hover {
       @media (hover: hover) {
-        background-color: var(--color-blue-700);
+        background-color: var(--color-red-700);
       }
     }
   }
