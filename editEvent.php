@@ -117,13 +117,20 @@
                 <input type="text" id="end-time" name="end-time" value="<?php echo time24hto12h($event['endTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 12:00 PM">
                 <label for="name">* Speaker </label>
                         <?php
-
+                        /*
                         $people = [];
                         $result = mysqli_query($con, "SELECT * FROM dbpersons");
                         while ($row = mysqli_fetch_assoc($result)) {
                             $people[] = $row;
-                        }
+                        } */
 
+                        $people = [];
+                        $result = mysqli_query($con, "SELECT * FROM dbpersons");
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            if ($row['status'] === 'Accepted Speaker') {
+                                $people[] = $row;
+                            }
+                        }
 
                         foreach ($people as &$person) {
                             $person_id = $person['id'];
