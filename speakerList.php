@@ -121,19 +121,27 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             </tr>
                         </thead>
                         <tbody>';
-                     foreach ($persons as $person) {
+                    foreach ($persons as $person) {
                         /* TODO: Add this function to person class or raw dog it */
                         /* <td>' . $person->get_notes() . '</td> */
+                        $query = "SELECT * FROM dbpersons WHERE id='{$person->get_id()}'";
+                        $rawPerson = mysqli_query($con, $query)->fetch_assoc();
+                        $query = "SELECT * FROM speaker_topics WHERE speaker='{$person->get_id()}'";
+                        $topics = mysqli_query($con, $query);
+                        $topicString = "";
+                        foreach ($topics as $topic)
+                            $topicString = $topicString . $topic['topic'] . ", ";
+                        $topicString = rtrim($topicString, ", ");
                         echo '
                             <tr>
                             <td>' . $person->get_first_name() . " " . $person->get_last_name() . '</td>
                             <td><a href="mailto:' . $person->get_email() . '" class="text-blue-700 underline">' . $person->get_email() . '</a></td>
                             <td><a href="tel:' . $person->get_phone1() . '" class="text-blue-700 underline">' . formatPhoneNumber($person->get_phone1()) . '</a></td>
-                            <td>' . '</td>
-                            <td>' . "" . '</td>
+                            <td>' . $topicString . '</td>
+                            <td>' . $rawPerson['notes'] . '</td>
                             <td><a href="viewProfile.php?id=' . $person->get_id() . '" class="text-blue-700 underline">Edit</a></td>
                             </tr>';
-                     }echo '
+                    }echo '
                             </tbody>
                             </table>
                         </div>';
@@ -161,12 +169,18 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
 
                             require_once('include/output.php');
                             foreach ($people as $person) {
+                            $query = "SELECT * FROM speaker_topics WHERE speaker='{$person['id']}'";
+                            $topics = mysqli_query($con, $query);
+                            $topicString = "";
+                            foreach ($topics as $topic)
+                                $topicString = $topicString . $topic['topic'] . ", ";
+                            $topicString = rtrim($topicString, ", ");
                             echo '
                             <tr>
                             <td>' . $person["first_name"] . " " . $person["last_name"] . '</td>
                             <td><a href="mailto:' . $person["email"] . '" class="text-blue-700 underline">' . $person["email"] . '</a></td>
                             <td><a href="tel:' . $person["phone1"] . '" class="text-blue-700 underline">' . formatPhoneNumber($person["phone1"]) . '</a></td>
-                            <td>' . '</td>
+                            <td>' . $topicString . '</td>
                             <td>' . $person["notes"] . '</td>
                             <td><a href="viewProfile.php?id=' . $person["id"] . '" class="text-blue-700 underline">Edit</a></td>
                             </tr>';
@@ -181,39 +195,6 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
 
             </form>
 
-            <!--
-                <div class="overflow-x-auto">
-                    <table>
-                        <thead class="bg-blue-400">
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Topics</th>
-                                <th>Notes</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        removed php start tag here!!
-                            require_once('include/output.php');
-                            foreach ($people as $person) {
-                            echo '
-                            <tr>
-                            <td>' . $person["first_name"] . " " . $person["last_name"] . '</td>
-                            <td><a href="mailto:' . $person["email"] . '" class="text-blue-700 underline">' . $person["email"] . '</a></td>
-                            <td><a href="tel:' . $person["phone1"] . '" class="text-blue-700 underline">' . formatPhoneNumber($person["phone1"]) . '</a></td>
-                            <td>' . '</td>
-                            <td>' . $person["notes"] . '</td>
-                            <td><a href="viewProfile.php?id=' . $person["id"] . '" class="text-blue-700 underline">Edit</a></td>
-                            </tr>';
-                            }
-                            removed php end tag here!!
-                        </tbody>
-                    </table>
-                </div>
-                        -->
             </div>
         </main>
     </body>
