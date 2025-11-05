@@ -21,6 +21,7 @@ class Person {
 	private $emergency_contact_relation;
 	private $type;
 	private $status;
+	private $notes;
 
 	private $archived;
 	private $skills;
@@ -37,7 +38,7 @@ class Person {
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization
+		$archived, $topic_summary,$organization, $notes, 
 	) {
 		$this->id = $id;
 
@@ -55,6 +56,8 @@ class Person {
 		$this->email = $email;
 
 		$this->archived = $archived;
+
+		$this->notes = $notes;
 
 		//$this->event_topic = $event_topic;
 		$this->topic_summary = $topic_summary;
@@ -94,5 +97,7 @@ class Person {
 	public function get_access_level() { return $this->access_level; }
 
 	public function get_password() { return $this->password; }
+
+	public function get_notes() { return $this->notes; }
 
 }
