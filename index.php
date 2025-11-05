@@ -585,15 +585,15 @@
             <button class="arrow-button">→</button>
         </div>
                     -->
-    <div class="content-box-test" onclick="window.location.href='generateEmailList.php'">
-            <div class="icon-overlay">
-                <img style="border-radius: 5px;" src="images/clipboard-regular.svg" alt="Report Icon">
-            </div>
-            <img class="background-image" src="images/blank-white-background.jpg" />
-            <div class="large-text-sub">Generate Email List</div>
-            <div class="graph-text">Volunteer Emails</div>
-            <button class="arrow-button">→</button>
-        </div>
+    <!-- <div class="content-box-test" onclick="window.location.href='generateEmailList.php'"> -->
+    <!--         <div class="icon-overlay"> -->
+    <!--             <img style="border-radius: 5px;" src="images/clipboard-regular.svg" alt="Report Icon"> -->
+    <!--         </div> -->
+    <!--         <img class="background-image" src="images/blank-white-background.jpg" /> -->
+    <!--         <div class="large-text-sub">Generate Email List</div> -->
+    <!--         <div class="graph-text">Volunteer Emails</div> -->
+    <!--         <button class="arrow-button">→</button> -->
+    <!--     </div> -->
 <!--
         <div class="content-box-test" onclick="window.location.href='viewDiscussions.php'">
             <div class="icon-overlay">
