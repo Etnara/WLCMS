@@ -16,8 +16,8 @@ session_write_close();
         <nav>
             <span id="nav-top">
                 <span class="logo">
-                    <img src="images/FredSPCAlogo.png">
-                        <span id="vms-logo"> Fredericksburg SPCA Volunteer </span>
+                    <img src="images/real-women-logo.webp">
+                        <span id="vms-logo"> Women's Leadership Colloquium </span>
                         </span>
                     <img id="menu-toggle" src="images/menu.png">
                 </span>

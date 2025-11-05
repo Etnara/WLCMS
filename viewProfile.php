@@ -157,13 +157,13 @@ $other_topics = mysqli_query($con, "
 
         const tabs = document.querySelectorAll('.tab-button');
         tabs.forEach(tab => {
-        tab.classList.remove('border-b-4', 'border-blue-900');
-        tab.classList.add('hover:border-b-2', 'hover:border-blue-700');
+        tab.classList.remove('border-b-4', 'border-red-800');
+        tab.classList.add('hover:border-b-2', 'hover:border-red-700');
         });
 
         const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
-        activeTab.classList.add('border-b-4', 'border-blue-900');
-        activeTab.classList.remove('hover:border-b-2', 'hover:border-blue-700');
+        activeTab.classList.add('border-b-4', 'border-red-800');
+        activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
         localStorage.setItem('activeTab', sectionId);
         }
 
@@ -200,7 +200,7 @@ $other_topics = mysqli_query($con, "
 
 <body class="bg-gray-100">
     <!-- Hero Section -->
-    <div class="h-48 relative" style="background-image: url('https://images.thdstatic.com/productImages/7c22c2c6-a12a-404c-bdd6-d56779e7a66f/svn/chesapeake-wallpaper-rolls-3122-10402-64_600.jpg');">
+    <div class="h-48 relative" style="background-image: url('images/heads.jpg')">
     </div>
 
     <!-- Profile Content -->
@@ -237,11 +237,11 @@ $other_topics = mysqli_query($con, "
                 </div>
             </div>
             <div class="mt-6 space-y-2">
-                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Edit Profile</button>
+                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
 
                 <!-- -->
                 <?php if ($id != $userID): ?>
-                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Speaker List</button>
+                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
                 <?php endif ?>
                 <!-- -->
 
@@ -249,7 +249,7 @@ $other_topics = mysqli_query($con, "
                 <?php if ($accessLevel < 2) : ?>
                 <button onclick="window.location.href='volunteerReport.php?id=<?php echo $user->get_id() ?>';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">My Volunteering Report</button>
                 <?php endif ?>
-                <button onclick="window.location.href='index.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Dashboard</button>
+                <button onclick="window.location.href='index.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Dashboard</button>
             </div>
         </div>
 
@@ -257,7 +257,7 @@ $other_topics = mysqli_query($con, "
         <div class="w-full md:w-2/3 bg-white rounded-2xl shadow-lg border border-gray-300 p-6">
             <!-- Tabs -->
             <div class="flex border-b border-gray-300 mb-4">
-                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-blue-900" data-tab="personal" onclick="showSection('personal')">Topics</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-red-800" data-tab="personal" onclick="showSection('personal')">Topics</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
 
@@ -301,7 +301,7 @@ $other_topics = mysqli_query($con, "
                                 <input
                                     type="submit"
                                     value="Add Topic"
-                                    class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 hover:border-blue-700 cursor-pointer"
+                                    class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 hover:border-red-800 cursor-pointer"
                                     style="border-radius: 1rem 0 0 1rem;"
                                 />
                             </td>
@@ -358,23 +358,23 @@ $other_topics = mysqli_query($con, "
                 <div>
                     <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
                         <textarea name="update_notes" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"><?php echo $person['notes']; ?></textarea>
-                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer"/>
+                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-800 cursor-pointer"/>
                     </form>
                 </div>
             </div>
 
             <!-- Past Communications Section -->
-             <div id="communications" class="profile-section space-y-4 hidden">             
+             <div id="communications" class="profile-section space-y-4 hidden">
                     <?php
                         $communications = getAllCommunicationsFor($user->get_email());
                         if(count($communications)==0){
                             echo '<p style="text-align: center";>
                             There have been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
-                            '</p>';                       
+                            '</p>';
                         }else{
                             echo
                             '<h1 class="mb-4" style="text-align: center">
-                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name(). 
+                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name().
                             '</h1>
                             <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
                                 <tr>
@@ -382,17 +382,17 @@ $other_topics = mysqli_query($con, "
                                     <th>Contacted By</th>
                                 </tr>';
                             foreach($communications as $communication){
-                                
+
                                 $admin = retrieve_person_by_email( $communication[0]);
-                                echo '<tr>' . 
-                                '<td>' . $communication[1] . '</td>' . 
+                                echo '<tr>' .
+                                '<td>' . $communication[1] . '</td>' .
                                 '<td>' . $admin->get_first_name() . ' ' . $admin->get_last_name() . '</td>'
                                 . '</tr>';
                             }
                             echo '</table>';
-                        }                
+                        }
                     ?>
-                
+
              </div>
 
         </div>

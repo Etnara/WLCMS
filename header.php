@@ -64,13 +64,13 @@ if (date("H:i:s") > "18:19:59") {
             border-bottom-right-radius: 50px;
         }
          .content-box-test:hover {
-            border: 4px solid #007BFF;
+            border: 4px solid #800000;
         }
 /*END STYLE TEST*/
 
         .full-width-bar {
             width: 100%;
-            background: #294877;
+            background: #800000;
             padding: 17px 5%;
             display: flex;
             flex-wrap: wrap;
@@ -133,7 +133,7 @@ if (date("H:i:s") > "18:19:59") {
             left: 30px;
             font-size: 14px;
             font-weight: 700;
-            color: #294877;
+            color: #800000;
         }
 
         .large-text {
@@ -163,7 +163,7 @@ if (date("H:i:s") > "18:19:59") {
             left: 10%;
             font-size: 14px;
             font-weight: 700;
-            color: #294877;
+            color: #800000;
             max-width: 90%;
         }
 
@@ -192,15 +192,17 @@ if (date("H:i:s") > "18:19:59") {
 
         /* Logo */
         .logo-container {
-            background: #294877;
+            background: #ffe3e3ff;
             padding: 10px 20px;
             border-radius: 50px;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) inset;
+            overflow: hidden;
         }
 
         .logo-container img {
             width: 128px;
             height: 52px;
+            object-fit: crop;
             display: block;
         }
 
@@ -262,7 +264,7 @@ if (date("H:i:s") > "18:19:59") {
         }
 
         .date-box {
-            background: #274471;
+            background: #800000;
             padding: 10px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -292,7 +294,7 @@ if (date("H:i:s") > "18:19:59") {
 
 /* Button Styling */
 .nav-button {
-    background: #274471;
+    background: #800000;
     border: none;
     color: white;
     font-size: 20px;
@@ -358,7 +360,7 @@ if (date("H:i:s") > "18:19:59") {
         /* Footer */
         .footer {
             width: 100%;
-            background: #294877;
+            background: #800000;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -374,7 +376,8 @@ if (date("H:i:s") > "18:19:59") {
         }
 
         .footer-logo {
-            width: 150px; /* Adjust logo size */
+            width: 250px; /* Adjust logo size */
+            height: auto;
             margin-bottom: 15px;
         }
 
@@ -565,7 +568,7 @@ if (date("H:i:s") > "18:19:59") {
         <!-- Left Section: Logo & Nav Links -->
         <div class="left-section">
             <div class="logo-container">
-                <a href="index.php"><img src="images/actual_log.png" alt="Logo"></a>
+                <a href="index.php"><img src="images/real-women-logo.webp" alt="Logo"></a>
             </div>
             <div class="nav-links">
 		<div class="nav-item"><span class="font-change">Volunteer Management System</span>
@@ -712,11 +715,13 @@ if (date("H:i:s") > "18:19:59") {
         <!-- Left Section: Logo & Nav Links -->
         <div class="left-section">
             <div class="logo-container">
-                <a href="index.php"><img src="images/actual_log.png" alt="Logo"></a>
+                <a href="index.php"><img src="images/real-logo1.png" alt="Logo"></a>
             </div>
+            <!--
                 <a href="viewCheckInOut.php" style="color: white; text-decoration: none;"><div class="date-box">Check In/Out</div></a>
+                -->
             <div class="nav-links">
-                <div class="nav-item">Volunteers
+                <div class="nav-item">Speakers
                     <div class="dropdown">
 
 <a href="VolunteerRegister.php" style="text-decoration: none;">
@@ -726,10 +731,10 @@ if (date("H:i:s") > "18:19:59") {
   </div>
 </a>
 
-<a href="personSearch.php" style="text-decoration: none;">
+<a href="speakerList.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/person-search.svg">
-    <span>Search Volunteers</span>
+    <span>Search Speakers</span>
   </div>
 </a>
 <a href="checkedInVolunteers.php" style="text-decoration: none;">
@@ -756,6 +761,7 @@ if (date("H:i:s") > "18:19:59") {
     <span>View Events</span>
   </div>
 </a>
+<!--
 <a href="editHours.php" style="text-decoration: none;">
   <div class="in-nav">
     <img src="images/clock-regular.svg">
@@ -774,10 +780,11 @@ if (date("H:i:s") > "18:19:59") {
     <span>Edit Event</span>
   </div>
 </a>
-
+-->
 
                     </div>
                 </div>
+                <!--
                 <div class="nav-item">Groups
                     <div class="dropdown">
 
@@ -797,6 +804,7 @@ if (date("H:i:s") > "18:19:59") {
 
                     </div>
                </div>
+               -->
 
 
                <div class="nav-item">Admin
@@ -829,7 +837,7 @@ if (date("H:i:s") > "18:19:59") {
         <div class="right-section">
 <a href="calendar.php">
 <div class="icon-butt">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#294877" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#800000" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 4C3 3.44772 3.44772 3 4 3H6V2C6 1.44772 6.44772 1 7 1C7.55228 1 8 1.44772 8 2V3H16V2C16 1.44772 16.4477 1 17 1C17.5523 1 18 1.44772 18 2V3H20C20.5523 3 21 3.44772 21 4V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V4ZM5 5V20H19V5H5ZM7 10H9V12H7V10ZM11 10H13V12H11V10ZM15 10H17V12H15V10ZM7 14H9V16H7V14ZM11 14H13V16H11V14ZM15 14H17V16H15V14Z"/>
         </svg>
 </div>
@@ -857,11 +865,13 @@ if (date("H:i:s") > "18:19:59") {
         <!-- Left Section: Logo & Nav Links -->
         <div class="left-section">
             <div class="logo-container">
-                <a href="index.php"><img src="images/actual_log.png" alt="Logo"></a>
+                <a href="index.php"><img src="images/real-logo1.png" alt="Logo"></a>
             </div>
+            <!--
                 <a href="viewCheckInOut.php" style="color: white; text-decoration: none;"><div class="date-box">Check In/Out</div></a>
+                -->
             <div class="nav-links">
-                <div class="nav-item">Volunteers
+                <div class="nav-item">Speakers
                     <div class="dropdown">
 
 <a href="VolunteerRegister.php" style="text-decoration: none;">
@@ -956,7 +966,7 @@ if (date("H:i:s") > "18:19:59") {
         <div class="right-section">
 <a href="calendar.php">
 <div class="icon-butt">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#294877" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#800000" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 4C3 3.44772 3.44772 3 4 3H6V2C6 1.44772 6.44772 1 7 1C7.55228 1 8 1.44772 8 2V3H16V2C16 1.44772 16.4477 1 17 1C17.5523 1 18 1.44772 18 2V3H20C20.5523 3 21 3.44772 21 4V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V4ZM5 5V20H19V5H5ZM7 10H9V12H7V10ZM11 10H13V12H11V10ZM15 10H17V12H15V10ZM7 14H9V16H7V14ZM11 14H13V16H11V14ZM15 14H17V16H15V14Z"/>
         </svg>
 </div>
@@ -1026,7 +1036,7 @@ if (date("H:i:s") > "18:19:59") {
         <div class="right-section">
 <a href="calendar.php">
 <div class="icon-butt">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#294877" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#800000" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 4C3 3.44772 3.44772 3 4 3H6V2C6 1.44772 6.44772 1 7 1C7.55228 1 8 1.44772 8 2V3H16V2C16 1.44772 16.4477 1 17 1C17.5523 1 18 1.44772 18 2V3H20C20.5523 3 21 3.44772 21 4V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V4ZM5 5V20H19V5H5ZM7 10H9V12H7V10ZM11 10H13V12H11V10ZM15 10H17V12H15V10ZM7 14H9V16H7V14ZM11 14H13V16H11V14ZM15 14H17V16H15V14Z"/>
         </svg>
 </div>
