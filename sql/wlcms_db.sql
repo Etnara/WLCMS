@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 05, 2025 at 02:14 AM
+-- Generation Time: Nov 07, 2025 at 12:44 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -27,7 +27,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `dbarchived_volunteers`
 --
 
-DROP TABLE IF EXISTS `dbarchived_volunteers`;
 CREATE TABLE `dbarchived_volunteers` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -70,33 +69,9 @@ INSERT INTO `dbarchived_volunteers` (`id`, `start_date`, `first_name`, `last_nam
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dbcommunications`
---
-
-DROP TABLE IF EXISTS `dbcommunications`;
-CREATE TABLE `dbcommunications` (
-  `admin_email` varchar(127) NOT NULL,
-  `speaker_email` varchar(127) NOT NULL,
-  `date` varchar(127) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `dbcommunications`
---
-
-INSERT INTO `dbcommunications` (`admin_email`, `speaker_email`, `date`) VALUES
-('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2004-11-05'),
-('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-03-22'),
-('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-02'),
-('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-03');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `dbdiscussions`
 --
 
-DROP TABLE IF EXISTS `dbdiscussions`;
 CREATE TABLE `dbdiscussions` (
   `author_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -117,7 +92,6 @@ INSERT INTO `dbdiscussions` (`author_id`, `title`, `body`, `time`) VALUES
 -- Table structure for table `dbeventmedia`
 --
 
-DROP TABLE IF EXISTS `dbeventmedia`;
 CREATE TABLE `dbeventmedia` (
   `id` int(11) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -135,7 +109,6 @@ CREATE TABLE `dbeventmedia` (
 -- Table structure for table `dbeventpersons`
 --
 
-DROP TABLE IF EXISTS `dbeventpersons`;
 CREATE TABLE `dbeventpersons` (
   `eventID` int(11) NOT NULL,
   `userID` varchar(256) NOT NULL,
@@ -159,7 +132,6 @@ INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
 -- Table structure for table `dbevents`
 --
 
-DROP TABLE IF EXISTS `dbevents`;
 CREATE TABLE `dbevents` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -203,7 +175,6 @@ INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `descripti
 -- Table structure for table `dbgroups`
 --
 
-DROP TABLE IF EXISTS `dbgroups`;
 CREATE TABLE `dbgroups` (
   `group_name` varchar(255) NOT NULL,
   `color_level` varchar(50) NOT NULL
@@ -223,7 +194,6 @@ INSERT INTO `dbgroups` (`group_name`, `color_level`) VALUES
 -- Table structure for table `dbmessages`
 --
 
-DROP TABLE IF EXISTS `dbmessages`;
 CREATE TABLE `dbmessages` (
   `id` int(11) NOT NULL,
   `senderID` varchar(256) NOT NULL,
@@ -507,7 +477,6 @@ INSERT INTO `dbmessages` (`id`, `senderID`, `recipientID`, `title`, `body`, `tim
 -- Table structure for table `dbpendingsignups`
 --
 
-DROP TABLE IF EXISTS `dbpendingsignups`;
 CREATE TABLE `dbpendingsignups` (
   `username` varchar(25) NOT NULL,
   `eventname` varchar(100) NOT NULL,
@@ -531,7 +500,6 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 -- Table structure for table `dbpersonhours`
 --
 
-DROP TABLE IF EXISTS `dbpersonhours`;
 CREATE TABLE `dbpersonhours` (
   `personID` varchar(256) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -553,7 +521,6 @@ INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VA
 -- Table structure for table `dbpersons`
 --
 
-DROP TABLE IF EXISTS `dbpersons`;
 CREATE TABLE `dbpersons` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -574,16 +541,28 @@ CREATE TABLE `dbpersons` (
 --
 
 INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `email`, `password`, `phone1`, `organization`, `topic_summary`, `status`, `archived`, `notes`) VALUES
-('ameyer123', '2025-05-01', 'Aidan', 'Meyer', 'aidanmeyer32@gmail.com', '$2y$10$2VDZjrW0EacO0VA5hIYIl.fKqPC5wUdSSQ1lXXRSgC0eWxVslPcOC', '4344222910', NULL, '', 'Inactive', 0, NULL),
-('ameyer3', '2025-03-26', 'Aidan', 'Meyer', 'aidanmeyer32@gmail.com', '$2y$10$0R5pX4uTxS0JZ4rc7dGprOK4c/d1NEs0rnnaEmnW4sz8JIQVyNdBC', '4344222910', NULL, '', 'Active', 0, NULL),
-('BobVolunteer', '2025-04-29', 'Bob', 'SPCA', 'fred54321@gmail.com', '$2y$10$4wUwAW0yoizxi5UFy1/OZu.yfYY7rzUsuYcZCdvfplLj95r7OknvG', '9806761234', NULL, '', 'Active', 0, NULL),
-('lukeg', '2025-04-29', 'Luke', 'Gibson', 'volunteer@volunteer.com', '$2y$10$KsNVJYhvO5D287GpKYsIPuci9FnL.Eng9R6lBpaetu2Y0yVJ7Uuiq', '1234567890', NULL, '', 'Active', 0, NULL),
-('maddiev', '2025-04-28', 'maddie', 'van buren', 'mvanbure@mail.umw.edu', '$2y$10$0mv3.e6gjqoIg.HfT5qVXOsI.Ca5E93DAy8BnT124W1PvMDxpfoxy', '1234567890', NULL, '', 'Active', 0, NULL),
-('michael_smith', '2025-03-16', 'Michael', 'Smith', 'michaelsmith@email.com', '$2y$10$XYZ789xyz456LMN123DEF', '4345559876', NULL, '', 'Active', 0, ''),
-('michellevb', '2025-04-29', 'Michelle', 'Van Buren', 'michelle.vb@gmail.com', '$2y$10$bkqOWUdIJoSa6kZoRo5KH.cerZkBQf74RYsponUUgefJxNc8ExppK', '1234567890', NULL, '', 'Active', 0, NULL),
-('test_acc', '2025-04-29', 'test', 'test', 'test@gmail.com', '$2y$10$kpVA41EXvoJyv896uDBEF.fHCPmSlkVSaXjHojBl7DqbRnEm//kxy', '5555555555', NULL, '', 'Active', 0, NULL),
+('aaaa6e14ab', NULL, 'AAAAA', 'AAAAAA', 'aaaa@gmail.com', '$2y$10$Cvn7KIgGZej5e5oiQR3ONucR1wruxC8fFK/XYf.fSWinbrTqdz6l.', '2495555555', NULL, 'alkdsjfkls', 'Accepted Speaker', 0, NULL),
+('bobo7d0204', NULL, 'BOB', 'bobo', 'bobo@gmail.com', '$2y$10$8LS/4Tj7gAs0MmWwtRNy7u6HTONVqW/OVAepmNtyaCa5K.JuGs4A6', '5556666666', NULL, 'HI lol', 'Pending Speaker', 0, NULL),
+('byeeeeye4776a2', NULL, 'byebye', 'byebye', 'byeeeeye@gmail.com', '$2y$10$LY6pEwZQRb5TrFwmH4emfe6H3yRlEiXexZjjtPnqqzo6vCigrEMRa', '7778983922', NULL, 'adskfha', 'Accepted Speaker', 0, NULL),
+('cat39cbf0', NULL, 'cat', 'cat', 'cat@gmail.com', '$2y$10$z.tdchTsy7xOnRYHGIGpXuU2.ilcHxg0zMWp0l.wWop6BgWGr3.pu', '5556666668', NULL, 'sdklfaj', 'Pending Speaker', 0, NULL),
+('chickenfad6d0', NULL, 'chicken', 'chicken', 'chicken@gmail.com', '$2y$10$rxPXKUZ.FRLzZN3KMde2PugYJudNLNuhc0/XC6FMFB5I4l2GzlmdW', '5556666613', NULL, 'alkdsfjlksdjf', 'Pending Speaker', 0, NULL),
+('coole7963a', NULL, 'cool', 'cool', 'cool@gmail.com', '$2y$10$uo24Q67uqsZ1Kjf2FAQX7emi2FFa4.l9BW6YXdS1GC2DVjN6tgHL.', '5556666617', NULL, 'lksdfjlskadfj', 'Pending Speaker', 0, NULL),
+('cow86ef02', NULL, 'cow', 'cow', 'cow@gmail.com', '$2y$10$VdtCRoCL9c8/3w9BmqGr/OW0NA/KIw1RDZ6/oy2q61S/AbAOt9tOS', '5556666610', NULL, 'sdafsdfsa', 'Accepted Speaker', 0, NULL),
+('dogc59da3', NULL, 'dog', 'dog', 'dog@gmail.com', '$2y$10$hsAD1pJNPuL2U3zwRbx/FepL4STf2GiIV0GDorD6MPacHW.Vsy94a', '5556666669', NULL, 'asdflkjsd', 'Pending Speaker', 0, NULL),
+('horseb97c66', NULL, 'horse', 'horse', 'horse@gmail.com', '$2y$10$hToKrfsBEggXIpz1J.u4XefcVPOM3IEwh8GwzRuhWlc/txwWGuHzK', '5556666611', NULL, 'horse', 'Pending Speaker', 0, NULL),
+('house4216e9', NULL, 'hosue', 'hosue', 'house@gmail.com', '$2y$10$RaozOUFjqz4VTJRSG1BPZ.H8I1ES8spiLC19RYEYszy/n4wEoJ7HC', '5556666614', NULL, 'yeeeeettttt', 'Pending Speaker', 0, NULL),
+('lex2ed436', NULL, 'le', 'asdf', 'lex@gmail.com', '$2y$10$2di7rpzp6penbXEyA/8NOuobtD9VzNyA5TTaa0J2YaJH6jXmDis0.', '5555555553', NULL, 'as', 'Pending Speaker', 0, NULL),
+('lexie664595', NULL, 'laksdjf', 'lkdj', 'lexie@gmail.com', '$2y$10$a86bhsIhROAcNKpXzkPLgusjYU4a91yonYWdrNuHBN1dgpgRPjyc.', '', NULL, '', 'Admin', 0, NULL),
+('phrasebd5011', NULL, 'phrase', 'phrase', 'phrase@gmail.com', '$2y$10$GlvYYx2W5/z.fNtTiSaOi.0nJPvfIA/L8m0GbTHOeWirOCJVrafWS', '5556666615', NULL, 'alksdfjhslkadf', 'Pending Speaker', 0, NULL),
+('pigc875d3', NULL, 'pig', 'pig', 'pig@gmail.com', '$2y$10$H5XiUX321VoAf37WB/fQ7.FyoETWt7/KYF41PXZo4bmO7wKEmSmS6', '5556666612', NULL, 'yoyoy', 'Pending Speaker', 0, NULL),
+('really51e6a9', NULL, 'really', 'really', 'really@gmail.com', '$2y$10$1lQ3y7RMJXXrqSc0jfZsgu5X8af.YxBu2lt7JdP28UQFcjygRM/rK', '5556666456', NULL, 'ldkagjlkadjfg', 'Pending Speaker', 0, NULL),
+('rob442036', NULL, 'ROBERT', 'robertt', 'rob@gmail.com', '$2y$10$nBr9HgCQzaqKdfLB7exlNeYf9pS24eXdLfVxcKhqgJN7juBBp099e', '5555555553', 'robby', 'robbing', 'Accepted Speaker', 0, NULL),
+('speaker8ab4e9', NULL, 'speaker', 'speaker', 'speaker@gmail.com', '$2y$10$Fb63B3CY0AaE0vH6ORIaBeLfr8l.SOVMXF5BHWI/VHY3U62/H4nQm', '5556783333', NULL, 'slkdjfael', 'Pending Speaker', 0, NULL),
+('steve99a339', NULL, 'Steve', 'Stevee', 'steve@gmail.com', '$2y$10$YuPkqku8HZUGrqMyHlUznOr8l85jmb69IRM.7vARB8qjR7VrZXsT6', '5555555551', NULL, 'hi again', 'Pending Speaker', 0, NULL),
+('urmom89ddd4', NULL, 'Mary', 'urmom', 'urmom@gmail.com', '$2y$10$1zodjsMerYcuDZbnr6Q4IePybZTffQUUVZML4xHCBFr/3lPV4VeFu', '5555555552', 'house', 'yay', 'Pending Speaker', 0, NULL),
 ('vmsroot', NULL, 'vmsroot', '', '', '$2y$10$.3p8xvmUqmxNztEzMJQRBesLDwdiRU3xnt/HOcJtsglwsbUk88VTO', '', NULL, '', 'Active', 0, 'System root user account'),
-('Volunteer25', '2025-04-30', 'Volley', 'McTear', 'volly@gmail.com', '$2y$10$45gKdbjW78pNKX/5ROtb7eU9OykSCsP/QCyTAvqBtord4J7V3Ywga', '9887765543', NULL, '', 'Active', 0, NULL);
+('won33697a', NULL, 'won', 'won', 'won@gmail.com', '$2y$10$45rG9RVes.z9UEsWZtg7Bu7GEuD9F8Ylyx8mNFx2WfW39nCAClD/.', '5556666644', NULL, 'alksdjfalksj', 'Rejected Speaker', 0, NULL),
+('work2f1daa', NULL, 'wowowoowowow', 'owfajd', 'work@gmail.com', '$2y$10$U.13zVnCXZ7XSJpWoojPXOI/VryhxQvH.pQD4deXWTqTKvMn6r..C', '7778983933', NULL, 'adsfsdf', 'Pending Speaker', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -591,7 +570,6 @@ INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `email`,
 -- Table structure for table `dbshifts`
 --
 
-DROP TABLE IF EXISTS `dbshifts`;
 CREATE TABLE `dbshifts` (
   `shift_id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -632,10 +610,24 @@ INSERT INTO `dbshifts` (`shift_id`, `person_id`, `date`, `startTime`, `endTime`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dbsurveys`
+--
+
+CREATE TABLE `dbsurveys` (
+  `id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `mime` varchar(100) NOT NULL,
+  `size` bigint(20) NOT NULL,
+  `content` longblob NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discussion_replies`
 --
 
-DROP TABLE IF EXISTS `discussion_replies`;
 CREATE TABLE `discussion_replies` (
   `reply_id` int(11) NOT NULL,
   `user_reply_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -663,7 +655,6 @@ INSERT INTO `discussion_replies` (`reply_id`, `user_reply_id`, `author_id`, `dis
 -- Table structure for table `monthly_hours_snapshot`
 --
 
-DROP TABLE IF EXISTS `monthly_hours_snapshot`;
 CREATE TABLE `monthly_hours_snapshot` (
   `id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -690,22 +681,9 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `speaker_topics`
---
-
-DROP TABLE IF EXISTS `speaker_topics`;
-CREATE TABLE `speaker_topics` (
-  `speaker` varchar(256) NOT NULL,
-  `topic` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `user_groups`
 --
 
-DROP TABLE IF EXISTS `user_groups`;
 CREATE TABLE `user_groups` (
   `user_id` varchar(255) NOT NULL,
   `group_name` varchar(255) NOT NULL
@@ -729,12 +707,6 @@ INSERT INTO `user_groups` (`user_id`, `group_name`) VALUES
 --
 ALTER TABLE `dbarchived_volunteers`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `dbcommunications`
---
-ALTER TABLE `dbcommunications`
-  ADD PRIMARY KEY (`admin_email`,`speaker_email`,`date`);
 
 --
 -- Indexes for table `dbdiscussions`
@@ -788,6 +760,13 @@ ALTER TABLE `dbshifts`
   ADD PRIMARY KEY (`shift_id`);
 
 --
+-- Indexes for table `dbsurveys`
+--
+ALTER TABLE `dbsurveys`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_surveys_uploaded_at` (`uploaded_at`);
+
+--
 -- Indexes for table `discussion_replies`
 --
 ALTER TABLE `discussion_replies`
@@ -801,12 +780,6 @@ ALTER TABLE `discussion_replies`
 --
 ALTER TABLE `monthly_hours_snapshot`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `speaker_topics`
---
-ALTER TABLE `speaker_topics`
-  ADD PRIMARY KEY (`speaker`,`topic`);
 
 --
 -- Indexes for table `user_groups`
@@ -837,6 +810,12 @@ ALTER TABLE `dbshifts`
   MODIFY `shift_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
+-- AUTO_INCREMENT for table `dbsurveys`
+--
+ALTER TABLE `dbsurveys`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `discussion_replies`
 --
 ALTER TABLE `discussion_replies`
@@ -857,12 +836,6 @@ ALTER TABLE `monthly_hours_snapshot`
 --
 ALTER TABLE `dbevents`
   ADD CONSTRAINT `FKspeakerID` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Constraints for table `speaker_topics`
---
-ALTER TABLE `speaker_topics`
-  ADD CONSTRAINT `speaker_id` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
