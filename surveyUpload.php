@@ -65,6 +65,29 @@ $list = $con->query("SELECT id, filename, uploaded_at FROM dbsurveys ORDER BY up
 $tailwind_mode = true;
 require_once('header.php');
 ?>
+
+<!-- BANDAID FIX FOR HEADER BEING WEIRD -->
+<?php
+$tailwind_mode = true;
+require_once('header.php');
+?>
+<style>
+  .date-box {
+      /*background: #274471;*/
+      padding: 7px 30px;
+      border-radius: 50px;
+      box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+  }   
+  .dropdown {
+      padding-right: 50px;
+  }   
+</style>
+<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,7 +135,7 @@ require_once('header.php');
           <?php while ($r = $list->fetch_assoc()): ?>
             <tr>
               <td>
-                <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank">
+                <a class="text-blue-700 underline" href="survey_download.php?id=<?= (int)$r['id'] ?>" target="_blank">
                   <?= htmlspecialchars($r['filename']) ?>
                 </a>
               </td>
