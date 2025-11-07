@@ -1,0 +1,139 @@
+<?php
+session_cache_expire(30);
+session_start();
+
+$loggedIn   = isset($_SESSION['_id']);
+$accessLevel= $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
+if ($accessLevel < 2) { header('Location: index.php'); die(); }
+
+require_once 'database/dbinfo.php';
+$con = connect();
+
+$ok = $err = null;
+
+// CSRF token
+if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(16));
+$csrf = $_SESSION['csrf'];
+
+function is_real_pdf($tmpPath): bool {
+  $f = new finfo(FILEINFO_MIME_TYPE);
+  return $f->file($tmpPath) === 'application/pdf';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (!hash_equals($csrf, $_POST['csrf'] ?? '')) {
+    $err = 'Invalid request token.';
+  } else {
+    $action = $_POST['action'] ?? '';
+    if ($action === 'upload') {
+      if (!isset($_FILES['pdf']) || $_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
+        $err = 'Please choose a PDF file.';
+      } else {
+        $file = $_FILES['pdf'];
+        $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime  = $finfo->file($file['tmp_name']) ?: '';
+
+        if ($ext !== 'pdf' || $mime !== 'application/pdf') {
+          $err = 'File must be a valid .pdf';
+        } else {
+          $data = file_get_contents($file['tmp_name']);
+          if ($data === false || $data === '') {
+            $err = 'Could not read uploaded file.';
+          } else {
+            $stmt = $con->prepare("INSERT INTO dbsurveys (filename, mime, content) VALUES (?, ?, ?)");
+            $fn   = basename($file['name']);
+            $stmt->bind_param('sss', $fn, $mime, $data);
+            if ($stmt->execute()) $ok = 'Survey uploaded.'; else $err = 'Upload failed.';
+            $stmt->close();
+          }
+        }
+      }
+    } elseif ($action === 'delete') {
+      $id = (int)($_POST['id'] ?? 0);
+      if ($id > 0) {
+        if ($con->query("DELETE FROM dbsurveys WHERE id=$id")) $ok = 'Survey deleted.';
+        else $err = 'Could not delete.';
+      }
+    }
+  }
+}
+
+// fetch list
+$list = $con->query("SELECT id, filename, uploaded_at FROM dbsurveys ORDER BY uploaded_at DESC");
+
+$tailwind_mode = true;
+require_once('header.php');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Survey Uploads</title>
+  <link rel="icon" type="image/x-icon" href="images/real-women-logo.webp">
+  <link href="css/normal_tw.css" rel="stylesheet">
+  <style>
+    .file-meta { font-size:.9rem; color:#4b5563; }
+  </style>
+</head>
+<body>
+<header class="hero-header">
+  <div class="center-header"><h1>Coffee Talk Surveys</h1></div>
+</header>
+
+<main>
+  <div class="main-content-box w-[80%] p-8 mb-8">
+    <div class="flex justify-center gap-8 mb-8">
+      <a href="index.php" class="return-button">Return to Dashboard</a>
+    </div>
+
+    <?php if ($ok): ?><div class="status-ok mb-4"><?= htmlspecialchars($ok) ?></div><?php endif; ?>
+    <?php if ($err): ?><div class="status-err mb-4"><?= htmlspecialchars($err) ?></div><?php endif; ?>
+
+    <h3 class="mb-2">Upload a Survey (PDF)</h3>
+    <form method="post" enctype="multipart/form-data" class="space-y-4 mb-10">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
+      <input type="hidden" name="action" value="upload">
+      <input type="file" name="pdf" accept="application/pdf" class="w-full" required>
+      <button type="submit" class="blue-button">Upload</button>
+    </form>
+
+    <h3 class="mb-2">Uploaded Surveys</h3>
+    <?php if ($list && $list->num_rows): ?>
+      <div class="overflow-x-auto">
+        <table>
+          <thead class="bg-blue-400">
+            <tr>
+              <th>File</th>
+              <th>Uploaded</th>
+              <th style="width:120px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php while ($r = $list->fetch_assoc()): ?>
+            <tr>
+              <td>
+                <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank">
+                  <?= htmlspecialchars($r['filename']) ?>
+                </a>
+              </td>
+              <td class="file-meta"><?= htmlspecialchars($r['uploaded_at']) ?></td>
+              <td>
+                <form method="post" onsubmit="return confirm('Delete this survey?');">
+                  <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
+                  <button class="blue-button">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php else: ?>
+      <div class="info-block">No surveys uploaded yet.</div>
+    <?php endif; ?>
+  </div>
+</main>
+</body>
+</html>
