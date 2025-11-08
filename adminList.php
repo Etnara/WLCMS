@@ -103,7 +103,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
+                                
                                 <th>Notes</th>
                                 <th>Profile</th>
                                 
@@ -117,8 +117,6 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <tr>
                             <td>' . $person->get_first_name() . " " . $person->get_last_name() . '</td>
                             <td><a href="mailto:' . $person->get_email() . '" class="text-blue-700 underline">' . $person->get_email() . '</a></td>
-                            <td><a href="tel:' . $person->get_phone1() . '" class="text-blue-700 underline">' . formatPhoneNumber($person->get_phone1()) . '</a></td>
-                            
                             <td>' . $person->get_notes() . '</td>
                             <td><a href="viewProfile.php?id=' . $person->get_id() . '" class="text-blue-700 underline">Edit</a></td>
                             </tr>';
@@ -140,10 +138,9 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                
                                 <th>Notes</th>
-                                <th></th>
+                                
+                                <th>Profile</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -154,7 +151,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             <tr>
                             <td>' . $person["first_name"] . " " . $person["last_name"] . '</td>
                             <td><a href="mailto:' . $person["email"] . '" class="text-blue-700 underline">' . $person["email"] . '</a></td>
-                            <td><a href="tel:' . $person["phone1"] . '" class="text-blue-700 underline">' . formatPhoneNumber($person["phone1"]) . '</a></td>
+                            
                             
                             <td>' . $person["notes"] . '</td>
                             <td><a href="viewProfile.php?id=' . $person["id"] . '" class="text-blue-700 underline">Edit</a></td>
