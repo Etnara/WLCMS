@@ -11,7 +11,6 @@ $con = connect();
 
 $ok = $err = null;
 
-// CSRF token
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(16));
 $csrf = $_SESSION['csrf'];
 
@@ -82,9 +81,45 @@ require_once('header.php');
       font-weight: 700;
       text-align: center;
   }   
-  .dropdown {
-      padding-right: 50px;
-  }   
+  .dropdown { padding-right: 50px; }
+
+  /* ===== file input bar edit ===== */
+  .file-input {
+    width: 100%;
+    border: 1px solid #e5e7eb;         
+    background-color: #f3f4f6;         
+    color: #374151;                    
+    border-radius: 8px;
+    padding: 10px;           /* space around the filename thingy */
+  }
+  .file-input:focus {
+    outline: none;
+    border-color: #93c5fd;             
+    box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+  }
+  /* style the button part (cross-browser) */
+  .file-input::file-selector-button {
+    margin-right: 12px;
+    border: 0;
+    background: #9ca3af;               
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .file-input::file-selector-button:hover { background: #6b7280; }
+
+  /* Safari/WebKit fallback */
+  .file-input::-webkit-file-upload-button {
+    margin-right: 12px;
+    border: 0;
+    background: #9ca3af;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .file-meta { font-size:.9rem; color:#4b5563; }
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 
@@ -94,9 +129,6 @@ require_once('header.php');
   <title>Survey Uploads</title>
   <link rel="icon" type="image/x-icon" href="images/real-women-logo.webp">
   <link href="css/normal_tw.css" rel="stylesheet">
-  <style>
-    .file-meta { font-size:.9rem; color:#4b5563; }
-  </style>
 </head>
 <body>
 <header class="hero-header">
@@ -116,8 +148,10 @@ require_once('header.php');
     <form method="post" enctype="multipart/form-data" class="space-y-4 mb-10">
       <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
       <input type="hidden" name="action" value="upload">
-      <input type="file" name="pdf" accept="application/pdf" class="w-full" required>
-      <button type="submit" class="blue-button">Upload</button>
+     <div style="display: flex; align-items: center; gap: 10px;">
+      <input type="file" name="pdf" accept="application/pdf" class="file-input" style="flex: 1;" required>
+      <button type="submit" class="blue-button" style="white-space: nowrap;">Upload</button>
+    </div>
     </form>
 
     <h3 class="mb-2">Uploaded Surveys</h3>
