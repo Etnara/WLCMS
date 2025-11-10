@@ -17,7 +17,16 @@ if ($stmt->num_rows !== 1) {
 $stmt->bind_result($fn, $mime, $blob);
 $stmt->fetch();
 
+// the output has to be clean before or it fails :(
+if (ob_get_level()) {
+  ob_end_clean();
+}
+
 header('Content-Type: ' . ($mime ?: 'application/pdf'));
-header('Content-Disposition: inline; filename="' . rawurlencode($fn) . '"');
-header('Content-Length: ' . strlen($blob));
+header('Content-Disposition: inline; filename="' . basename($fn) . '"');
+
+// handle blob stuff carefully or php freaks out about it lol
 echo $blob;
+
+$stmt->close();
+$con->close();
