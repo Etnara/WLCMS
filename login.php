@@ -143,11 +143,11 @@
                 ?>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="email" placeholder="Enter your email" required>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-700" type="text" name="email" placeholder="Enter your email" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="password" name="password" placeholder="Enter your password" required>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-700" type="password" name="password" placeholder="Enter your password" required>
         </div>
         <div class="flex justify-between items-center mb-4">
           <a href="#" class="text-blue-500 text-sm hover:underline">Forgot password?</a>
