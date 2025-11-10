@@ -262,6 +262,38 @@ function getPendingSpeakers($offset, $limit){
     }
 }
 
+//get rejected speakers
+function getRejectedSpeakers($offset, $limit){
+    $con=connect();
+
+    try{
+        //allow -1 to get all speakers
+        if ($limit == -1){
+            $limit = 100;
+        }
+
+        $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" AND status = "Rejected Speaker" LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
+
+        $stmt = $con->prepare($query);
+
+        /*
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }*/
+
+        $result = mysqli_query($con,$query);
+        $thePersons = array();
+        while ($result_row = mysqli_fetch_assoc($result)) {
+            $thePerson = make_a_person($result_row);
+            $thePersons[] = $thePerson;
+        }
+
+        return ['array' => $thePersons, 'message' => "success"];
+    } catch (Exception $e){
+        return ['array' => [], 'message' => $e->getMessage()];
+    }
+}
+
 function acceptSpeaker($volunteer_id){
     $con = connect(); // Ensure this function connects to your database
 
