@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // auto-login by storing the person's id and access level
             $_SESSION['_id'] = $id;
             $_SESSION['access_level'] = 2;
+            $_SESSION['logged_in'] = true;
             session_regenerate_id(true);
             $success = true;
             // Delete UUID from authentication_tokens table after account is created
