@@ -8,6 +8,7 @@ All mailing functions created by Caleb Lineberry */
 require_once('vendor/autoload.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+include_once('database/dbinfo.php');
 
 $mail = new PHPMailer(true);
 
@@ -70,18 +71,33 @@ Please email bwilli22@umw.edu if you need to rechedule or cancel.";
     $mail->send();
 }
 
+function generate_uuid_v4() {
+    $data = random_bytes(16); // Cryptographically Secure
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // Set version to 0100
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // Set bits 6-7 to 10
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
 function sendAdminInvite($to){
     global $mail;
     $mail->addAddress($to);
     $mail->Subject = "Invite for Admin Account Creation";
 
+    $uuid = generate_uuid_v4();
+
     $link = $_SERVER['HTTP_REFERER'];
-    $link = substr($link, 0, strrpos($link, "/")) . "/AdminForm.php";
+    $link = substr($link, 0, strrpos($link, "/")) . "/AdminForm.php?uuid={$uuid}";
 
-    $mail->Body =
-"Welcome to the Coffee Talks Management System!
+    $mail->isHTML();
+    $mail->Body = "
+        Welcome to the Coffee Talks Management System! <br>
+        Please create your admin account <a href =\"{$link}\">here</a>. <br>
+        This link expires in 24 hours.
+    ";
 
-Please create your admin account here: {$link}";
+    $con = connect();
+    mysqli_query($con, "INSERT INTO authentication_tokens VALUES ('{$uuid}', NOW());");
+    $con->close();
 
     $mail->send();
 }
