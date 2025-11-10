@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
+<<<<<<< HEAD
 -- Generation Time: Nov 16, 2025 at 10:21 PM
+=======
+-- Generation Time: Nov 09, 2025 at 07:35 PM
+>>>>>>> 9cb65e4 (Improvement/Admin Form Security (#25))
 -- Server version: 10.11.14-MariaDB
 -- PHP Version: 8.4.13
 
@@ -29,7 +33,11 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `authentication_tokens`;
 CREATE TABLE `authentication_tokens` (
+<<<<<<< HEAD
   `uuid` char(36) NOT NULL,
+=======
+  `uuid` uuid NOT NULL,
+>>>>>>> 9cb65e4 (Improvement/Admin Form Security (#25))
   `time` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
