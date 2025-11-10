@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 05, 2025 at 02:14 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Nov 09, 2025 at 07:35 PM
+-- Server version: 10.11.14-MariaDB
+-- PHP Version: 8.4.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,18 @@ SET time_zone = "+00:00";
 --
 -- Database: `wlcms_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `authentication_tokens`
+--
+
+DROP TABLE IF EXISTS `authentication_tokens`;
+CREATE TABLE `authentication_tokens` (
+  `uuid` uuid NOT NULL,
+  `time` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -723,6 +735,12 @@ INSERT INTO `user_groups` (`user_id`, `group_name`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `authentication_tokens`
+--
+ALTER TABLE `authentication_tokens`
+  ADD PRIMARY KEY (`uuid`);
 
 --
 -- Indexes for table `dbarchived_volunteers`
