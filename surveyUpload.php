@@ -180,7 +180,7 @@ require_once('header.php');
           <?php while ($r = $list->fetch_assoc()): ?>
             <tr>
               <td>
-                <a class="text-blue-700 underline" href="survey_download.php?id=<?= (int)$r['id'] ?>" target="_blank">
+                <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank">
                   <?= htmlspecialchars($r['filename']) ?>
                 </a>
               </td>
