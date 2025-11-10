@@ -86,7 +86,7 @@ function sendAdminInvite($to){
     $uuid = generate_uuid_v4();
 
     $link = $_SERVER['HTTP_REFERER'];
-    $link = substr($link, 0, strrpos($link, "/")) . "/AdminForm.php?uuid={$uuid}";
+    $link = substr($link, 0, strrpos($link, "/")) . "/AdminForm.php?uuid={$uuid}&email={$to}";
 
     $mail->isHTML();
     $mail->Body = "
