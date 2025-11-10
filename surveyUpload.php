@@ -83,7 +83,6 @@ require_once('header.php');
   }   
   .dropdown { padding-right: 50px; }
 
-  /* ===== file input bar edit ===== */
   .file-input {
     width: 100%;
     border: 1px solid #e5e7eb;         
@@ -92,25 +91,7 @@ require_once('header.php');
     border-radius: 8px;
     padding: 10px;           /* space around the filename thingy */
   }
-  .file-input:focus {
-    outline: none;
-    border-color: #93c5fd;             
-    box-shadow: 0 0 0 3px rgba(59,130,246,.25);
-  }
-  /* style the button part (cross-browser) */
   .file-input::file-selector-button {
-    margin-right: 12px;
-    border: 0;
-    background: #9ca3af;               
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .file-input::file-selector-button:hover { background: #6b7280; }
-
-  /* Safari/WebKit fallback */
-  .file-input::-webkit-file-upload-button {
     margin-right: 12px;
     border: 0;
     background: #9ca3af;
@@ -119,7 +100,33 @@ require_once('header.php');
     border-radius: 6px;
     cursor: pointer;
   }
+  .file-input::file-selector-button:hover { background: #6b7280; }
+
   .file-meta { font-size:.9rem; color:#4b5563; }
+
+  .popup {
+  position: fixed;
+  top: 325px; /* CHANGE THIS SO IT MOVES LOWER ON SCREEN */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0;
+  animation: fadeInOut 4s forwards;
+  z-index: 9999;
+}
+
+  .popup.ok { background-color: #15803d; }
+  .popup.err { background-color: #b91c1c; }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  }
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 
@@ -135,23 +142,27 @@ require_once('header.php');
   <div class="center-header"><h1>Coffee Talk Surveys</h1></div>
 </header>
 
+<?php if ($ok): ?>
+  <div class="popup ok"><?= htmlspecialchars($ok) ?></div>
+<?php endif; ?>
+<?php if ($err): ?>
+  <div class="popup err"><?= htmlspecialchars($err) ?></div>
+<?php endif; ?>
+
 <main>
   <div class="main-content-box w-[80%] p-8 mb-8">
     <div class="flex justify-center gap-8 mb-8">
       <a href="index.php" class="return-button">Return to Dashboard</a>
     </div>
 
-    <?php if ($ok): ?><div class="status-ok mb-4"><?= htmlspecialchars($ok) ?></div><?php endif; ?>
-    <?php if ($err): ?><div class="status-err mb-4"><?= htmlspecialchars($err) ?></div><?php endif; ?>
-
     <h3 class="mb-2">Upload a Survey (PDF)</h3>
     <form method="post" enctype="multipart/form-data" class="space-y-4 mb-10">
       <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
       <input type="hidden" name="action" value="upload">
-     <div style="display: flex; align-items: center; gap: 10px;">
-      <input type="file" name="pdf" accept="application/pdf" class="file-input" style="flex: 1;" required>
-      <button type="submit" class="blue-button" style="white-space: nowrap;">Upload</button>
-    </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <input type="file" name="pdf" accept="application/pdf" class="file-input" style="flex: 1;" required>
+        <button type="submit" class="blue-button" style="white-space: nowrap;">Upload</button>
+      </div>
     </form>
 
     <h3 class="mb-2">Uploaded Surveys</h3>
@@ -173,7 +184,7 @@ require_once('header.php');
                   <?= htmlspecialchars($r['filename']) ?>
                 </a>
               </td>
-              <td class="file-meta"><?= htmlspecialchars($r['uploaded_at']) ?></td>
+                <td class="file-meta"><?= date('Y-m-d H:i', strtotime($r['uploaded_at'])) ?></td>
               <td>
                 <form method="post" onsubmit="return confirm('Delete this survey?');">
                   <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
