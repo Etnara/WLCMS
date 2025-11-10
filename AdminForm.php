@@ -25,7 +25,7 @@
   <form method="post">
     <div class="form-row"><label>First Name</label><input name="first_name" required></div>
     <div class="form-row"><label>Last Name</label><input name="last_name" required></div>
-    <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
+    <div class="form-row"><label>Email</label><input type="email" name="email" required <?php if (isset($_GET['email'])) echo "value=\"{$_GET['email']}\""; ?>></div>
     <div class="form-row"><label>Password (8+ chars)</label><input type="password" name="password" minlength="8" required></div>
     <div class="form-row"><label>Confirm Password</label><input type="password" name="password_confirm" minlength="8" required></div>
     <div class="text-center mt-6"><button class="blue-button">Create Admin Account</button></div>
