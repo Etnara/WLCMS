@@ -8,6 +8,33 @@ require_once __DIR__ . '/domain/Person.php';
 require_once __DIR__ . '/database/dbPersons.php';
 
 $con = connect();
+
+# Delete expired authentication tokens
+mysqli_query($con, "
+    DELETE FROM authentication_tokens
+    WHERE (time + INTERVAL 1 DAY) < NOW()
+");
+
+if (!isset($_SESSION['logged_in'])) {
+    if (!isset($_GET['uuid'])) {
+        header('Location: login.php');
+        die();
+    }
+
+    $exists = mysqli_execute_query($con, "
+        SELECT EXISTS(
+            SELECT 1
+            FROM authentication_tokens
+            WHERE uuid=?
+        )
+    ", [$_GET['uuid']])->fetch_column(0);
+
+    if (!$exists) {
+        header('Location: login.php');
+        die();
+    }
+}
+
 $error = null;
 $success = false;
 
@@ -84,6 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['access_level'] = 2;
             session_regenerate_id(true);
             $success = true;
+            // Delete UUID from authentication_tokens table after account is created
+            mysqli_execute_query($con, "DELETE FROM authentication_tokens WHERE uuid=?", [$_GET['uuid']]);
         } else {
             $error = 'Account could not be created (username may already exist).';
         }
