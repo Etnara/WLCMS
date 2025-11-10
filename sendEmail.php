@@ -102,4 +102,57 @@ function sendAdminInvite($to){
     $mail->send();
 }
 
+
+
+
+
+// automated email (at least an attempt)
+function autoEmail($type, $to, $first_name = '', $last_name = '', $date = '') {
+    switch ($type) {
+        case 'form_confirmation':
+            sendFormConfirmation($to, $first_name, $last_name);
+            break;
+
+        case 'form_approved':
+            sendFormApproved($to, $first_name, $last_name);
+            break;
+
+        case 'speaker_scheduled':
+            sendScheduledSpeaker($to, $first_name, $last_name, $date);
+            break;
+
+        case 'admin_invite':
+            sendAdminInvite($to);
+            break;
+
+        default:
+            throw new Exception("Unknown email type: $type");
+    }
+}
+
+//speaker email reminder one week and 24 hr prior to talk
+function speakerReminder($to, $first_name, $last_name, $eventDate){
+    global $mail;
+    $now = new DateTime();
+    $event = new DateTime($eventDate);
+    $diff = $event->getTimestamp() - $now->getTimestamp();
+
+    $oneWeek = 7 * 24 * 60 * 60;
+    $oneDay = 24 * 60 * 60;
+    $timeWindow = 60;
+
+    if(abs($diff - $oneWeek) <= $timeWindow){
+        $mail->addAddress($to, $first_name . ' '. $last_name);
+        $mail->Subject = "Reminder: Your Coffee Talk is in 1 week";
+        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a reminder one week in advance.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->send();
+    } elseif(abs($diff - $oneDay) <= $timeWindow){
+        $mail->addAddress($to, $first_name . ' '. $last_name);
+        $mail->Subject = "Reminder: Your Coffee Talk is tomorrow";
+        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a 24-hour reminder.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->send();
+    }
+}
+
+
 ?>
