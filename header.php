@@ -571,7 +571,7 @@ if (date("H:i:s") > "18:19:59") {
                 <a href="index.php"><img src="images/real-women-logo.webp" alt="Logo"></a>
             </div>
             <div class="nav-links">
-		<div class="nav-item"><span class="font-change">Volunteer Management System</span>
+		<div class="nav-item"><span class="font-change">Women\'s Leadership Colloquium</span>
 		</div>
            </div>
         </div>
