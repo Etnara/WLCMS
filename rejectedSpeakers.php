@@ -167,7 +167,7 @@ function display ($pageNum){
                                     <div style='display: flex; gap: 8px;'>
                                             <button type='button' style='background-color: #294877; color: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 1rem;' onclick=\"confirmAction('accept', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Accept</button>
-                                            <button type='button' style='background-color: #db393b; color: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 1rem;' onclick=\"confirmAction('reject', '{$fullName}','{$volunteer->get_id()}')
+                                            <button type='button' style='background-color: #db393b; color: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 1rem;' onclick=\"confirmAction('delete', '{$fullName}','{$volunteer->get_id()}')
                                                 \">Delete</button>";
                                     echo "</td>";
                                     echo "</tr>";
@@ -313,7 +313,7 @@ function display ($pageNum){
     function confirmAction(action, fullName,id) {
     const target = action === 'accept'
         ? `AcceptSpeaker.php?name=${fullName}&id=${id}`
-        : `RejectSpeaker.php?name=${fullName}&id=${id}`;
+        : `DeleteSpeaker.php?name=${fullName}&id=${id}`;
     if (confirm(`Are you sure you want to ${action} ${fullName}?`)) {
         window.location.href = target;
     }

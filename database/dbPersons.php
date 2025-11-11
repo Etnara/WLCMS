@@ -351,6 +351,39 @@ function acceptSpeaker($volunteer_id){
 
 }
 
+function deleteSpeaker($speaker_id) {
+    $con = connect(); 
+
+    mysqli_begin_transaction($con);
+
+    try {
+        // Delete the volunteer from dbpersons
+        
+        $query_delete = "DELETE FROM dbpersons WHERE id = ?";
+        $stmt_delete = $con->prepare($query_delete);
+        $stmt_delete->bind_param("s", $speaker_id);
+
+        if (!$stmt_delete->execute()){
+            throw new Exception("Failed to properly delete.");
+        }
+        
+        // Commit transaction
+        mysqli_commit($con);
+
+        //echo "Speaker successfully archived.";
+    } catch (Exception $e) {
+        // Rollback if anything goes wrong
+        mysqli_rollback($con);
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+
+    // Close connection
+    //$stmt->close();
+    $stmt_delete->close();
+    mysqli_close($con);
+    return ['success' => true, 'message' => 'Speaker deleted successfully.'];
+}
+
 
 function archive_volunteer($volunteer_id) {
     $con = connect(); // Ensure this function connects to your database
