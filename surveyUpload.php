@@ -58,8 +58,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// fetch list
-$list = $con->query("SELECT id, filename, uploaded_at FROM dbsurveys ORDER BY uploaded_at DESC");
+// pagination / mock data (UI design only — replace with DB query later)
+$limit = 10; // items per page
+$pageNum = max(1, (int)($_GET['page'] ?? 1));
+$offset = ($pageNum - 1) * $limit;
+
+// Mock data for UI design (replace with real DB query later)
+$allRows = [
+  ['id' => 1, 'event_name' => 'Spring Gala 2025', 'filename' => 'spring-gala-survey.pdf', 'uploaded_at' => '2025-11-10'],
+  ['id' => 2, 'event_name' => 'Winter Fundraiser', 'filename' => 'winter-fundraiser-survey.pdf', 'uploaded_at' => '2025-11-09'],
+  ['id' => 3, 'event_name' => 'Coffee Talk Kickoff', 'filename' => 'coffee-talk-kickoff.pdf', 'uploaded_at' => '2025-11-08'],
+  ['id' => 4, 'event_name' => 'Board Meeting Q4', 'filename' => 'board-meeting-q4.pdf', 'uploaded_at' => '2025-11-07'],
+  ['id' => 5, 'event_name' => 'Volunteer Summit', 'filename' => 'volunteer-summit.pdf', 'uploaded_at' => '2025-11-06 '],
+  ['id' => 6, 'event_name' => 'Annual Gala', 'filename' => 'annual-gala.pdf', 'uploaded_at' => '2025-11-05'],
+  ['id' => 7, 'event_name' => 'Community Day', 'filename' => 'community-day.pdf', 'uploaded_at' => '2025-11-04'],
+  ['id' => 8, 'event_name' => 'Fall Festival', 'filename' => 'fall-festival.pdf', 'uploaded_at' => '2025-11-03'],
+  ['id' => 9, 'event_name' => 'Donor Reception', 'filename' => 'donor-reception.pdf', 'uploaded_at' => '2025-11-02'],
+  ['id' => 10, 'event_name' => 'Staff Training', 'filename' => 'staff-training.pdf', 'uploaded_at' => '2025-11-01'],
+  ['id' => 11, 'event_name' => 'Member Appreciation', 'filename' => 'member-appreciation.pdf', 'uploaded_at' => '2025-10-31'],
+  ['id' => 12, 'event_name' => 'Quarterly Review', 'filename' => 'quarterly-review.pdf', 'uploaded_at' => '2025-10-30'],
+];
+
+// handle sorting
+$sortBy = $_GET['sort'] ?? 'uploaded_at'; // default sort by date
+$sortOrder = $_GET['order'] ?? 'desc'; // default descending
+if (!in_array($sortOrder, ['asc', 'desc'])) $sortOrder = 'desc';
+
+// map sort param to array keys
+$sortKeyMap = [
+  'event_name' => 'event_name',
+  'filename' => 'filename',
+  'uploaded_at' => 'uploaded_at',
+];
+$sortKey = $sortKeyMap[$sortBy] ?? 'uploaded_at';
+
+// sort the array
+usort($allRows, function($a, $b) use ($sortKey, $sortOrder) {
+  $valA = $a[$sortKey];
+  $valB = $b[$sortKey];
+  $cmp = strcmp($valA, $valB);
+  return ($sortOrder === 'asc') ? $cmp : -$cmp;
+});
+
+$totalRows = count($allRows);
+$totalPages = max(1, (int)ceil($totalRows / $limit));
+
+// slice for current page
+$list = array_slice($allRows, $offset, $limit);
+
+// helper function to build sort link
+function sortLink($column, $label) {
+  global $sortBy, $sortOrder, $pageNum;
+  $newOrder = ($sortBy === $column && $sortOrder === 'asc') ? 'desc' : 'asc';
+  $arrow = ($sortBy === $column) ? ($sortOrder === 'asc' ? ' ▲' : ' ▼') : '';
+  return '<a href="?sort=' . $column . '&order=' . $newOrder . '&page=' . $pageNum . '" style="text-decoration:none; cursor:pointer; color:inherit;">' . $label . $arrow . '</a>';
+}
 
 $tailwind_mode = true;
 require_once('header.php');
@@ -102,7 +155,8 @@ require_once('header.php');
   }
   .file-input::file-selector-button:hover { background: #6b7280; }
 
-  .file-meta { font-size:.9rem; color:#4b5563; }
+  /* make date/file-meta more prominent */
+  .file-meta { font-size:1.1rem; color:#4b5563; font-weight:700; }
 
   .popup {
   position: fixed;
@@ -126,6 +180,43 @@ require_once('header.php');
     0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
     10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  }
+
+  /* Pagination styles */
+  .pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 10px 0;
+    flex-wrap: wrap;
+  }
+  .page-num {
+    display: inline-block;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #d1d5db;
+    text-decoration: none;
+    min-width: 36px;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .page-num:hover { background: #e5e7eb; }
+  .page-num.active {
+    background: #800000;
+    color: #fff;
+    border-color: #800000;
+    box-shadow: 0 2px 8px rgba(128, 0, 0, 0.3);
+  }
+  .page-num:disabled {
+    opacity: 0.5;
+    cursor: default;
+    background: #f3f4f6;
   }
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
@@ -166,25 +257,28 @@ require_once('header.php');
     </form>
 
     <h3 class="mb-2">Uploaded Surveys</h3>
-    <?php if ($list && $list->num_rows): ?>
-      <div class="overflow-x-auto">
-        <table>
-          <thead class="bg-blue-400">
+    <div class="overflow-x-auto">
+      <table>
+        <thead class="bg-blue-400">
+          <tr>
+            <th><?= sortLink('event_name', 'Event Name') ?></th>
+            <th><?= sortLink('filename', 'File') ?></th>
+            <th><?= sortLink('uploaded_at', 'Date') ?></th>
+            <th style="width:120px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Render mock data rows (will be replaced with DB query later)
+        if (count($list) > 0) {
+          foreach ($list as $r) {
+            ?>
             <tr>
-              <th>File</th>
-              <th>Uploaded</th>
-              <th style="width:120px;"></th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php while ($r = $list->fetch_assoc()): ?>
-            <tr>
+              <td><?= htmlspecialchars($r['event_name'] ?? '') ?></td>
               <td>
-                <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank">
-                  <?= htmlspecialchars($r['filename']) ?>
-                </a>
+                <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank"><?= htmlspecialchars($r['filename']) ?></a>
               </td>
-                <td class="file-meta"><?= date('Y-m-d H:i', strtotime($r['uploaded_at'])) ?></td>
+              <td class="file-meta"><?= date('m/d/Y', strtotime($r['uploaded_at'])) ?></td>
               <td>
                 <form method="post" onsubmit="return confirm('Delete this survey?');">
                   <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
@@ -194,13 +288,63 @@ require_once('header.php');
                 </form>
               </td>
             </tr>
-          <?php endwhile; ?>
-          </tbody>
-        </table>
-      </div>
-    <?php else: ?>
-      <div class="info-block">No surveys uploaded yet.</div>
-    <?php endif; ?>
+            <?php
+          }
+        } else {
+          // placeholder row for layout/testing
+          ?>
+          <tr>
+            <td>Sample Event</td>
+            <td><span class="text-blue-700">sample-survey.pdf</span></td>
+            <td class="file-meta"><?= date('Y-m-d H:i') ?></td>
+            <td><button class="blue-button" disabled>Delete</button></td>
+          </tr>
+          <?php
+        }
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination (numbered pages, centered) -->
+    <div class="pagination" role="navigation" aria-label="Pagination">
+      <?php
+        // build a small window of pages around current page
+        $window = 2; // pages on each side of current
+        $startPage = max(1, $pageNum - $window);
+        $endPage = min($totalPages, $pageNum + $window);
+
+        // if near edges, extend the window to show more pages
+        if ($endPage - $startPage < $window * 2) {
+          $needed = $window * 2 - ($endPage - $startPage);
+          $startPage = max(1, $startPage - $needed);
+          $endPage = min($totalPages, $endPage + $needed);
+        }
+      ?>
+
+      <!-- Back / Previous -->
+      <?php if ($pageNum > 1): ?>
+        <a class="page-num" href="?page=<?= $pageNum - 1 ?>" aria-label="Previous page">Back</a>
+      <?php else: ?>
+        <button class="page-num" disabled aria-hidden="true">Back</button>
+      <?php endif; ?>
+
+      <!-- Page numbers -->
+      <?php for ($p = $startPage; $p <= $endPage; $p++): ?>
+        <?php if ($p == $pageNum): ?>
+          <span class="page-num active" aria-current="page"><?= $p ?></span>
+        <?php else: ?>
+          <a class="page-num" href="?page=<?= $p ?>"><?= $p ?></a>
+        <?php endif; ?>
+      <?php endfor; ?>
+
+      <!-- Next -->
+      <?php if ($pageNum < $totalPages): ?>
+        <a class="page-num" href="?page=<?= $pageNum + 1 ?>" aria-label="Next page">Next</a>
+      <?php else: ?>
+        <button class="page-num" disabled aria-hidden="true">Next</button>
+      <?php endif; ?>
+    </div>
   </div>
 </main>
 </body>
