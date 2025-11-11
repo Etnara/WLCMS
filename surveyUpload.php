@@ -157,7 +157,7 @@ require_once('header.php');
   font-size: 1rem;
   opacity: 0;
   animation: fadeInOut 4s forwards;
-  z-index: 9999;
+  z-index: 100;
 }
 
   .popup.ok { background-color: #15803d; }
