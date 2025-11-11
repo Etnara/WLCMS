@@ -129,6 +129,7 @@ require_once('header.php');
     color: #374151;                    
     border-radius: 8px;
     padding: 10px;           /* space around the filename thingy */
+    margin-bottom: 0;
   }
   .file-input::file-selector-button {
     margin-right: 12px;
