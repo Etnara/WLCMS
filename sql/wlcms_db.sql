@@ -863,7 +863,7 @@ ALTER TABLE `dbshifts`
 -- AUTO_INCREMENT for table `dbsurveys`
 --
 ALTER TABLE `dbsurveys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `discussion_replies`

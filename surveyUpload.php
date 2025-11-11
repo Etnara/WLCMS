@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           } else {
             $stmt = $con->prepare("INSERT INTO dbsurveys (filename, mime, content) VALUES (?, ?, ?)");
             $fn   = basename($file['name']);
-            $stmt->bind_param('sss', $fn, $mime, $data);
+            $stmt->bind_param('ssb', $fn, $mime, $data);
+            $stmt->send_long_data(2, $data);
             if ($stmt->execute()) $ok = 'Survey uploaded.'; else $err = 'Upload failed.';
             $stmt->close();
           }
@@ -58,53 +59,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// pagination / mock data (UI design only — replace with DB query later)
+// pagination settings
 $limit = 10; // items per page
 $pageNum = max(1, (int)($_GET['page'] ?? 1));
 $offset = ($pageNum - 1) * $limit;
-
-// Mock data for UI design (replace with real DB query later)
-$allRows = [
-  ['id' => 1, 'event_name' => 'Spring Gala 2025', 'filename' => 'spring-gala-survey.pdf', 'uploaded_at' => '2025-11-10'],
-  ['id' => 2, 'event_name' => 'Winter Fundraiser', 'filename' => 'winter-fundraiser-survey.pdf', 'uploaded_at' => '2025-11-09'],
-  ['id' => 3, 'event_name' => 'Coffee Talk Kickoff', 'filename' => 'coffee-talk-kickoff.pdf', 'uploaded_at' => '2025-11-08'],
-  ['id' => 4, 'event_name' => 'Board Meeting Q4', 'filename' => 'board-meeting-q4.pdf', 'uploaded_at' => '2025-11-07'],
-  ['id' => 5, 'event_name' => 'Volunteer Summit', 'filename' => 'volunteer-summit.pdf', 'uploaded_at' => '2025-11-06 '],
-  ['id' => 6, 'event_name' => 'Annual Gala', 'filename' => 'annual-gala.pdf', 'uploaded_at' => '2025-11-05'],
-  ['id' => 7, 'event_name' => 'Community Day', 'filename' => 'community-day.pdf', 'uploaded_at' => '2025-11-04'],
-  ['id' => 8, 'event_name' => 'Fall Festival', 'filename' => 'fall-festival.pdf', 'uploaded_at' => '2025-11-03'],
-  ['id' => 9, 'event_name' => 'Donor Reception', 'filename' => 'donor-reception.pdf', 'uploaded_at' => '2025-11-02'],
-  ['id' => 10, 'event_name' => 'Staff Training', 'filename' => 'staff-training.pdf', 'uploaded_at' => '2025-11-01'],
-  ['id' => 11, 'event_name' => 'Member Appreciation', 'filename' => 'member-appreciation.pdf', 'uploaded_at' => '2025-10-31'],
-  ['id' => 12, 'event_name' => 'Quarterly Review', 'filename' => 'quarterly-review.pdf', 'uploaded_at' => '2025-10-30'],
-];
 
 // handle sorting
 $sortBy = $_GET['sort'] ?? 'uploaded_at'; // default sort by date
 $sortOrder = $_GET['order'] ?? 'desc'; // default descending
 if (!in_array($sortOrder, ['asc', 'desc'])) $sortOrder = 'desc';
 
-// map sort param to array keys
+// validate sort column
 $sortKeyMap = [
-  'event_name' => 'event_name',
   'filename' => 'filename',
   'uploaded_at' => 'uploaded_at',
 ];
 $sortKey = $sortKeyMap[$sortBy] ?? 'uploaded_at';
 
-// sort the array
-usort($allRows, function($a, $b) use ($sortKey, $sortOrder) {
-  $valA = $a[$sortKey];
-  $valB = $b[$sortKey];
-  $cmp = strcmp($valA, $valB);
-  return ($sortOrder === 'asc') ? $cmp : -$cmp;
-});
-
-$totalRows = count($allRows);
+// get total count
+$countResult = $con->query("SELECT COUNT(*) as cnt FROM dbsurveys");
+$countRow = $countResult->fetch_assoc();
+$totalRows = $countRow['cnt'] ?? 0;
 $totalPages = max(1, (int)ceil($totalRows / $limit));
 
-// slice for current page
-$list = array_slice($allRows, $offset, $limit);
+// fetch surveys from database
+$query = "SELECT id, filename, uploaded_at FROM dbsurveys ORDER BY $sortKey $sortOrder LIMIT $offset, $limit";
+$result = $con->query($query);
+$list = [];
+if ($result) {
+  while ($row = $result->fetch_assoc()) {
+    $list[] = $row;
+  }
+}
 
 // helper function to build sort link
 function sortLink($column, $label) {
@@ -252,7 +238,7 @@ require_once('header.php');
       <input type="hidden" name="action" value="upload">
       <div style="display: flex; align-items: center; gap: 10px;">
         <input type="file" name="pdf" accept="application/pdf" class="file-input" style="flex: 1;" required>
-        <button type="submit" class="blue-button" style="white-space: nowrap;">Upload</button>
+        <button type="submit" class="blue-button" style="white-space: nowrap; padding: 12px 20px; height: 54px; display: flex; align-items: center;">Upload</button>
       </div>
     </form>
 
@@ -261,7 +247,6 @@ require_once('header.php');
       <table>
         <thead class="bg-blue-400">
           <tr>
-            <th><?= sortLink('event_name', 'Event Name') ?></th>
             <th><?= sortLink('filename', 'File') ?></th>
             <th><?= sortLink('uploaded_at', 'Date') ?></th>
             <th style="width:120px;"></th>
@@ -269,12 +254,11 @@ require_once('header.php');
         </thead>
         <tbody>
         <?php
-        // Render mock data rows (will be replaced with DB query later)
-        if (count($list) > 0) {
+        // Render database rows
+        if (!empty($list)) {
           foreach ($list as $r) {
             ?>
             <tr>
-              <td><?= htmlspecialchars($r['event_name'] ?? '') ?></td>
               <td>
                 <a class="text-blue-700 underline" href="surveyDownload.php?id=<?= (int)$r['id'] ?>" target="_blank"><?= htmlspecialchars($r['filename']) ?></a>
               </td>
@@ -294,9 +278,8 @@ require_once('header.php');
           // placeholder row for layout/testing
           ?>
           <tr>
-            <td>Sample Event</td>
-            <td><span class="text-blue-700">sample-survey.pdf</span></td>
-            <td class="file-meta"><?= date('Y-m-d H:i') ?></td>
+            <td><span class="text-blue-700">No surveys uploaded yet</span></td>
+            <td class="file-meta">-</td>
             <td><button class="blue-button" disabled>Delete</button></td>
           </tr>
           <?php
