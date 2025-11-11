@@ -147,7 +147,7 @@ require_once('header.php');
 
   .popup {
   position: absolute;
-  top: 325px; /* CHANGE THIS SO IT MOVES LOWER ON SCREEN */
+  top: 320px; /* CHANGE THIS SO IT MOVES LOWER ON SCREEN */
   left: 50%;
   transform: translateX(-50%);
   padding: 16px 24px;
