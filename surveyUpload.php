@@ -146,7 +146,7 @@ require_once('header.php');
   .file-meta { font-size:1.1rem; color:#4b5563; font-weight:700; }
 
   .popup {
-  position: fixed;
+  position: absolute;
   top: 325px; /* CHANGE THIS SO IT MOVES LOWER ON SCREEN */
   left: 50%;
   transform: translateX(-50%);
