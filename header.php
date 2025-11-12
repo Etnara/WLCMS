@@ -686,6 +686,8 @@ if (date("H:i:s") > "18:19:59") {
         $permission_array['createadmininvite.php'] = 3;
         $permission_array['accept_invite.php']     = 2;
         $permission_array['speakerlist.php'] = 2;
+        $permission_array['surveyUpload.php'] = 2;
+
         // LOWERCASE
 
 
@@ -821,8 +823,21 @@ if (date("H:i:s") > "18:19:59") {
         <span>Admin Form</span>
       </div>
     </a>
+
   </div>
 </div>
+
+
+<div class="nav-item">Statistics
+      <div class="dropdown">
+        <a href="surveyUpload.php" style="text-decoration: none;">
+          <div class="in-nav">
+            <img src="images/upload-arrow.svg" alt="Upload icon">
+            <span>Survey Uploads</span>
+          </div>
+        </a>
+      </div>
+    </div>
 
 
 
