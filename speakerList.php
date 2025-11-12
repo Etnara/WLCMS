@@ -40,6 +40,36 @@ $admin = retrieve_person($_SESSION['_id']);
         font-size: 0.8em;
         color: white;
     }
+
+    .search-container {
+    position: relative; 
+    }
+
+    .search-results {
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        right: 0;
+        z-index: 10;
+        
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 2px;
+        padding: 0;
+        list-style: none;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .search-results li {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .search-results li:hover {
+        background-color: #f0f0f0;
+    }
     </style>
 
     <head>
@@ -117,44 +147,100 @@ $admin = retrieve_person($_SESSION['_id']);
 
             <form id="person-search" class="space-y-6" method="get">
             <div>
+                <div class="search-container">
                 <label for="name">Search Speakers by name</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
                  placeholder="Enter the speaker's name">
+                <ul id="nameResults" class="search-results"></ul>
+                </div>
+                <!--
                 <label for="topic">Search Speakers by topic</label>
-                <input type="text" id="topic" name="topic" class="w-full" value="<?php if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
+                <input type="text" id="topic" name="topic" class="w-full" value="<?php //if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
                 placeholder="Enter a topic">
+                -->
                         <table style="border: 0">
                             <td>
                                 <input type="submit" name="submit" value="Search" class="blue-button">
                             </td>
                             <td>
-                                <input type="submit" name="submit" value="Clear" class="blue-button">
+                                <input type="submit" name="submit" value="View all" class="blue-button">
                             </td>
                         </table>
             </div>
+            <script>
+            let nameTimeout = null;
+            const input = document.getElementById('name');
+            const resultsContainer = document.getElementById('nameResults');
+
+            input.addEventListener('input', function() {
+            clearTimeout(nameTimeout);
+            const query = this.value.trim();
+
+            resultsContainer.innerHTML = '';
+            if (!query) return;
+
+            nameTimeout = setTimeout(() => {
+                fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    resultsContainer.innerHTML = '';
+
+                    if (!data || data.length === 0) {
+                        resultsContainer.innerHTML = '<li>No matches found</li>';
+                        return;
+                    }
+
+                    data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+
+                    
+                    li.addEventListener('click', () => {
+                        input.value = item;
+                        resultsContainer.innerHTML = ''; 
+                    });
+
+                    resultsContainer.appendChild(li);
+                    });
+                })
+                .catch(err => console.error(err));
+            }, 300);
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!document.querySelector('.search-container').contains(e.target)) {
+                    resultsContainer.innerHTML = '';
+                }
+            });
+
+            window.addEventListener('scroll', () => {
+                resultsContainer.innerHTML = '';
+            });
+            </script>
 
             <!--<div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div> -->
                 <?php
-                    if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear")) {
+                    if ( (isset($_GET['submit']) && $_GET['submit'] != "View all")) {
                         require_once('include/input-validation.php');
                         require_once('database/dbPersons.php');
                         require_once('database/dbCommunications.php');
 
                         $args = sanitize($_GET);
                         $name = $args['name'];
-                        $topic = $args['topic'];
+                        $persons = array();
 
-                        if ($topic) {
+                        if ($name) {
                             echo "<h3>Search Results</h3>";
-                            $persons = find_speakers_by_topic($topic);
+                            $persons = find_speakers_by_topic($name);
+                            $persons2 = find_users($name);
+                            foreach ($persons2 as $p) {
+                                $persons[] = $p;
+                            }
+
                             require_once('include/output.php');
                             //echo '<div class="error-block">Returned to Full List.</div>';
-                        } else if ($name) {
-                            echo "<h3>Search Results</h3>";
-                             $persons = find_users($name);
-                             require_once('include/output.php');
                         }
                         if ((count($persons) > 0)){
                             echo'<div class="overflow-x-auto">
@@ -199,7 +285,7 @@ $admin = retrieve_person($_SESSION['_id']);
                         echo '<div class="error-block">Your search returned no results.</div>';
                     }
 
-                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "Clear")) {
+                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "View all")) {
                        echo' <div class="overflow-x-auto">
                     <table>
                         <thead class="bg-blue-400">

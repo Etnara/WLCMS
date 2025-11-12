@@ -384,6 +384,60 @@ function deleteSpeaker($speaker_id) {
     return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
+function search_speakers($text) {
+    $con = connect();
+
+    try {
+        
+        $queryNames = "
+            SELECT CONCAT(first_name, ' ', last_name) AS name 
+            FROM dbpersons 
+            WHERE first_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
+            LIMIT 10";
+        $stmtNames = $con->prepare($queryNames);
+        $stmtNames->bind_param("s", $text);
+        $stmtNames->execute();
+        $resultNames = $stmtNames->get_result();
+
+        $names = [];
+        while ($row = $resultNames->fetch_assoc()) {
+            $names[] = $row;
+        }
+
+        // --- Match last names ---
+        $queryLast = "
+            SELECT CONCAT(first_name, ' ', last_name) AS name 
+            FROM dbpersons 
+            WHERE last_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
+            LIMIT 10";
+        $stmtLast = $con->prepare($queryLast);
+        $stmtLast->bind_param("s", $text);
+        $stmtLast->execute();
+        $resultLast = $stmtLast->get_result();
+
+        while ($row = $resultLast->fetch_assoc()) {
+            if (!in_array($row, $names)) {
+                $names[] = $row;
+            }
+        }
+
+        $queryTopics = "SELECT DISTINCT topic FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+        $stmtTopics = $con->prepare($queryTopics);
+        $stmtTopics->bind_param("s", $text);
+        $stmtTopics->execute();
+        $resultTopics = $stmtTopics->get_result();
+
+        $topics = [];
+        while ($row = $resultTopics->fetch_assoc()) {
+            $topics[] = $row;
+        }
+
+        return ['names' => $names, 'topics' => $topics,'message' => 'worked'];
+
+    } catch (Exception $e) {
+        return ['names' => [], 'topics' => [],'message' => $e->getMessage()];
+    }
+}
 
 function archive_volunteer($volunteer_id) {
     $con = connect(); // Ensure this function connects to your database
