@@ -390,7 +390,7 @@ function search_speakers($text) {
     try {
         
         $queryNames = "
-            SELECT CONCAT(first_name, ' ', last_name) AS name 
+            SELECT id 
             FROM dbpersons 
             WHERE first_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -404,9 +404,8 @@ function search_speakers($text) {
             $names[] = $row;
         }
 
-        // --- Match last names ---
         $queryLast = "
-            SELECT CONCAT(first_name, ' ', last_name) AS name 
+            SELECT id 
             FROM dbpersons 
             WHERE last_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -421,7 +420,7 @@ function search_speakers($text) {
             }
         }
 
-        $queryTopics = "SELECT DISTINCT topic FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+        $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
         $stmtTopics = $con->prepare($queryTopics);
         $stmtTopics->bind_param("s", $text);
         $stmtTopics->execute();
