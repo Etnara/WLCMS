@@ -147,7 +147,6 @@ $admin = retrieve_person($_SESSION['_id']);
 
             
             <div>
-<<<<<<< HEAD
                 <div class="search-container">
                 <label for="name">Search Speakers by name or topic</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
@@ -159,14 +158,6 @@ $admin = retrieve_person($_SESSION['_id']);
                 <input type="text" id="topic" name="topic" class="w-full" value="<?php //if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
                 placeholder="Enter a topic">
                 -->
-=======
-                <label for="name">Search Speakers by name</label>
-                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
-                 placeholder="Enter the speaker's name">
-                <label for="topic">Search Speakers by topic</label>
-                <input type="text" id="topic" name="topic" class="w-full" value="<?php if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
-                placeholder="Enter a topic">
->>>>>>> 24ecf32 (Created a rough draft of searching by topic)
                         <table style="border: 0">
                             <td>
                                 <input type="submit" name="submit" value="Search" class="blue-button">
@@ -231,32 +222,17 @@ $admin = retrieve_person($_SESSION['_id']);
             </div> -->
             
                 <?php
-<<<<<<< HEAD
                 /*
                     if ( (isset($_GET['submit']) && $_GET['submit'] != "View all")) {
-=======
-                    if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear")) {
->>>>>>> 24ecf32 (Created a rough draft of searching by topic)
                         require_once('include/input-validation.php');
                         require_once('database/dbPersons.php');
                         require_once('database/dbCommunications.php');
 
                         $args = sanitize($_GET);
                         $name = $args['name'];
-<<<<<<< HEAD
                         $persons = array();
 
                         if ($name) {
-=======
-                        $topic = $args['topic'];
-
-                        if ($topic) {
-                            echo "<h3>Search Results</h3>";
-                            $persons = find_speakers_by_topic($topic);
-                            require_once('include/output.php');
-                            //echo '<div class="error-block">Returned to Full List.</div>';
-                        } else if ($name) {
->>>>>>> 24ecf32 (Created a rough draft of searching by topic)
                             echo "<h3>Search Results</h3>";
                             $persons = find_speakers_by_topic($name);
                             $persons2 = find_users($name);
@@ -312,11 +288,7 @@ $admin = retrieve_person($_SESSION['_id']);
                         echo '<div class="error-block">Your search returned no results.</div>';
                     }
 
-<<<<<<< HEAD
                     }if ( (isset($_GET['submit']) && $_GET['submit'] == "View all")) {
-=======
-                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "Clear")) {
->>>>>>> 24ecf32 (Created a rough draft of searching by topic)
                        echo' <div class="overflow-x-auto">
                     <table>
                         <thead class="bg-blue-400">

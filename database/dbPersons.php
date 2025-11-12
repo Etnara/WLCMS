@@ -351,6 +351,7 @@ function acceptSpeaker($volunteer_id){
 
 }
 
+<<<<<<< HEAD
 function deleteSpeaker($speaker_id) {
     $con = connect(); 
 
@@ -384,13 +385,19 @@ function deleteSpeaker($speaker_id) {
     return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
+=======
+>>>>>>> d533714 (Display search results that display both speakers and topics)
 function search_speakers($text) {
     $con = connect();
 
     try {
         
         $queryNames = "
+<<<<<<< HEAD
             SELECT id 
+=======
+            SELECT CONCAT(first_name, ' ', last_name) AS name 
+>>>>>>> d533714 (Display search results that display both speakers and topics)
             FROM dbpersons 
             WHERE first_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -404,8 +411,14 @@ function search_speakers($text) {
             $names[] = $row;
         }
 
+<<<<<<< HEAD
         $queryLast = "
             SELECT id 
+=======
+        // --- Match last names ---
+        $queryLast = "
+            SELECT CONCAT(first_name, ' ', last_name) AS name 
+>>>>>>> d533714 (Display search results that display both speakers and topics)
             FROM dbpersons 
             WHERE last_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -420,7 +433,11 @@ function search_speakers($text) {
             }
         }
 
+<<<<<<< HEAD
         $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+=======
+        $queryTopics = "SELECT DISTINCT topic FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+>>>>>>> d533714 (Display search results that display both speakers and topics)
         $stmtTopics = $con->prepare($queryTopics);
         $stmtTopics->bind_param("s", $text);
         $stmtTopics->execute();
