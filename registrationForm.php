@@ -40,6 +40,21 @@
         </fieldset>
 
         <fieldset class="section-box mb-4">
+          <h3 class="mb-2"> Availability</h3>
+          <p class="mb-2">Please select your available months.</p>
+          <div class="blue-div"></div>
+
+          <div class="main-content-box border-2 mb-0 shadow-xs w-full p-4">
+              <p class="sub-text" style="text-align: center;">
+                Coffee Talks are on the second Tuesday of each month.
+              </p>
+              <p style="text-align: center;">
+                By selecting the month(s) below, you are not guaranteed to be speaking for that month.
+              </p>
+            </div>
+
+        </fieldset>
+        <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
             <p class="mb-2">Please provide information of the event topic.</p>
             <div class="blue-div"></div>
