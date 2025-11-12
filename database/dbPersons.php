@@ -394,10 +394,14 @@ function search_speakers($text) {
         
         $queryNames = "
 <<<<<<< HEAD
+<<<<<<< HEAD
             SELECT id 
 =======
             SELECT CONCAT(first_name, ' ', last_name) AS name 
 >>>>>>> d533714 (Display search results that display both speakers and topics)
+=======
+            SELECT id 
+>>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
             FROM dbpersons 
             WHERE first_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -412,6 +416,7 @@ function search_speakers($text) {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $queryLast = "
             SELECT id 
 =======
@@ -419,6 +424,10 @@ function search_speakers($text) {
         $queryLast = "
             SELECT CONCAT(first_name, ' ', last_name) AS name 
 >>>>>>> d533714 (Display search results that display both speakers and topics)
+=======
+        $queryLast = "
+            SELECT id 
+>>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
             FROM dbpersons 
             WHERE last_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -434,10 +443,14 @@ function search_speakers($text) {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
 =======
         $queryTopics = "SELECT DISTINCT topic FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
 >>>>>>> d533714 (Display search results that display both speakers and topics)
+=======
+        $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+>>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
         $stmtTopics = $con->prepare($queryTopics);
         $stmtTopics->bind_param("s", $text);
         $stmtTopics->execute();

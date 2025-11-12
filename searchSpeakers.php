@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/database/dbPersons.php';
 <<<<<<< HEAD
+<<<<<<< HEAD
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
@@ -99,38 +100,57 @@ $table .= '</tbody></table>';
 
 echo json_encode($table); 
 =======
+=======
+require_once 'include/input-validation.php';
+require_once 'database/dbCommunications.php';
+>>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
 
-// Database connection (adjust as needed)
+$q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-
-$q = isset($_GET['q']) ? $_GET['q'] : '';
 if ($q === '') {
-  echo json_encode([]);
-  exit;
+    echo json_encode([]);
+    exit;
 }
+
 $result = search_speakers($q);
+
 if (isset($result['message']) && $result['message'] === 'worked') {
     $merged = [];
 
-    // Add all name matches
     foreach ($result['names'] as $n) {
-        // handle combined names like "first_name last_name" or alias 'name'
-        if (isset($n['name'])) {
-            $merged[] = $n['name'];
-        } elseif (isset($n['first_name']) && isset($n['last_name'])) {
-            $merged[] = $n['first_name'] . ' ' . $n['last_name'];
-        }
+        $merged[] = $n['id'];
     }
 
-    // Add all topic matches
     foreach ($result['topics'] as $t) {
-        $merged[] = $t['topic'];
+        $merged[] = $t['speaker'];
     }
 
-    // Remove duplicates and reindex
     $merged = array_values(array_unique($merged));
 
-    echo json_encode($merged);
+    $data = [];
+
+    foreach ($merged as $person_id) {
+        $con = connect();
+        $query = "SELECT * FROM dbpersons WHERE id='$person_id'";
+        $rawPerson = mysqli_query($con, $query)->fetch_assoc();
+
+        $topicsResult = mysqli_query($con, "SELECT topic FROM speaker_topics WHERE speaker='$person_id'");
+        $topics = [];
+        while ($row = mysqli_fetch_assoc($topicsResult)) {
+            $topics[] = $row['topic'];
+        }
+
+        $data[] = [
+            'id' => $person_id,
+            'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
+            'email' => $rawPerson['email'],
+            'phone' => $rawPerson['phone1'],
+            'topics' => implode(', ', $topics),
+            'notes' => $rawPerson['notes']
+        ];
+    }
+
+    echo json_encode($data);
 } else {
     echo json_encode([]);
 }

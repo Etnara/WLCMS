@@ -96,43 +96,6 @@ $admin = retrieve_person($_SESSION['_id']);
 
                     <!-- Link to Review Speakers Page -->
                     <?php
-                    function find_speakers_by_topic($topic) {
-                        if (!$topic) {
-                            return [];
-                        }
-
-                        $connection = connect();
-                        $topic = mysqli_real_escape_string($connection, $topic);
-
-                        $query = "
-                            SELECT DISTINCT p.*
-                            FROM dbpersons p
-                            JOIN speaker_topics t ON p.id = t.speaker
-                            WHERE t.topic LIKE '%$topic%'
-                            AND p.status = 'Accepted Speaker'
-                            ORDER BY p.last_name, p.first_name
-                        ";
-
-                        $result = mysqli_query($connection, $query);
-
-                        if (!$result) {
-                            mysqli_close($connection);
-                            return [];
-                        }
-
-                        $raw = mysqli_fetch_all($result, MYSQLI_ASSOC);
-                        $persons = [];
-
-                        foreach ($raw as $row) {
-                            if ($row['id'] == 'vmsroot') {
-                                continue;
-                            }
-                            $persons[] = make_a_person($row); 
-                        }
-
-                        mysqli_close($connection);
-                        return $persons;
-                    }
                     if ($numPending) {
                         echo "
                             <a href=\"checkedInVolunteers.php\" class=\"return-button\" style=\"position: relative; margin-left: 2rem;\">
@@ -191,7 +154,7 @@ $admin = retrieve_person($_SESSION['_id']);
                 // Delay typing by 300ms before fetching
                 searchTimeout = setTimeout(() => {
                     fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
-                        .then(res => res.json())
+                        .then(res => res.text()) // <- expect HTML, not JSON
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         })
