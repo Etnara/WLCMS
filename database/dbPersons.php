@@ -262,6 +262,38 @@ function getPendingSpeakers($offset, $limit){
     }
 }
 
+//get rejected speakers
+function getRejectedSpeakers($offset, $limit){
+    $con=connect();
+
+    try{
+        //allow -1 to get all speakers
+        if ($limit == -1){
+            $limit = 100;
+        }
+
+        $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" AND status = "Rejected Speaker" LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
+
+        $stmt = $con->prepare($query);
+
+        /*
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }*/
+
+        $result = mysqli_query($con,$query);
+        $thePersons = array();
+        while ($result_row = mysqli_fetch_assoc($result)) {
+            $thePerson = make_a_person($result_row);
+            $thePersons[] = $thePerson;
+        }
+
+        return ['array' => $thePersons, 'message' => "success"];
+    } catch (Exception $e){
+        return ['array' => [], 'message' => $e->getMessage()];
+    }
+}
+
 function acceptSpeaker($volunteer_id){
     $con = connect(); // Ensure this function connects to your database
 
@@ -317,6 +349,39 @@ function acceptSpeaker($volunteer_id){
     mysqli_close($con);
     return ['success' => true, 'message' => 'Volunteer archived successfully.'];;
 
+}
+
+function deleteSpeaker($speaker_id) {
+    $con = connect(); 
+
+    mysqli_begin_transaction($con);
+
+    try {
+        // Delete the volunteer from dbpersons
+        
+        $query_delete = "DELETE FROM dbpersons WHERE id = ?";
+        $stmt_delete = $con->prepare($query_delete);
+        $stmt_delete->bind_param("s", $speaker_id);
+
+        if (!$stmt_delete->execute()){
+            throw new Exception("Failed to properly delete.");
+        }
+        
+        // Commit transaction
+        mysqli_commit($con);
+
+        //echo "Speaker successfully archived.";
+    } catch (Exception $e) {
+        // Rollback if anything goes wrong
+        mysqli_rollback($con);
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+
+    // Close connection
+    //$stmt->close();
+    $stmt_delete->close();
+    mysqli_close($con);
+    return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
 
