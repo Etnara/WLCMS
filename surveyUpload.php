@@ -11,6 +11,10 @@ $con = connect();
 
 $ok = $err = null;
 
+// show messages once 
+if (isset($_GET['ok'])) $ok = $_GET['ok'];
+if (isset($_GET['err'])) $err = $_GET['err'];
+
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(16));
 $csrf = $_SESSION['csrf'];
 
@@ -44,16 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fn   = basename($file['name']);
             $stmt->bind_param('ssb', $fn, $mime, $data);
             $stmt->send_long_data(2, $data);
-            if ($stmt->execute()) $ok = 'Survey uploaded.'; else $err = 'Upload failed.';
-            $stmt->close();
+           // redirects instead to stop the browser asking to resubmit form on refresh
+            if ($stmt->execute()) {
+              $stmt->close(); 
+              header("Location: " . $_SERVER['PHP_SELF'] . "?ok=" . urlencode('Survey uploaded.'));
+              exit;
+            } else {
+              $stmt->close(); 
+              header("Location: " . $_SERVER['PHP_SELF'] . "?err=" . urlencode('Upload failed.'));
+              exit;
+            }
           }
         }
       }
     } elseif ($action === 'delete') {
       $id = (int)($_POST['id'] ?? 0);
       if ($id > 0) {
-        if ($con->query("DELETE FROM dbsurveys WHERE id=$id")) $ok = 'Survey deleted.';
-        else $err = 'Could not delete.';
+        if ($con->query("DELETE FROM dbsurveys WHERE id=$id")) {
+          header("Location: " . $_SERVER['PHP_SELF'] . "?ok=" . urlencode('Survey deleted.'));
+          exit;
+        } else {
+          header("Location: " . $_SERVER['PHP_SELF'] . "?err=" . urlencode('Could not delete.'));
+          exit;
+        }
       }
     }
   }
@@ -331,5 +348,18 @@ require_once('header.php');
     </div>
   </div>
 </main>
+
+<!-- removes ?ok/err from url after popup so it does not show again when refreshed -->
+<script>
+  if (window.history.replaceState) {
+    const url = new URL(window.location);
+    if (url.searchParams.has('ok') || url.searchParams.has('err')) {
+      url.searchParams.delete('ok');
+      url.searchParams.delete('err');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  }
+</script>
+
 </body>
 </html>
