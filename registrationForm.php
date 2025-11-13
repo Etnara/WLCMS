@@ -51,7 +51,68 @@
               <p style="text-align: center;">
                 By selecting the month(s) below, you are not guaranteed to be speaking for that month.
               </p>
-            </div>
+          </div>
+          <style>
+            .month-grid {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+              gap: 10px 1px; /* vertical and horizontal spacing */
+              max-width: 700px; /* optional: keeps it from stretching too wide */
+            }
+
+            .month-grid label {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 4px; /* reduce spacing between checkbox and text */
+              margin: 0; /* remove default label margin */
+              padding: 2px 0; /* small vertical breathing room */
+              cursor: pointer;
+              font-size: 16px;
+            }
+            .month-grid input[type="checkbox"] {
+              margin: 0;
+              padding: 0;
+              appearance: none;        /* removes Safari default spacing */
+              -webkit-appearance: none;
+              width: 18px;
+              height: 18px;
+              border: 2px solid #666;
+              border-radius: 4px;
+              position: relative;
+            }
+
+            .month-grid input[type="checkbox"]:checked::after {
+              content: "✓";
+              position: absolute;
+              left: 1px;
+              top: -3px;
+              font-size: 16px;
+              color: #2a7;
+            }
+
+            .month-grid span {
+              line-height: 1; /* aligns text perfectly with checkbox */
+            }
+          </style>
+          <!--
+          <h3 class="mb-2">Select the months you're available:</h3>
+          -->
+          <br/>
+          <div class="month-grid">
+            <label><input type="checkbox" name="months[]" value="January"><span>January</span></label>
+            <label><input type="checkbox" name="months[]" value="February"><span>February</span></label>
+            <label><input type="checkbox" name="months[]" value="March"><span>March</span></label>
+            <label><input type="checkbox" name="months[]" value="April"><span>April</span></label>
+            <label><input type="checkbox" name="months[]" value="May"><span>May</span></label>
+            <label><input type="checkbox" name="months[]" value="June"><span>June</span></label>
+            <label><input type="checkbox" name="months[]" value="July"><span>July</span></label>
+            <label><input type="checkbox" name="months[]" value="August"><span>August</span></label>
+            <label><input type="checkbox" name="months[]" value="September"><span>September</span></label>
+            <label><input type="checkbox" name="months[]" value="October"><span>October</span></label>
+            <label><input type="checkbox" name="months[]" value="November"><span>November</span></label>
+            <label><input type="checkbox" name="months[]" value="December"><span>December</span></label>
+          </div>
 
         </fieldset>
         <fieldset class="section-box mb-4">
