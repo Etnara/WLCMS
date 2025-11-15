@@ -7,7 +7,7 @@
 
 <main>
   <div class="main-content-box w-full max-w-3xl p-8 mb-8">
-    <form class="signup-form" method="post">
+    <form id="interestForm" class="signup-form" method="post">
 	<div class="text-center mb-8">
           <h2 class="mb-8">Interest Form</h2>
             <div class="main-content-box border-2 mb-0 shadow-xs w-full p-4">
@@ -49,7 +49,7 @@
                 Coffee Talks are on the second Tuesday of each month.
               </p>
               <p style="text-align: center;">
-                By selecting the month(s) below, you are not guaranteed to be speaking for that month.
+                Selecting the month(s) below does not guarantee you to speak for that month's Coffee Talk.
               </p>
           </div>
           <style>
@@ -129,3 +129,18 @@
     </form>
    </div> 
 </main>
+<script>
+document.getElementById("interestForm").addEventListener("submit", function(e) {
+    const checkboxes = document.querySelectorAll('input[name="months[]"]');
+    let checked = false;
+
+    checkboxes.forEach(cb => {
+        if (cb.checked) checked = true;
+    });
+
+    if (!checked) {
+        e.preventDefault();
+        alert("Please select at least one month.");
+    }
+});
+</script>
