@@ -369,7 +369,11 @@ function deleteSpeaker($speaker_id) {
         
         // Commit transaction
         mysqli_commit($con);
-
+        
+        $query_delete = "delete from speaker_months WHERE id = ?";
+        $stmt_delete = $con->prepare($query_delete);
+        $stmt_delete->bind_param("s", $speaker_id);
+        mysqli_commit($con);
         //echo "Speaker successfully archived.";
     } catch (Exception $e) {
         // Rollback if anything goes wrong
