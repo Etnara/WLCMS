@@ -238,6 +238,18 @@
             $event_endTime = time24hto12h($event_info['endTime']);
             $event_location = $event_info['location'];
             $event_speaker = $event_info['speaker'];
+            $sDateTime = new DateTime($event_info['date'] . '' . $event_startTime);
+            $iso_sTime = $sDateTime->format(DateTime::ATOM);
+            $eDateTime = new DateTime($event_info['date'] . '' . $event_endTime);
+            $iso_eTime = $eDateTime->format(DateTime::ATOM);
+            $iso_sTime = str_replace(array('-',':'), array('',''), $iso_sTime);
+            $iso_eTime = str_replace(array('-',':'), array('',''), $iso_eTime);
+            $urlEvent_Name = urlencode($event_name);
+            $urlDescription = urlencode($event_description);
+            $urlLocation = urlencode($event_location);
+            $urlString = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" . $urlEvent_Name . "&dates=" . $iso_sTime . 
+            "/" . $iso_eTime . "&details=" . $urlDescription . "&location=" . $urlLocation;
+        
             if ($event_speaker == "")
                 $event_speaker = "None";
             else {
@@ -388,6 +400,8 @@
 
             <a href="calendar.php?month=<?= substr($event_info['date'], 0, 7) ?>" class="button cancel">Return to Calendar</a>
             <a href="viewAllEvents.php" class="button cancel">Return to All Events</a>
+            <a href="<?php echo $urlString;?>" class="button cancel">Add to Google Calendar</a>
+            
 
         </div>
 
