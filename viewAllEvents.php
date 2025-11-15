@@ -39,8 +39,34 @@
                 //require_once('database/dbevents.php');
                 //require_once('domain/Event.php');
                 //$events = get_all_events();
+                
                 $events = get_all_events_sorted_by_date_not_archived();
                 $archivedevents = get_all_events_sorted_by_date_and_archived();
+
+                //$events = array_slice(get_all_events_sorted_by_date_not_archived(), $offset, $limit);
+                //$archivedevents = array_slice(get_all_events_sorted_by_date_and_archived(), $offset, $limit);
+
+                $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+                $limit = 10;
+                $offset = $pageNum * $limit;
+
+                $eventsPage = array_slice($events, $offset, $limit);
+                $archivedPage = array_slice($archivedevents, $offset, $limit);
+
+                function pageExists($pageNum, $archived = false) {
+                    $limit  = 10;
+                    $offset = $pageNum * $limit;
+                    if ($pageNum < 0) return false;
+
+                    global $events, $archivedevents;
+                    $all = $archived ? $archivedevents : $events;
+                    $slice = array_slice($all, $offset, $limit);
+                    return !empty($slice);
+                }
+
+                $nextExists = pageExists($pageNum + 1);
+                $prevExists = pageExists($pageNum - 1);
+
                 $today = new DateTime(); // Current date
                 
                 // Filter out expired events
@@ -172,6 +198,23 @@
                             ?>
                         </tbody>
                     </table>
+                    <div class="info-section">
+                        <p class="info-text" style="margin-bottom:3rem">
+                            <?php if ($prevExists): ?>
+                                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+                            <?php else: ?>
+                                <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
+                            <?php endif; ?>
+
+                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $pageNum + 1 ?></span>
+
+                                <?php if ($nextExists): ?>
+                                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                                <?php else: ?>
+                                    <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
+                            <?php endif; ?>
+                        </p>
+                    </div>
                 </div>
 
                 <div class="table-wrapper">
@@ -233,8 +276,25 @@
                             ?>
                         </tbody>
                     </table>
-                </div>
+                   <div class="info-section">
+                        <p class="info-text" style="margin-bottom:3rem">
+                            <?php if ($prevExists): ?>
+                                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+                            <?php else: ?>
+                                <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
+                            <?php endif; ?>
 
+                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $pageNum + 1 ?></span>
+
+                                <?php if ($nextExists): ?>
+                                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                                <?php else: ?>
+                                    <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                </div>
+                
                 <?php else: ?>
                 <p class="no-events standout">There are currently no events available to view.<a class="button add" href="addEvent.php">Create a New Event</a> </p>
             <?php endif ?>
