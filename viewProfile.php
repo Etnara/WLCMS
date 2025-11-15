@@ -32,6 +32,7 @@ if ($isAdmin && isset($_GET['id'])) {
 require_once('database/dbPersons.php');
 require_once('database/dbCommunications.php');
 require_once('database/dbEvents.php');
+require_once('database/dbSpeaker_Months.php');
 //if (isset($_GET['removePic'])) {
 // if ($_GET['removePic'] === 'true') {
 // remove_profile_picture($id);
@@ -230,9 +231,18 @@ $other_topics = mysqli_query($con, "
                         echo "<span class=\"font-medium\">Phone Number</span><span>" . formatPhoneNumber($person['phone1']) . "</span>";
                         ?>
                     </div>
-                    <div class="flex justify-between py-2">
-                        <span class="font-medium">Status</span><span><?php
-                            echo $person["status"];
+                    <div class="flex flex-col items-center py-2">
+                        <span class="font-medium">Availablity</span><span><?php
+                            $months = getAllMonthsFor($user->get_id());
+                            echo "<p align=center>";
+                            while (current($months) !== false) {
+                                echo current($months);
+                                if (next($months) !== false) { // Check if there's a next element
+                                    echo ', ';
+                                }
+                            }
+                            echo '</p>';
+
                             ?></span>
                     </div>
                 </div>
@@ -396,7 +406,7 @@ $other_topics = mysqli_query($con, "
                     ?>
 
              </div>
-            
+
              <!-- Past Events Section -->
              <div id="events" class="profile-section space-y-4 hidden">
                 <?php
@@ -408,7 +418,7 @@ $other_topics = mysqli_query($con, "
                         $user->get_first_name() . ' ' . $user->get_last_name() . ' has not been a speaker yet
                         </h1>';
                     } else{
-                        echo 
+                        echo
                         '<h1 class="mb-4" style="text-align: center">
                          History of all past Coffee Talks with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
                         '</h1>
@@ -418,12 +428,12 @@ $other_topics = mysqli_query($con, "
                                     <th>Coffee Talk</th>
                                 </tr>';
                         foreach($events as $event){
-                            echo '<tr>' . 
+                            echo '<tr>' .
                             '<td>' . date('m/d/Y', strtotime($event['date'])) . '</td>'.
                             '<td>'. $event['name']. '<td>'
                             . '<tr>';
                         }
-                    }   
+                    }
                 ?>
              </div>
         </div>

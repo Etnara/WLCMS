@@ -55,25 +55,25 @@
           <style>
             .month-grid {
               display: grid;
-              grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
-              gap: 10px 1px; /* vertical and horizontal spacing */
-              max-width: 700px; /* optional: keeps it from stretching too wide */
+              grid-template-columns: repeat(4, 1fr); 
+              gap: 10px 1px; 
+              max-width: 700px; 
             }
 
             .month-grid label {
               display: flex;
               align-items: center;
               justify-content: flex-start;
-              gap: 4px; /* reduce spacing between checkbox and text */
-              margin: 0; /* remove default label margin */
-              padding: 2px 0; /* small vertical breathing room */
+              gap: 4px; 
+              margin: 0; 
+              padding: 2px 0; 
               cursor: pointer;
               font-size: 16px;
             }
             .month-grid input[type="checkbox"] {
               margin: 0;
               padding: 0;
-              appearance: none;        /* removes Safari default spacing */
+              appearance: none;        
               -webkit-appearance: none;
               width: 18px;
               height: 18px;
@@ -92,7 +92,7 @@
             }
 
             .month-grid span {
-              line-height: 1; /* aligns text perfectly with checkbox */
+              line-height: 1; 
             }
           </style>
           <!--

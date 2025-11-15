@@ -47,4 +47,21 @@ function rejectedSpeakerMonthsRemoval($speakerID){
     $conn->close();
 }
 
+function getAllMonthsFor($speakerID){
+    $query = 'select month from speaker_months where id=? 
+    order by field(month,"January","February","March","April","May","June","July","August","September","October","November","December")';
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $speakerID);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $months = array_column($result->fetch_all(MYSQLI_ASSOC), "month");
+    
+    $stmt->close();
+    $conn->close();
+
+    return $months;
+}
+
 ?>
