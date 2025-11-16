@@ -143,14 +143,18 @@ $admin = retrieve_person($_SESSION['_id']);
                 const query = this.value.trim();
 
                 if (!query) {
-                    resultsContainer.innerHTML = '';
+                    fetch(`searchSpeakers.php`)
+                        .then(res => res.json())
+                        .then(html => {
+                            resultsContainer.innerHTML = html;
+                        });
                     return;
                 }
 
                 // Delay typing by 300ms before fetching
                 searchTimeout = setTimeout(() => {
                     fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
-                        .then(res => res.text()) // <- expect HTML, not JSON
+                        .then(res => res.json())
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         })
@@ -159,6 +163,20 @@ $admin = retrieve_person($_SESSION['_id']);
                             resultsContainer.innerHTML = '<div class="error-block">Error loading results.</div>';
                         });
                 }, 300);
+            });
+            </script>
+
+            <script>
+                window.addEventListener('DOMContentLoaded', () => {
+                fetch(`searchSpeakers.php`)
+                    .then(res => res.json())
+                    .then(html => {
+                        resultsContainer.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        resultsContainer.innerHTML = '<div class="error-block">Error loading results.</div>';
+                    });
             });
             </script>
 
