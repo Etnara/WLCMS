@@ -7,6 +7,7 @@ require_once __DIR__ . '/database/dbPersons.php';
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
+<<<<<<< HEAD
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $merged = [];
@@ -104,54 +105,105 @@ echo json_encode($table);
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 >>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
+=======
+>>>>>>> a9980ae (Changed speaker search to update the table)
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
+$merged = [];
 
 if ($q === '') {
-    echo json_encode([]);
-    exit;
-}
+    //get all
+    $con = connect();
+    $all = mysqli_query($con, "SELECT id FROM dbpersons WHERE status = 'Accepted Speaker' ORDER BY last_name ASC");
 
-$result = search_speakers($q);
-
-if (isset($result['message']) && $result['message'] === 'worked') {
-    $merged = [];
-
-    foreach ($result['names'] as $n) {
-        $merged[] = $n['id'];
+    while ($row = mysqli_fetch_assoc($all)) {
+        $merged[] = $row['id'];
     }
+} else{
+    //get specific
+    $result = search_speakers($q);
 
-    foreach ($result['topics'] as $t) {
-        $merged[] = $t['speaker'];
-    }
-
-    $merged = array_values(array_unique($merged));
-
-    $data = [];
-
-    foreach ($merged as $person_id) {
-        $con = connect();
-        $query = "SELECT * FROM dbpersons WHERE id='$person_id'";
-        $rawPerson = mysqli_query($con, $query)->fetch_assoc();
-
-        $topicsResult = mysqli_query($con, "SELECT topic FROM speaker_topics WHERE speaker='$person_id'");
-        $topics = [];
-        while ($row = mysqli_fetch_assoc($topicsResult)) {
-            $topics[] = $row['topic'];
+    if (isset($result['message']) && $result['message'] === 'worked') {
+        foreach ($result['names'] as $n) {
+            $merged[] = $n['id'];
         }
 
-        $data[] = [
-            'id' => $person_id,
-            'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
-            'email' => $rawPerson['email'],
-            'phone' => $rawPerson['phone1'],
-            'topics' => implode(', ', $topics),
-            'notes' => $rawPerson['notes']
-        ];
+        foreach ($result['topics'] as $t) {
+            $merged[] = $t['speaker'];
+        }
+
+        $merged = array_values(array_unique($merged));
+    } else {
+        echo json_encode([]);
+        exit;
+    }   
+}
+
+$data = [];
+
+foreach ($merged as $person_id) {
+    $con = connect();
+    $query = "SELECT * FROM dbpersons WHERE id='$person_id'";
+    $rawPerson = mysqli_query($con, $query)->fetch_assoc();
+
+    $topicsResult = mysqli_query($con, "SELECT topic FROM speaker_topics WHERE speaker='$person_id'");
+    $topics = [];
+    while ($row = mysqli_fetch_assoc($topicsResult)) {
+        $topics[] = $row['topic'];
     }
 
+<<<<<<< HEAD
     echo json_encode($data);
 } else {
     echo json_encode([]);
 }
 >>>>>>> d533714 (Display search results that display both speakers and topics)
+=======
+    $data[] = [
+        'id' => $person_id,
+        'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
+        'email' => $rawPerson['email'],
+        'phone' => $rawPerson['phone1'],
+        'topics' => implode(', ', $topics),
+        'notes' => $rawPerson['notes']
+    ];
+}
+$table = '<table>
+        <thead class="bg-blue-400">
+            <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Topics</th>
+            <th>Notes</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody>';
+
+$exist = false;
+
+foreach ($data as $row) {
+    $exist = true;
+
+    $table .= '<tr>';
+    $table .= '<td>' . htmlspecialchars($row['name']) . '</td>';
+    $table .= '<td><a href="mailto:' . htmlspecialchars($row['email']) . 
+            '" class="text-blue-700 underline">' . htmlspecialchars($row['email']) . '</a></td>';
+    $table .= '<td><a href="tel:' . $row['phone'] . '" class="text-blue-700 underline">' . 
+            formatPhoneNumber($row['phone']) . '</a></td>';
+    $table .= '<td>' . htmlspecialchars($row['topics']) . '</td>';
+    $table .= '<td>' . htmlspecialchars($row['notes']) . '</td>';
+    $table .= '<td><a href="viewProfile.php?id=' . htmlspecialchars($row['id']) . 
+            '" class="text-blue-700 underline">Edit</a></td>';
+    $table .= '</tr>';
+}
+
+if (!$exist) {
+    $table .= '<tr><td colspan="6"><div class="error-block">Your search returned no results.</div></td></tr>';
+}
+
+$table .= '</tbody></table>';
+
+echo json_encode($table); 
+>>>>>>> a9980ae (Changed speaker search to update the table)
