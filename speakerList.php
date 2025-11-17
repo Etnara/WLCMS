@@ -144,7 +144,7 @@ $admin = retrieve_person($_SESSION['_id']);
 
                 if (!query) {
                     fetch(`searchSpeakers.php`)
-                        .then(res => res.json())
+                        .then(res => res.text())
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         });
@@ -154,7 +154,7 @@ $admin = retrieve_person($_SESSION['_id']);
                 // Delay typing by 300ms before fetching
                 searchTimeout = setTimeout(() => {
                     fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
-                        .then(res => res.json())
+                        .then(res => res.text())
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         })
@@ -169,12 +169,16 @@ $admin = retrieve_person($_SESSION['_id']);
             <script>
                 window.addEventListener('DOMContentLoaded', () => {
                 fetch(`searchSpeakers.php`)
-                    .then(res => res.json())
+                    .then(res => {
+                        console.log("Response:", res);
+                        return res.json();   
+                    })
                     .then(html => {
+                        console.log("HTML:", html)
                         resultsContainer.innerHTML = html;
                     })
                     .catch(err => {
-                        console.error(err);
+                        console.error("Error:", err);
                         resultsContainer.innerHTML = '<div class="error-block">Error loading results.</div>';
                     });
             });
