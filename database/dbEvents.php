@@ -931,4 +931,18 @@ function update_animal2($animal) {
     return $id;
 }
 
+function getPastEventsForSpeaker($speakerId){
+    $conn = connect();
+    $query = "select date, name from dbevents where speaker=? and date < curdate() order by date desc";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $speakerId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $conn->close();
+    if ($result->num_rows > 0) {
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    return [];
+}
+
 //There was a question mark followed by a > here

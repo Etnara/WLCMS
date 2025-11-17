@@ -473,7 +473,7 @@ if (date("H:i:s") > "18:19:59") {
         }
 
         .in-nav {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
         }

@@ -31,6 +31,7 @@ if ($isAdmin && isset($_GET['id'])) {
 }
 require_once('database/dbPersons.php');
 require_once('database/dbCommunications.php');
+require_once('database/dbEvents.php');
 //if (isset($_GET['removePic'])) {
 // if ($_GET['removePic'] === 'true') {
 // remove_profile_picture($id);
@@ -260,6 +261,7 @@ $other_topics = mysqli_query($con, "
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-red-800" data-tab="personal" onclick="showSection('personal')">Topics</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="events" onclick="showSection('events')">Past Events</button>
 
             </div>
 
@@ -394,7 +396,36 @@ $other_topics = mysqli_query($con, "
                     ?>
 
              </div>
+            
+             <!-- Past Events Section -->
+             <div id="events" class="profile-section space-y-4 hidden">
+                <?php
+                    $events = getPastEventsForSpeaker($user->get_id());
 
+                    if(count($events)==0){
+                        echo
+                        '<h1 class="mb-4" style="text-align: center">' .
+                        $user->get_first_name() . ' ' . $user->get_last_name() . ' has not been a speaker yet
+                        </h1>';
+                    } else{
+                        echo 
+                        '<h1 class="mb-4" style="text-align: center">
+                         History of all past Coffee Talks with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
+                        '</h1>
+                        <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Coffee Talk</th>
+                                </tr>';
+                        foreach($events as $event){
+                            echo '<tr>' . 
+                            '<td>' . date('m/d/Y', strtotime($event['date'])) . '</td>'.
+                            '<td>'. $event['name']. '<td>'
+                            . '<tr>';
+                        }
+                    }   
+                ?>
+             </div>
         </div>
     </div>
     </div>
