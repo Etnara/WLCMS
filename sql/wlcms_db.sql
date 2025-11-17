@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 09, 2025 at 07:35 PM
+-- Generation Time: Nov 16, 2025 at 10:21 PM
 -- Server version: 10.11.14-MariaDB
 -- PHP Version: 8.4.13
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `authentication_tokens`;
 CREATE TABLE `authentication_tokens` (
-  `uuid` uuid NOT NULL,
+  `uuid` char(36) NOT NULL,
   `time` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -39,6 +39,7 @@ CREATE TABLE `authentication_tokens` (
 -- Table structure for table `dbarchived_volunteers`
 --
 
+DROP TABLE IF EXISTS `dbarchived_volunteers`;
 CREATE TABLE `dbarchived_volunteers` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -84,6 +85,7 @@ INSERT INTO `dbarchived_volunteers` (`id`, `start_date`, `first_name`, `last_nam
 -- Table structure for table `dbcommunications`
 --
 
+DROP TABLE IF EXISTS `dbcommunications`;
 CREATE TABLE `dbcommunications` (
   `admin_email` varchar(127) NOT NULL,
   `speaker_email` varchar(127) NOT NULL,
@@ -106,6 +108,7 @@ INSERT INTO `dbcommunications` (`admin_email`, `speaker_email`, `date`) VALUES
 -- Table structure for table `dbdiscussions`
 --
 
+DROP TABLE IF EXISTS `dbdiscussions`;
 CREATE TABLE `dbdiscussions` (
   `author_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -126,6 +129,7 @@ INSERT INTO `dbdiscussions` (`author_id`, `title`, `body`, `time`) VALUES
 -- Table structure for table `dbeventmedia`
 --
 
+DROP TABLE IF EXISTS `dbeventmedia`;
 CREATE TABLE `dbeventmedia` (
   `id` int(11) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -143,6 +147,7 @@ CREATE TABLE `dbeventmedia` (
 -- Table structure for table `dbeventpersons`
 --
 
+DROP TABLE IF EXISTS `dbeventpersons`;
 CREATE TABLE `dbeventpersons` (
   `eventID` int(11) NOT NULL,
   `userID` varchar(256) NOT NULL,
@@ -166,6 +171,7 @@ INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
 -- Table structure for table `dbevents`
 --
 
+DROP TABLE IF EXISTS `dbevents`;
 CREATE TABLE `dbevents` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -209,6 +215,7 @@ INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `descripti
 -- Table structure for table `dbgroups`
 --
 
+DROP TABLE IF EXISTS `dbgroups`;
 CREATE TABLE `dbgroups` (
   `group_name` varchar(255) NOT NULL,
   `color_level` varchar(50) NOT NULL
@@ -228,6 +235,7 @@ INSERT INTO `dbgroups` (`group_name`, `color_level`) VALUES
 -- Table structure for table `dbmessages`
 --
 
+DROP TABLE IF EXISTS `dbmessages`;
 CREATE TABLE `dbmessages` (
   `id` int(11) NOT NULL,
   `senderID` varchar(256) NOT NULL,
@@ -511,6 +519,7 @@ INSERT INTO `dbmessages` (`id`, `senderID`, `recipientID`, `title`, `body`, `tim
 -- Table structure for table `dbpendingsignups`
 --
 
+DROP TABLE IF EXISTS `dbpendingsignups`;
 CREATE TABLE `dbpendingsignups` (
   `username` varchar(25) NOT NULL,
   `eventname` varchar(100) NOT NULL,
@@ -534,6 +543,7 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 -- Table structure for table `dbpersonhours`
 --
 
+DROP TABLE IF EXISTS `dbpersonhours`;
 CREATE TABLE `dbpersonhours` (
   `personID` varchar(256) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -555,6 +565,7 @@ INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VA
 -- Table structure for table `dbpersons`
 --
 
+DROP TABLE IF EXISTS `dbpersons`;
 CREATE TABLE `dbpersons` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -592,6 +603,7 @@ INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `email`,
 -- Table structure for table `dbshifts`
 --
 
+DROP TABLE IF EXISTS `dbshifts`;
 CREATE TABLE `dbshifts` (
   `shift_id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -635,6 +647,7 @@ INSERT INTO `dbshifts` (`shift_id`, `person_id`, `date`, `startTime`, `endTime`,
 -- Table structure for table `dbsurveys`
 --
 
+DROP TABLE IF EXISTS `dbsurveys`;
 CREATE TABLE `dbsurveys` (
   `id` int(11) NOT NULL,
   `filename` varchar(255) NOT NULL,
@@ -649,6 +662,7 @@ CREATE TABLE `dbsurveys` (
 -- Table structure for table `discussion_replies`
 --
 
+DROP TABLE IF EXISTS `discussion_replies`;
 CREATE TABLE `discussion_replies` (
   `reply_id` int(11) NOT NULL,
   `user_reply_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -676,6 +690,7 @@ INSERT INTO `discussion_replies` (`reply_id`, `user_reply_id`, `author_id`, `dis
 -- Table structure for table `monthly_hours_snapshot`
 --
 
+DROP TABLE IF EXISTS `monthly_hours_snapshot`;
 CREATE TABLE `monthly_hours_snapshot` (
   `id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -705,6 +720,7 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- Table structure for table `speaker_topics`
 --
 
+DROP TABLE IF EXISTS `speaker_topics`;
 CREATE TABLE `speaker_topics` (
   `speaker` varchar(256) NOT NULL,
   `topic` varchar(255) NOT NULL
@@ -716,6 +732,7 @@ CREATE TABLE `speaker_topics` (
 -- Table structure for table `user_groups`
 --
 
+DROP TABLE IF EXISTS `user_groups`;
 CREATE TABLE `user_groups` (
   `user_id` varchar(255) NOT NULL,
   `group_name` varchar(255) NOT NULL
@@ -863,7 +880,7 @@ ALTER TABLE `dbshifts`
 -- AUTO_INCREMENT for table `dbsurveys`
 --
 ALTER TABLE `dbsurveys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `discussion_replies`
