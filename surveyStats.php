@@ -13,6 +13,10 @@ $con = connect();
 $start = $_GET['start'] ?? '';
 $end   = $_GET['end'] ?? '';
 
+// search filters
+$searchType = $_GET['searchType'] ?? 'speaker'; // 'speaker' or 'topic'
+$searchQuery = $_GET['searchQuery'] ?? '';
+
 $invalidDate = false;
 
 // invalid if only one date chosen
@@ -25,6 +29,17 @@ if (($start && !$end) || (!$start && $end)) {
         $startEsc = $con->real_escape_string($start);
         $endEsc   = $con->real_escape_string($end);
         $filterSQL = "WHERE talk_date BETWEEN '$startEsc' AND '$endEsc'";
+    }
+}
+
+// build search filter
+$searchFilter = "";
+if ($searchQuery) {
+    $searchEsc = $con->real_escape_string($searchQuery);
+    if ($searchType === 'speaker') {
+        $searchFilter = $filterSQL ? " AND speaker_name LIKE '%$searchEsc%'" : " WHERE speaker_name LIKE '%$searchEsc%'";
+    } elseif ($searchType === 'topic') {
+        $searchFilter = $filterSQL ? " AND topic_title LIKE '%$searchEsc%'" : " WHERE topic_title LIKE '%$searchEsc%'";
     }
 }
 
@@ -58,7 +73,7 @@ $speakers = $con->query("
            COUNT(*) AS survey_count,
            AVG(speaker_rating) AS avg_rating
     FROM dbsurveys
-    $filterSQL
+    $filterSQL $searchFilter
     GROUP BY speaker_name
     ORDER BY $sortKeyS $directionS
 ");
@@ -69,14 +84,14 @@ $topics = $con->query("
            COUNT(*) AS survey_count,
            AVG(topic_rating) AS avg_rating
     FROM dbsurveys
-    $filterSQL
+    $filterSQL $searchFilter
     GROUP BY topic_title
     ORDER BY $sortKeyT $directionT
 ");
 
 // sorting
 function sortLinkSpeaker($col, $label) {
-    global $sortS, $directionS, $start, $end;
+    global $sortS, $directionS, $start, $end, $searchType, $searchQuery;
 
     $newDir = ($sortS === $col && $directionS === 'asc') ? 'desc' : 'asc';
 
@@ -85,11 +100,11 @@ function sortLinkSpeaker($col, $label) {
         $arrow = $directionS === 'asc' ? ' ▲' : ' ▼';
     }
 
-    return "<a href=\"?sortS=$col&directionS=$newDir&start=$start&end=$end\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+    return "<a href=\"?sortS=$col&directionS=$newDir&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
 }
 
 function sortLinkTopic($col, $label) {
-    global $sortT, $directionT, $start, $end;
+    global $sortT, $directionT, $start, $end, $searchType, $searchQuery;
 
     $newDir = ($sortT === $col && $directionT === 'asc') ? 'desc' : 'asc';
 
@@ -98,7 +113,7 @@ function sortLinkTopic($col, $label) {
         $arrow = $directionT === 'asc' ? ' ▲' : ' ▼';
     }
 
-    return "<a href=\"?sortT=$col&directionT=$newDir&start=$start&end=$end\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+    return "<a href=\"?sortT=$col&directionT=$newDir&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
 }
 
 ?>
@@ -208,6 +223,7 @@ require_once('header.php');
         <a href="index.php" class="return-button">Return to Dashboard</a>
     </div>
 
+
     <!-- date boxy thing -->
     <div class="p-4 mb-10 rounded-xl shadow-md border border-gray-300 bg-white">
         <form method="GET" class="flex flex-wrap gap-6">
@@ -233,6 +249,34 @@ require_once('header.php');
                 <a href="surveyStats.php" class="blue-button px-6" style="height:40px; background:#6b7280;">Clear</a>
             </div>
 
+        </form>
+    </div> 
+
+    <!-- Search Section -->
+    <div class="p-4 mb-10 rounded-xl shadow-md border border-gray-300 bg-white">
+        <form method="GET" class="flex flex-wrap gap-4 items-end">
+            <!-- Hidden fields to preserve date filters -->
+            <input type="hidden" name="start" value="<?= htmlspecialchars($start) ?>">
+            <input type="hidden" name="end" value="<?= htmlspecialchars($end) ?>">
+
+            <div>
+                <label class="font-semibold block mb-1">Search Type:</label>
+                <select name="searchType" class="border p-2 rounded">
+                    <option value="speaker" <?= $searchType === 'speaker' ? 'selected' : '' ?>>Speaker Name</option>
+                    <option value="topic" <?= $searchType === 'topic' ? 'selected' : '' ?>>Topic Name</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="font-semibold block mb-1">Search:</label>
+                <input type="text" name="searchQuery" value="<?= htmlspecialchars($searchQuery) ?>"
+                       placeholder="Enter name..." class="border p-2 rounded w-[250px]">
+            </div>
+
+            <div class="flex flex-col justify-end">
+                <button class="blue-button px-6" style="height:40px;">Search</button>
+                <a href="surveyStats.php" class="blue-button px-6" style="height:40px; background:#6b7280;">Clear All</a>
+            </div>
         </form>
     </div>
 
