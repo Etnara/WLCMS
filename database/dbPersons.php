@@ -351,7 +351,6 @@ function acceptSpeaker($volunteer_id){
 
 }
 
-<<<<<<< HEAD
 function deleteSpeaker($speaker_id) {
     $con = connect(); 
 
@@ -385,23 +384,13 @@ function deleteSpeaker($speaker_id) {
     return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
-=======
->>>>>>> d533714 (Display search results that display both speakers and topics)
 function search_speakers($text) {
     $con = connect();
 
     try {
         
         $queryNames = "
-<<<<<<< HEAD
-<<<<<<< HEAD
             SELECT id 
-=======
-            SELECT CONCAT(first_name, ' ', last_name) AS name 
->>>>>>> d533714 (Display search results that display both speakers and topics)
-=======
-            SELECT id 
->>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
             FROM dbpersons 
             WHERE first_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -415,19 +404,8 @@ function search_speakers($text) {
             $names[] = $row;
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         $queryLast = "
             SELECT id 
-=======
-        // --- Match last names ---
-        $queryLast = "
-            SELECT CONCAT(first_name, ' ', last_name) AS name 
->>>>>>> d533714 (Display search results that display both speakers and topics)
-=======
-        $queryLast = "
-            SELECT id 
->>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
             FROM dbpersons 
             WHERE last_name LIKE CONCAT('%', ?, '%') AND status = 'Accepted Speaker'
             LIMIT 10";
@@ -442,15 +420,7 @@ function search_speakers($text) {
             }
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
-=======
-        $queryTopics = "SELECT DISTINCT topic FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
->>>>>>> d533714 (Display search results that display both speakers and topics)
-=======
-        $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
->>>>>>> 8d94e5c (Created rough draft of displaying search results in the table)
         $stmtTopics = $con->prepare($queryTopics);
         $stmtTopics->bind_param("s", $text);
         $stmtTopics->execute();
