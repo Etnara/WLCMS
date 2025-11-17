@@ -143,7 +143,7 @@
                 $user = retrieve_person($userID);
                 //sizeof($upcomingEvents
                 if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
-                <div class="table-wrapper">
+                <div class="table-wrapper" class="justify-content: center">
                     <h2>Upcoming Events</h2>
                     <table class="general">
                         <thead>
