@@ -144,7 +144,7 @@ $admin = retrieve_person($_SESSION['_id']);
 
                 if (!query) {
                     fetch(`searchSpeakers.php`)
-                        .then(res => res.text())
+                        .then(res => res.json())
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         });
@@ -154,7 +154,7 @@ $admin = retrieve_person($_SESSION['_id']);
                 // Delay typing by 300ms before fetching
                 searchTimeout = setTimeout(() => {
                     fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
-                        .then(res => res.text())
+                        .then(res => res.json())
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         })
