@@ -40,19 +40,68 @@
                 //require_once('domain/Event.php');
                 //$events = get_all_events();
                 
-                $events = get_all_events_sorted_by_date_not_archived();
-                $archivedevents = get_all_events_sorted_by_date_and_archived();
+                //$events = get_all_events_sorted_by_date_not_archived();
+                //$archivedevents = get_all_events_sorted_by_date_and_archived();
+
+                $allEvents = get_all_events_sorted_by_date_not_archived();
+                $allArchivedEvents = get_all_events_sorted_by_date_and_archived();
 
                 //$events = array_slice(get_all_events_sorted_by_date_not_archived(), $offset, $limit);
                 //$archivedevents = array_slice(get_all_events_sorted_by_date_and_archived(), $offset, $limit);
 
-                $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+                //$pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+                //$upcomingPageNum = isset($_GET['upcomingPage']) ? max(0, intval($_GET['upcomingPage'])) : 0;
+                //$archivedPageNum = isset($_GET['archivedPage']) ? max(0, intval($_GET['archivedPage'])) : 0;
+                $type = $_GET['type'] ?? 'upcoming';
+                    $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+
+                    if ($type === 'upcoming') {
+                        $upcomingPageNum = $pageNum;
+                        $archivedPageNum = 0; // default
+                    } else {
+                        $archivedPageNum = $pageNum;
+                        $upcomingPageNum = 0; // default
+                    }
                 $limit = 10;
-                $offset = $pageNum * $limit;
+                $upcomingOffset = $upcomingPageNum * $limit;
+                $archivedOffset = $archivedPageNum * $limit;
+                $today = new DateTime();
 
-                $eventsPage = array_slice($events, $offset, $limit);
-                $archivedPage = array_slice($archivedevents, $offset, $limit);
+                $filteredUpcoming = array_filter($allEvents, function($event) use ($today) {
+                    return new DateTime($event->getDate()) >= $today;
+                });
+                $upcomingEvents = array_slice($filteredUpcoming, $upcomingOffset, $limit);
 
+                $filteredArchived = array_filter($allArchivedEvents, function($event) use ($today) {
+                    return new DateTime($event->getDate()) < $today;
+                });
+                $upcomingArchivedEvents = array_slice($filteredArchived, $archivedOffset, $limit);
+
+                function pageExists($pageNum, $eventsArray) {
+                    $limit = 10;
+                    $offset = $pageNum * $limit;
+                    return $pageNum >= 0 && $offset < count($eventsArray);
+                }
+
+                $upcomingNextExists = pageExists($upcomingPageNum + 1, $filteredUpcoming);
+                $upcomingPrevExists = pageExists($upcomingPageNum - 1, $filteredUpcoming);
+
+                $archivedNextExists = pageExists($archivedPageNum + 1, $filteredArchived);
+                $archivedPrevExists = pageExists($archivedPageNum - 1, $filteredArchived);
+
+                $upcomingEvents = array_slice($filteredUpcoming, $upcomingOffset, $limit);
+                $upcomingArchivedEvents = array_slice($filteredArchived, $archivedOffset, $limit);
+
+               //$eventsPage = array_slice($events, $offset, $limit);
+               //$archivedPage = array_slice($archivedevents, $offset, $limit);
+
+                //$allEvents = get_all_events_sorted_by_date_not_archived();
+                //$allArchivedEvents = get_all_events_sorted_by_date_and_archived();
+
+                //$events = array_slice($allEvents, $upcomingOffset, $limit);
+                //$archivedevents = array_slice($allArchivedEvents, $archivedOffset, $limit);
+                
+/*
                 function pageExists($pageNum, $archived = false) {
                     $limit  = 10;
                     $offset = $pageNum * $limit;
@@ -63,26 +112,37 @@
                     $slice = array_slice($all, $offset, $limit);
                     return !empty($slice);
                 }
+*/
+                
+                /*
+                $upcomingNextExists = pageExists($upcomingPageNum + 1, $allEvents);
+                $upcomingPrevExists = pageExists($upcomingPageNum - 1, $allEvents);
 
-                $nextExists = pageExists($pageNum + 1);
-                $prevExists = pageExists($pageNum - 1);
+                $archivedNextExists = pageExists($archivedPageNum + 1, $allArchivedEvents);
+                $archivedPrevExists = pageExists($archivedPageNum - 1, $allArchivedEvents);
+*/
 
-                $today = new DateTime(); // Current date
+
+                //$nextExists = pageExists($pageNum + 1);
+                //$prevExists = pageExists($pageNum - 1);
+
+                //$today = new DateTime(); // Current date
                 
                 // Filter out expired events
-                $upcomingEvents = array_filter($events, function($event) use ($today) {
+               /* $upcomingEvents = array_filter($events, function($event) use ($today) {
                     $eventDate = new DateTime($event->getDate());
                     return $eventDate >= $today; // Only include events on or after today
-                });
+                });*/
 
-                $upcomingArchivedEvents = array_filter($archivedevents, function($event) use ($today) {
+
+               /* $upcomingArchivedEvents = array_filter($archivedevents, function($event) use ($today) {
                     $eventDate = new DateTime($event->getDate());
                     return $eventDate >= $today; // Only include events on or after today
-                });
+                });*/
 
                 $user = retrieve_person($userID);
-
-                if (sizeof($upcomingEvents) > 0): ?>
+                //sizeof($upcomingEvents
+                if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
                 <div class="table-wrapper">
                     <h2>Upcoming Events</h2>
                     <table class="general">
@@ -200,16 +260,16 @@
                     </table>
                     <div class="info-section">
                         <p class="info-text" style="margin-bottom:3rem">
-                            <?php if ($prevExists): ?>
-                                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+                            <?php if ($upcomingPrevExists): ?>
+                                <a href="?type=upcoming&page=<?= $upcomingPageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
                             <?php else: ?>
                                 <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
                             <?php endif; ?>
 
-                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $pageNum + 1 ?></span>
+                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $upcomingPageNum + 1  ?></span>
 
-                                <?php if ($nextExists): ?>
-                                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                                <?php if ($upcomingNextExists): ?>
+                                    <a href="?type=upcoming&page=<?= $upcomingPageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
                                 <?php else: ?>
                                     <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
                             <?php endif; ?>
@@ -277,17 +337,18 @@
                         </tbody>
                     </table>
                    <div class="info-section">
+                        <div class="info-section">
                         <p class="info-text" style="margin-bottom:3rem">
-                            <?php if ($prevExists): ?>
-                                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+                            <?php if ($archivedPrevExists): ?>
+                                <a href="?type=archived&page=<?= $archivedPageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
                             <?php else: ?>
                                 <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
                             <?php endif; ?>
 
-                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $pageNum + 1 ?></span>
+                            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $archivedPageNum  + 1  ?></span>
 
-                                <?php if ($nextExists): ?>
-                                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                                <?php if ($archivedNextExists): ?>
+                                    <a href="?type=archived&page=<?= $archivedPageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
                                 <?php else: ?>
                                     <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
                             <?php endif; ?>
