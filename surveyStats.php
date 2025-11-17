@@ -13,30 +13,46 @@ $con = connect();
 $start = $_GET['start'] ?? '';
 $end   = $_GET['end'] ?? '';
 
-$filterSQL = "";
-if ($start && $end) {
-    $startEsc = $con->real_escape_string($start);
-    $endEsc   = $con->real_escape_string($end);
-    $filterSQL = "WHERE talk_date BETWEEN '$startEsc' AND '$endEsc'";
+$invalidDate = false;
+
+// invalid if only one date chosen
+if (($start && !$end) || (!$start && $end)) {
+    $invalidDate = true;
+    $filterSQL = "";
+} else {
+    $filterSQL = "";
+    if ($start && $end) {
+        $startEsc = $con->real_escape_string($start);
+        $endEsc   = $con->real_escape_string($end);
+        $filterSQL = "WHERE talk_date BETWEEN '$startEsc' AND '$endEsc'";
+    }
 }
 
-// sorting
-$sort = $_GET['sort'] ?? 'avg_rating';
-$direction = $_GET['direction'] ?? 'desc';
-if (!in_array($direction, ['asc', 'desc'])) $direction = 'desc';
+//speaker sort
+$sortS = $_GET['sortS'] ?? 'avg_rating';
+$directionS = $_GET['directionS'] ?? 'desc';
+if (!in_array($directionS, ['asc', 'desc'])) $directionS = 'desc';
 
-// sortable columns
-$sortableCols = [
-    'speaker_name'   => 'speaker_name',
-    'survey_count'   => 'survey_count',
-    'avg_rating'     => 'avg_rating',
-    'topic_title'    => 'topic_title'
+$sortableSpeaker = [
+    'speaker_name' => 'speaker_name',
+    'avg_rating'   => 'avg_rating'
 ];
 
-// pick the correct column
-$sortKey = $sortableCols[$sort] ?? 'avg_rating';
+$sortKeyS = $sortableSpeaker[$sortS] ?? 'avg_rating';
 
-// SPEAKER ratings 
+//topic sort
+$sortT = $_GET['sortT'] ?? 'avg_rating';
+$directionT = $_GET['directionT'] ?? 'desc';
+if (!in_array($directionT, ['asc', 'desc'])) $directionT = 'desc';
+
+$sortableTopic = [
+    'topic_title' => 'topic_title',
+    'avg_rating'  => 'avg_rating'
+];
+
+$sortKeyT = $sortableTopic[$sortT] ?? 'avg_rating';
+
+//speaker sorting
 $speakers = $con->query("
     SELECT speaker_name,
            COUNT(*) AS survey_count,
@@ -44,10 +60,10 @@ $speakers = $con->query("
     FROM dbsurveys
     $filterSQL
     GROUP BY speaker_name
-    ORDER BY $sortKey $direction
+    ORDER BY $sortKeyS $directionS
 ");
 
-//  TOPIC ratings 
+//topic sorting
 $topics = $con->query("
     SELECT topic_title,
            COUNT(*) AS survey_count,
@@ -55,27 +71,89 @@ $topics = $con->query("
     FROM dbsurveys
     $filterSQL
     GROUP BY topic_title
-    ORDER BY $sortKey $direction
+    ORDER BY $sortKeyT $directionT
 ");
 
-// sorting arrow helper thingy
-function sortLink($col, $label) {
-    global $sort, $direction, $start, $end;
+// sorting
+function sortLinkSpeaker($col, $label) {
+    global $sortS, $directionS, $start, $end;
 
-    $newDir = ($sort === $col && $direction === 'asc') ? 'desc' : 'asc';
+    $newDir = ($sortS === $col && $directionS === 'asc') ? 'desc' : 'asc';
 
     $arrow = '';
-    if ($sort === $col) {
-        $arrow = ($direction === 'asc')
-            ? ' <span style="font-weight:700;color:#111;">▲</span>'
-            : ' <span style="font-weight:700;color:#111;">▼</span>';
+    if ($sortS === $col) {
+        $arrow = $directionS === 'asc' ? ' ▲' : ' ▼';
     }
 
-    return "<a href=\"?sort=$col&direction=$newDir&start=$start&end=$end\" 
-              style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+    return "<a href=\"?sortS=$col&directionS=$newDir&start=$start&end=$end\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+}
+
+function sortLinkTopic($col, $label) {
+    global $sortT, $directionT, $start, $end;
+
+    $newDir = ($sortT === $col && $directionT === 'asc') ? 'desc' : 'asc';
+
+    $arrow = '';
+    if ($sortT === $col) {
+        $arrow = $directionT === 'asc' ? ' ▲' : ' ▼';
+    }
+
+    return "<a href=\"?sortT=$col&directionT=$newDir&start=$start&end=$end\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
 }
 
 ?>
+
+<!-- BANDAID FIX FOR HEADER BEING WEIRD -->
+<?php
+$tailwind_mode = true;
+require_once('header.php');
+?>
+<link href="css/normal_tw.css" rel="stylesheet">
+
+<style>
+    .date-box {
+        background: #800000;
+        padding: 7px 30px;
+        border-radius: 50px;
+        box-shadow: -4px 4px 4px rgba(0,0,0,0.25) inset;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    th a { font-weight: 600; }
+    th a:hover { color: #374151; }
+
+    th { padding: 6px !important; }
+    td { padding: 6px !important; }
+
+    .col-wide { width: 65%; }
+    .col-narrow { width: 35%; text-align:center; }
+
+    /* popup */
+    .popup {
+      position: absolute;
+      top: 260px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      font-size: 1rem;
+      opacity: 0;
+      animation: fadeInOut 4s forwards;
+      z-index: 100;
+    }
+    .popup.err { background-color: #b91c1c; }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+</style>
 
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
@@ -94,10 +172,15 @@ require_once('header.php');
         font-weight: 700;
         text-align: center;
     }
+    /*
+    .hero-header{
+        background-color: #800000; 
+    }*/
     
     .dropdown {
         padding-right: 50px;
     }
+    
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 
@@ -107,11 +190,6 @@ require_once('header.php');
     <title>Survey Statistics</title>
     <link rel="icon" type="image/x-icon" href="images/real-women-logo.webp">
     <link href="css/normal_tw.css" rel="stylesheet">
-
-    <style>
-        th a { font-weight: 600; }
-        th a:hover { color: #374151; }
-    </style>
 </head>
 
 <body>
@@ -119,82 +197,92 @@ require_once('header.php');
     <div class="center-header"><h1>Survey Statistics</h1></div>
 </header>
 
+<?php if ($invalidDate): ?>
+    <div class="popup err">Please select BOTH a start and end date to filter.</div>
+<?php endif; ?>
+
 <main>
 <div class="main-content-box w-[80%] p-8 mb-8">
 
-    <!-- Return button -->
     <div class="flex justify-center gap-8 mb-8">
         <a href="index.php" class="return-button">Return to Dashboard</a>
     </div>
 
-    <!-- Date filter -->
-    <h3 class="mb-4">Filter by Date</h3>
-    <form method="GET" class="flex gap-4 mb-10 items-end">
-        <div>
-            <label class="font-semibold">Start:</label>
-            <input type="date" name="start" value="<?= htmlspecialchars($start) ?>" class="border p-2 rounded">
-        </div>
+    <!-- date boxy thing -->
+    <div class="p-4 mb-10 rounded-xl shadow-md border border-gray-300 bg-white">
+        <form method="GET" class="flex flex-wrap gap-6">
+            <div>
+                <label class="font-semibold block mb-1">Start:</label>
+                <input type="date" name="start" value="<?= htmlspecialchars($start) ?>"
+                       class="border p-2 rounded w-[180px]">
+            </div>
 
-        <div>
-            <label class="font-semibold">End:</label>
-            <input type="date" name="end" value="<?= htmlspecialchars($end) ?>" class="border p-2 rounded">
-        </div>
+            <div>
+                <label class="font-semibold block mb-1">End:</label>
+                <input type="date" name="end" value="<?= htmlspecialchars($end) ?>"
+                       class="border p-2 rounded w-[180px]">
+            </div>
 
-        <button class="blue-button" style="height:42px;">Apply</button>
-    </form>
+            <div class="flex flex-col justify-end">
+                <label class="mb-1 text-white select-none">.</label>
+                <button class="blue-button px-6" style="height:40px;">Apply</button>
+            </div>
 
-    <!-- SPEAKER AVG -->
+            <div class="flex flex-col justify-end">
+                <label class="mb-1 text-white select-none">.</label>
+                <a href="surveyStats.php" class="blue-button px-6" style="height:40px; background:#6b7280;">Clear</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- SPEAKER table -->
     <h3 class="mb-4">Speaker Ratings</h3>
 
     <div class="overflow-x-auto mb-10">
-        <table>
+        <table class="mx-auto w-[70%] rounded-lg overflow-hidden border border-gray-300">
             <thead class="bg-blue-400">
                 <tr>
-                    <th><?= sortLink('speaker_name', 'Speaker') ?></th>
-                    <th><?= sortLink('survey_count', '# Surveys') ?></th>
-                    <th><?= sortLink('avg_rating', 'Average Rating') ?></th>
+                    <th class="col-wide"><?= sortLinkSpeaker('speaker_name', 'Speaker') ?></th>
+                    <th class="col-narrow"><?= sortLinkSpeaker('avg_rating', 'Average Rating') ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php if ($speakers && $speakers->num_rows > 0): ?>
                 <?php while ($s = $speakers->fetch_assoc()): ?>
                     <tr>
-                        <td><?= htmlspecialchars($s['speaker_name']) ?></td>
-                        <td><?= (int)$s['survey_count'] ?></td>
-                        <td><?= round((float)$s['avg_rating'], 2) ?></td>
+                        <td class="col-wide"><?= htmlspecialchars($s['speaker_name']) ?></td>
+                        <td class="col-narrow"><?= round((float)$s['avg_rating'], 2) ?></td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
-                <tr><td colspan="3" class="text-center py-4">No data.</td></tr>
+                <tr><td colspan="2" class="text-center py-4">No data.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
     </div>
 
-
-    <!-- TOPIC AVG -->
+    <!-- TOPIC table -->
     <h3 class="mb-4">Topic Ratings</h3>
 
     <div class="overflow-x-auto mb-10">
-        <table>
+        <table class="mx-auto w-[70%] rounded-lg overflow-hidden border border-gray-300">
             <thead class="bg-blue-400">
                 <tr>
-                    <th><?= sortLink('topic_title', 'Topic') ?></th>
-                    <th><?= sortLink('survey_count', '# Surveys') ?></th>
-                    <th><?= sortLink('avg_rating', 'Average Rating') ?></th>
+                    <th class="col-wide"><?= sortLinkTopic('topic_title', 'Topic') ?></th>
+                    <th class="col-narrow"><?= sortLinkTopic('avg_rating', 'Average Rating') ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php if ($topics && $topics->num_rows > 0): ?>
                 <?php while ($t = $topics->fetch_assoc()): ?>
                     <tr>
-                        <td><?= htmlspecialchars($t['topic_title']) ?></td>
-                        <td><?= (int)$t['survey_count'] ?></td>
-                        <td><?= round((float)$t['avg_rating'], 2) ?></td>
+                        <td class="col-wide"><?= htmlspecialchars($t['topic_title']) ?></td>
+                        <td class="col-narrow"><?= round((float)$t['avg_rating'], 2) ?></td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
-                <tr><td colspan="3" class="text-center py-4">No data.</td></tr>
+                <tr><td colspan="2" class="text-center py-4">No data.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
@@ -204,7 +292,7 @@ require_once('header.php');
 </main>
 
 <script>
-// restore last scroll position so no weird reloads
+// restore scroll
 document.addEventListener("DOMContentLoaded", function() {
     const scrollPos = sessionStorage.getItem("surveyScroll");
     if (scrollPos) {
@@ -213,14 +301,23 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// save scroll position before clicking sort
+// save scroll before sorting
 document.querySelectorAll("th a").forEach(a => {
     a.addEventListener("click", function() {
         sessionStorage.setItem("surveyScroll", window.scrollY);
     });
 });
-</script>
 
+// remove invalid params so popup doesn't repeat
+<?php if ($invalidDate): ?>
+document.addEventListener("DOMContentLoaded", function() {
+    const url = new URL(window.location);
+    url.searchParams.delete("start");
+    url.searchParams.delete("end");
+    window.history.replaceState({}, document.title, url.pathname + url.search);
+});
+<?php endif; ?>
+</script>
 
 </body>
 </html>
