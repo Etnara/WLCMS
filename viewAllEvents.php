@@ -143,7 +143,7 @@
                 $user = retrieve_person($userID);
                 //sizeof($upcomingEvents
                 if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
-                <div class="table-wrapper" class="justify-content: center">
+                <div class="table-wrapper">
                     <h2>Upcoming Events</h2>
                     <table class="general">
                         <thead>
@@ -258,8 +258,8 @@
                             ?>
                         </tbody>
                     </table>
-                    <div class="info-section">
-                        <p class="info-text" style="margin-bottom:3rem">
+                    <div style="text-align:center; margin-bottom:3rem;">
+                        <p style="display:inline-block; margin:0;">
                             <?php if ($upcomingPrevExists): ?>
                                 <a href="?type=upcoming&page=<?= $upcomingPageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
                             <?php else: ?>
@@ -337,8 +337,8 @@
                         </tbody>
                     </table>
                    <div class="info-section">
-                        <div class="info-section">
-                        <p class="info-text" style="margin-bottom:3rem">
+                        <div style="text-align:center; margin-bottom:3rem;">
+                        <p style="display:inline-block; margin:0;">
                             <?php if ($archivedPrevExists): ?>
                                 <a href="?type=archived&page=<?= $archivedPageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
                             <?php else: ?>
