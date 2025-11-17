@@ -121,14 +121,14 @@ $admin = retrieve_person($_SESSION['_id']);
                 <input type="text" id="topic" name="topic" class="w-full" value="<?php //if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
                 placeholder="Enter a topic">
                 -->
-                        <table style="border: 0">
+                        <!--<table style="border: 0">
                             <td>
                                 <input type="submit" name="submit" value="Search" class="blue-button">
                             </td>
                             <td>
                                 <input type="submit" name="submit" value="View all" class="blue-button">
                             </td>
-                        </table>
+                        </table>-->
             </div>
 
             <div id="results"></div>
