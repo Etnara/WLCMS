@@ -246,7 +246,7 @@
             $iso_eTime = str_replace(array('-',':'), array('',''), $iso_eTime);
             $urlEvent_Name = urlencode($event_name);
             $urlDescription = urlencode($event_description);
-            $urlLocation = urlencode($event_location);
+            $urlLocation = urlencode("718 Caroline St, Fredericksburg, VA 22401");
             $urlString = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" . $urlEvent_Name . "&dates=" . $iso_sTime . 
             "/" . $iso_eTime . "&details=" . $urlDescription . "&location=" . $urlLocation;
         
@@ -400,7 +400,7 @@
 
             <a href="calendar.php?month=<?= substr($event_info['date'], 0, 7) ?>" class="button cancel">Return to Calendar</a>
             <a href="viewAllEvents.php" class="button cancel">Return to All Events</a>
-            <a href="<?php echo $urlString;?>" class="button cancel">Add to Google Calendar</a>
+            <a href="<?php echo $urlString;?>" target="_blank" class="button cancel">Add to Google Calendar</a>
             
 
         </div>
