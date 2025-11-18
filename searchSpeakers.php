@@ -83,8 +83,8 @@ foreach ($data as $row) {
             '" class="text-blue-700 underline">' . htmlspecialchars($row['email']) . '</a></td>';
     $table .= '<td><a href="tel:' . $row['phone'] . '" class="text-blue-700 underline">' . 
             formatPhoneNumber($row['phone']) . '</a></td>';
-    $table .= '<td>' . htmlspecialchars($row['topics']) . '</td>';
-    $table .= '<td>' . htmlspecialchars($row['notes']) . '</td>';
+    $table .= '<td>' . htmlspecialchars($row['topics'] ?? '') . '</td>';
+    $table .= '<td>' . htmlspecialchars($row['notes'] ?? '') . '</td>';
     $table .= '<td><a href="viewProfile.php?id=' . htmlspecialchars($row['id']) . 
             '" class="text-blue-700 underline">Edit</a></td>';
     $table .= '</tr>';
