@@ -217,7 +217,8 @@ require_once('header.php');
 <?php endif; ?>
 
 <main>
-<div class="main-content-box w-[80%] p-8 mb-8">
+    <div class="main-content-box w-[60%] p-8 mb-8">
+
 
     <div class="flex justify-center gap-8 mb-8">
         <a href="index.php" class="return-button">Return to Dashboard</a>
@@ -226,59 +227,71 @@ require_once('header.php');
 
     <!-- date boxy thing -->
     <div class="p-4 mb-10 rounded-xl shadow-md border border-gray-300 bg-white">
-        <form method="GET" class="flex flex-wrap gap-6">
-            <div>
-                <label class="font-semibold block mb-1">Start:</label>
-                <input type="date" name="start" value="<?= htmlspecialchars($start) ?>"
-                       class="border p-2 rounded w-[180px]">
+        <form method="GET" class="flex flex-col gap-8 w-full">
+
+            <!-- date section -->
+            <div class="flex flex-wrap gap-6 justify-center">
+
+                <div>
+                    <label class="font-semibold block mb-1">Start:</label>
+                    <input type="date" name="start" value="<?= htmlspecialchars($start) ?>"
+                        class="border p-2 rounded w-[180px]">
+                </div>
+
+                <div>
+                    <label class="font-semibold block mb-1">End:</label>
+                    <input type="date" name="end" value="<?= htmlspecialchars($end) ?>"
+                        class="border p-2 rounded w-[180px]">
+                </div>
+
+                <div class="flex flex-col justify-end">
+                    <label class="mb-1 text-white select-none">.</label>
+                    <button class="blue-button px-6" style="height:40px;">Apply</button>
+                </div>
+
+                <div class="flex flex-col justify-end">
+                    <label class="mb-1 text-white select-none">.</label>
+                    <a href="surveyStats.php" class="blue-button px-6" 
+                    style="height:40px; background:#6b7280;">Clear</a>
+                </div>
+
             </div>
 
-            <div>
-                <label class="font-semibold block mb-1">End:</label>
-                <input type="date" name="end" value="<?= htmlspecialchars($end) ?>"
-                       class="border p-2 rounded w-[180px]">
-            </div>
 
-            <div class="flex flex-col justify-end">
-                <label class="mb-1 text-white select-none">.</label>
-                <button class="blue-button px-6" style="height:40px;">Apply</button>
-            </div>
+            <!-- search section -->
+            <div class="flex flex-wrap gap-6 justify-center">
 
-            <div class="flex flex-col justify-end">
-                <label class="mb-1 text-white select-none">.</label>
-                <a href="surveyStats.php" class="blue-button px-6" style="height:40px; background:#6b7280;">Clear</a>
+                <div>
+                    <label class="font-semibold block mb-1">Search Type:</label>
+                    <select name="searchType" class="border p-2 rounded w-[180px]">
+                        <option value="speaker" <?= $searchType === 'speaker' ? 'selected' : '' ?>>Speaker Name</option>
+                        <option value="topic" <?= $searchType === 'topic' ? 'selected' : '' ?>>Topic Name</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="font-semibold block mb-1">Search:</label>
+                    <input type="text" name="searchQuery" value="<?= htmlspecialchars($searchQuery) ?>"
+                        placeholder="Enter name..." class="border p-2 rounded w-[200px]">
+                </div>
+
+                <div class="flex flex-col justify-end">
+                    <label class="mb-1 text-white select-none">.</label>
+                    <button class="blue-button px-6" style="height:40px;">Search</button>
+                </div>
+
+                <div class="flex flex-col justify-end">
+                    <label class="mb-1 text-white select-none">.</label>
+                    <a href="surveyStats.php" class="blue-button px-6" 
+                    style="height:40px; background:#6b7280;">Clear </a>
+                </div>
+
             </div>
 
         </form>
+
     </div> 
 
-    <!-- Search Section -->
-    <div class="p-4 mb-10 rounded-xl shadow-md border border-gray-300 bg-white">
-        <form method="GET" class="flex flex-wrap gap-4 items-end">
-            <!-- Hidden fields to preserve date filters -->
-            <input type="hidden" name="start" value="<?= htmlspecialchars($start) ?>">
-            <input type="hidden" name="end" value="<?= htmlspecialchars($end) ?>">
-
-            <div>
-                <label class="font-semibold block mb-1">Search Type:</label>
-                <select name="searchType" class="border p-2 rounded">
-                    <option value="speaker" <?= $searchType === 'speaker' ? 'selected' : '' ?>>Speaker Name</option>
-                    <option value="topic" <?= $searchType === 'topic' ? 'selected' : '' ?>>Topic Name</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="font-semibold block mb-1">Search:</label>
-                <input type="text" name="searchQuery" value="<?= htmlspecialchars($searchQuery) ?>"
-                       placeholder="Enter name..." class="border p-2 rounded w-[250px]">
-            </div>
-
-            <div class="flex flex-col justify-end">
-                <button class="blue-button px-6" style="height:40px;">Search</button>
-                <a href="surveyStats.php" class="blue-button px-6" style="height:40px; background:#6b7280;">Clear All</a>
-            </div>
-        </form>
-    </div>
 
     <!-- SPEAKER table -->
     <h3 class="mb-4">Speaker Ratings</h3>
