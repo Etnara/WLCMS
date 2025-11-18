@@ -40,6 +40,36 @@ $admin = retrieve_person($_SESSION['_id']);
         font-size: 0.8em;
         color: white;
     }
+
+    .search-container {
+    position: relative; 
+    }
+
+    .search-results {
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        right: 0;
+        z-index: 10;
+        
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 2px;
+        padding: 0;
+        list-style: none;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .search-results li {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .search-results li:hover {
+        background-color: #f0f0f0;
+    }
     </style>
 
     <head>
@@ -78,38 +108,107 @@ $admin = retrieve_person($_SESSION['_id']);
                 </div>
 
 
-            <form id="person-search" class="space-y-6" method="get">
+            
             <div>
-                <label for="name">Search Speakers by name</label>
-                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the speaker's name">
-                        <table style="border: 0">
+                <div class="search-container">
+                <label for="name">Search Speakers by name or topic</label>
+                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
+                 placeholder="Enter the speaker's name">
+                <ul id="nameResults" class="search-results"></ul>
+                </div>
+                <!--
+                <label for="topic">Search Speakers by topic</label>
+                <input type="text" id="topic" name="topic" class="w-full" value="<?php //if (isset($topic)) echo htmlspecialchars($_GET['topic']); ?>" 
+                placeholder="Enter a topic">
+                -->
+                        <!--<table style="border: 0">
                             <td>
                                 <input type="submit" name="submit" value="Search" class="blue-button">
                             </td>
                             <td>
-                                <input type="submit" name="submit" value="Clear" class="blue-button">
+                                <input type="submit" name="submit" value="View all" class="blue-button">
                             </td>
-                        </table>
+                        </table>-->
             </div>
+
+            <div id="results"></div>
+
+            <script>
+            const input = document.getElementById('name');
+            const resultsContainer = document.getElementById('results');
+            let searchTimeout = null;
+
+            input.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
+
+                if (!query) {
+                    fetch(`searchSpeakers.php`)
+                        .then(res => res.json())
+                        .then(html => {
+                            resultsContainer.innerHTML = html;
+                        });
+                    return;
+                }
+
+                // Delay typing by 300ms before fetching
+                searchTimeout = setTimeout(() => {
+                    fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
+                        .then(res => res.json())
+                        .then(html => {
+                            resultsContainer.innerHTML = html;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            resultsContainer.innerHTML = '<div class="error-block">Error loading results.</div>';
+                        });
+                }, 300);
+            });
+            </script>
+
+            <script>
+                window.addEventListener('DOMContentLoaded', () => {
+                fetch(`searchSpeakers.php`)
+                    .then(res => {
+                        console.log("Response:", res);
+                        return res.json();   
+                    })
+                    .then(html => {
+                        console.log("HTML:", html)
+                        resultsContainer.innerHTML = html;
+                    })
+                    .catch(err => {
+                        console.error("Error:", err);
+                        resultsContainer.innerHTML = '<div class="error-block">Error loading results.</div>';
+                    });
+            });
+            </script>
 
             <!--<div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div> -->
+            
                 <?php
-                    if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear") && isset($_GET['name']) ) {
+                /*
+                    if ( (isset($_GET['submit']) && $_GET['submit'] != "View all")) {
                         require_once('include/input-validation.php');
                         require_once('database/dbPersons.php');
                         require_once('database/dbCommunications.php');
 
                         $args = sanitize($_GET);
                         $name = $args['name'];
+                        $persons = array();
 
-                        if (!$name) {
-                            //echo '<div class="error-block">Returned to Full List.</div>';
-                        } else if ($name) {
+                        if ($name) {
                             echo "<h3>Search Results</h3>";
-                             $persons = find_users($name);
-                             require_once('include/output.php');
+                            $persons = find_speakers_by_topic($name);
+                            $persons2 = find_users($name);
+                            foreach ($persons2 as $p) {
+                                $persons[] = $p;
+                            }
+
+                            require_once('include/output.php');
+                            //echo '<div class="error-block">Returned to Full List.</div>';
                         }
                         if ((count($persons) > 0)){
                             echo'<div class="overflow-x-auto">
@@ -126,8 +225,10 @@ $admin = retrieve_person($_SESSION['_id']);
                         </thead>
                         <tbody>';
                     foreach ($persons as $person) {
+                    */
                         /* TODO: Add this function to person class or raw dog it */
                         /* <td>' . $person->get_notes() . '</td> */
+                        /*
                         $query = "SELECT * FROM dbpersons WHERE id='{$person->get_id()}'";
                         $rawPerson = mysqli_query($con, $query)->fetch_assoc();
                         $query = "SELECT * FROM speaker_topics WHERE speaker='{$person->get_id()}'";
@@ -150,13 +251,11 @@ $admin = retrieve_person($_SESSION['_id']);
                             </table>
                         </div>';
 
-                    }elseif($name==''){
-
-                    }else {
+                    } else {
                         echo '<div class="error-block">Your search returned no results.</div>';
                     }
 
-                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "Clear") || !isset($_GET['name']) || $_GET['name']=='' ) {
+                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "View all")) {
                        echo' <div class="overflow-x-auto">
                     <table>
                         <thead class="bg-blue-400">
@@ -199,10 +298,10 @@ $admin = retrieve_person($_SESSION['_id']);
                     </table>
                 </div>';
                     }
-
+*/
                 ?>
 
-            </form>
+            
 
             </div>
         </main>
