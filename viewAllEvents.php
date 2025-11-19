@@ -258,6 +258,7 @@
                             ?>
                         </tbody>
                     </table>
+                    <?php if($upcomingNextExists || $upcomingPrevExists): ?>
                     <div style="text-align:center; margin-bottom:3rem;">
                         <p style="display:inline-block; margin:0;">
                             <?php if ($upcomingPrevExists): ?>
@@ -275,6 +276,7 @@
                             <?php endif; ?>
                         </p>
                     </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="table-wrapper">
@@ -337,6 +339,7 @@
                         </tbody>
                     </table>
                    <div class="info-section">
+                        <?php if($archivedNextExists || $archivedPrevExists): ?>
                         <div style="text-align:center; margin-bottom:3rem;">
                         <p style="display:inline-block; margin:0;">
                             <?php if ($archivedPrevExists): ?>
@@ -354,6 +357,7 @@
                             <?php endif; ?>
                         </p>
                     </div>
+                    <?php endif; ?>
                 </div>
                 
                 <?php else: ?>
