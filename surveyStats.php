@@ -277,14 +277,14 @@ require_once('header.php');
                <div>
                    <label class="font-semibold block mb-1">Start:</label>
                    <input type="date" name="start" value="<?= htmlspecialchars($start) ?>"
-                       class="border p-2 rounded w-[180px]">
+                       class="border p-2 rounded w-[200px]">
                </div>
 
 
                <div>
                    <label class="font-semibold block mb-1">End:</label>
                    <input type="date" name="end" value="<?= htmlspecialchars($end) ?>"
-                       class="border p-2 rounded w-[180px]">
+                       class="border p-2 rounded w-[200px]">
                </div>
 
 
