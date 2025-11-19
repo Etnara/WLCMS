@@ -113,7 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $success = true;
             // Delete UUID from authentication_tokens table after account is created
-            mysqli_execute_query($con, "DELETE FROM authentication_tokens WHERE uuid=?", [$_GET['uuid']]);
+            if (isset($_GET['uuid']))
+                mysqli_execute_query($con, "DELETE FROM authentication_tokens WHERE uuid=?", [$_GET['uuid']]);
         } else {
             $error = 'Account could not be created (username may already exist).';
         }
