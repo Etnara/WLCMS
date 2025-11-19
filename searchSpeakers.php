@@ -5,6 +5,7 @@ require_once __DIR__ . '/database/dbPersons.php';
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
+require_once 'database/dbSpeaker_Months.php';
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $merged = [];
@@ -32,9 +33,18 @@ if ($q === '') {
 
         $merged = array_values(array_unique($merged));
     } else {
-        echo json_encode([]);
+        echo '<div class="error-block">There was an error loading results.</div>';
         exit;
-    }   
+    }
+    
+    $result = getAllSpeakersFor($q);   
+
+    if ($result != []){
+        foreach ($result as $r){
+            $merged[] = $r;
+        }
+        $merged = array_values(array_unique($merged));
+    }
 }
 
 $data = [];
@@ -96,4 +106,4 @@ if (!$exist) {
 
 $table .= '</tbody></table>';
 
-echo json_encode($table); 
+echo $table; 
