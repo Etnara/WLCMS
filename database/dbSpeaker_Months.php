@@ -64,4 +64,22 @@ function getAllMonthsFor($speakerID){
     return $months;
 }
 
+function getAllSpeakersFor($month){
+    //$query = 'select id from speaker_months where month=?'; 
+    $query = "select id from speaker_months where month like CONCAT('%', ?, '%')";
+    $conn = connect();
+    $month = ucfirst($month);
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s',$month);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $speakers = array_column($result->fetch_all(MYSQLI_ASSOC), "id");
+    
+    $stmt->close();
+    $conn->close();
+
+    return $speakers;
+}
+
 ?>
