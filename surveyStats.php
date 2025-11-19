@@ -91,7 +91,8 @@ $topics = $con->query("
 
 // sorting
 function sortLinkSpeaker($col, $label) {
-    global $sortS, $directionS, $start, $end, $searchType, $searchQuery;
+    // preserve topic sort when clicking speaker sort
+    global $sortS, $directionS, $sortT, $directionT, $start, $end, $searchType, $searchQuery;
 
     $newDir = ($sortS === $col && $directionS === 'asc') ? 'desc' : 'asc';
 
@@ -100,11 +101,12 @@ function sortLinkSpeaker($col, $label) {
         $arrow = $directionS === 'asc' ? ' ▲' : ' ▼';
     }
 
-    return "<a href=\"?sortS=$col&directionS=$newDir&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+    return "<a href=\"?sortS=$col&directionS=$newDir&sortT=$sortT&directionT=$directionT&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
 }
 
 function sortLinkTopic($col, $label) {
-    global $sortT, $directionT, $start, $end, $searchType, $searchQuery;
+    // preserve speaker sort when clicking topic sort
+    global $sortT, $directionT, $sortS, $directionS, $start, $end, $searchType, $searchQuery;
 
     $newDir = ($sortT === $col && $directionT === 'asc') ? 'desc' : 'asc';
 
@@ -113,7 +115,7 @@ function sortLinkTopic($col, $label) {
         $arrow = $directionT === 'asc' ? ' ▲' : ' ▼';
     }
 
-    return "<a href=\"?sortT=$col&directionT=$newDir&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
+    return "<a href=\"?sortT=$col&directionT=$newDir&sortS=$sortS&directionS=$directionS&start=$start&end=$end&searchType=$searchType&searchQuery=$searchQuery\" style=\"color:#111;text-decoration:none;\">$label$arrow</a>";
 }
 
 ?>
