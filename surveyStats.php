@@ -199,6 +199,26 @@ require_once('header.php');
      10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
    }
+
+    /* remove bottom rounding on the wrapper */
+    .stats-wrapper {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    /* fix red peeking through at table top omfg */
+    .stats-wrapper,
+    .stats-wrapper table {
+        border-radius: 0 !important;
+    }
+
+    .stats-wrapper table thead {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+        overflow: hidden;
+    }
+
+
 </style>
 
 
@@ -361,10 +381,10 @@ require_once('header.php');
    <h3 class="mb-4">Speaker Ratings</h3>
 
 
-   <div class="overflow-x-auto mb-10">
-       <table class="mx-auto w-[70%] rounded-lg overflow-hidden border border-gray-300">
+   <div class="overflow-x-auto mb-10 rounded-xl overflow-hidden stats-wrapper">
+       <table class="mx-auto w-[70%] overflow-hidden border-[4px] border-gray-300">
            <thead class="bg-blue-400">
-               <tr>
+               <tr class="overflow-hidden">
                    <th class="col-wide"><?= sortLinkSpeaker('speaker_name', 'Speaker') ?></th>
                    <th class="col-narrow"><?= sortLinkSpeaker('avg_rating', 'Average Rating') ?></th>
                </tr>
@@ -389,10 +409,10 @@ require_once('header.php');
    <h3 class="mb-4">Topic Ratings</h3>
 
 
-   <div class="overflow-x-auto mb-10">
-       <table class="mx-auto w-[70%] rounded-lg overflow-hidden border border-gray-300">
+   <div class="overflow-x-auto mb-10 rounded-xl overflow-hidden stats-wrapper">
+       <table class="mx-auto w-[70%] overflow-hidden border-[4px] border-gray-300">
            <thead class="bg-blue-400">
-               <tr>
+               <tr class="overflow-hidden"> 
                    <th class="col-wide"><?= sortLinkTopic('topic_title', 'Topic') ?></th>
                    <th class="col-narrow"><?= sortLinkTopic('avg_rating', 'Average Rating') ?></th>
                </tr>
