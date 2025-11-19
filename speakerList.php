@@ -111,9 +111,9 @@ $admin = retrieve_person($_SESSION['_id']);
             
             <div>
                 <div class="search-container">
-                <label for="name">Search Speakers by name or topic</label>
+                <label for="name">Search Speakers by name, topic, or months available</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
-                 placeholder="Enter the speaker's name">
+                 placeholder="Enter the speaker's name, topic, or a month">
                 <ul id="nameResults" class="search-results"></ul>
                 </div>
                 <!--
