@@ -111,9 +111,9 @@ $admin = retrieve_person($_SESSION['_id']);
             
             <div>
                 <div class="search-container">
-                <label for="name">Search Speakers by name or topic</label>
+                <label for="name">Search Speakers by name, topic, or months available</label>
                 <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>"
-                 placeholder="Enter the speaker's name">
+                 placeholder="Enter the speaker's name, topic, or a month">
                 <ul id="nameResults" class="search-results"></ul>
                 </div>
                 <!--
@@ -144,7 +144,11 @@ $admin = retrieve_person($_SESSION['_id']);
 
                 if (!query) {
                     fetch(`searchSpeakers.php`)
-                        .then(res => res.json())
+                        .then(res => res.text())
+                        .then(text => {
+                            console.log("Raw response:",text);
+                            return text;
+                        })
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         });
@@ -154,7 +158,11 @@ $admin = retrieve_person($_SESSION['_id']);
                 // Delay typing by 300ms before fetching
                 searchTimeout = setTimeout(() => {
                     fetch(`searchSpeakers.php?q=${encodeURIComponent(query)}`)
-                        .then(res => res.json())
+                        .then(res => res.text())
+                        .then(text => {
+                            console.log("Raw response:",text);
+                            return text;
+                        })
                         .then(html => {
                             resultsContainer.innerHTML = html;
                         })
@@ -171,8 +179,12 @@ $admin = retrieve_person($_SESSION['_id']);
                 fetch(`searchSpeakers.php`)
                     .then(res => {
                         console.log("Response:", res);
-                        return res.json();   
+                        return res.text();   
                     })
+                    .then(text => {
+                            console.log("Raw response:",text);
+                            return text;
+                        })
                     .then(html => {
                         console.log("HTML:", html)
                         resultsContainer.innerHTML = html;

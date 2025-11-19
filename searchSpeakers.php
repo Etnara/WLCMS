@@ -5,6 +5,7 @@ require_once __DIR__ . '/database/dbPersons.php';
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
+require_once 'database/dbSpeaker_Months.php';
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $merged = [];
@@ -32,9 +33,18 @@ if ($q === '') {
 
         $merged = array_values(array_unique($merged));
     } else {
-        echo json_encode([]);
+        echo '<div class="error-block">There was an error loading results.</div>';
         exit;
-    }   
+    }
+    
+    $result = getAllSpeakersFor($q);   
+
+    if ($result != []){
+        foreach ($result as $r){
+            $merged[] = $r;
+        }
+        $merged = array_values(array_unique($merged));
+    }
 }
 
 $data = [];
@@ -50,11 +60,18 @@ foreach ($merged as $person_id) {
         $topics[] = $row['topic'];
     }
 
+    $monthsResult = mysqli_query($con, "SELECT month FROM speaker_months WHERE id='$person_id'");
+    $months = [];
+    while ($row = mysqli_fetch_assoc($monthsResult)) {
+        $months[] = $row['month'];
+    }
+
     $data[] = [
         'id' => $person_id,
         'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
         'email' => $rawPerson['email'],
         'phone' => $rawPerson['phone1'],
+        'months' => implode(', ', $months),
         'topics' => implode(', ', $topics),
         'notes' => $rawPerson['notes']
     ];
@@ -65,6 +82,7 @@ $table = '<table>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Months Available</th>
             <th>Topics</th>
             <th>Notes</th>
             <th></th>
@@ -83,6 +101,7 @@ foreach ($data as $row) {
             '" class="text-blue-700 underline">' . htmlspecialchars($row['email']) . '</a></td>';
     $table .= '<td><a href="tel:' . $row['phone'] . '" class="text-blue-700 underline">' . 
             formatPhoneNumber($row['phone']) . '</a></td>';
+    $table .= '<td>' . htmlspecialchars($row['months'] ?? '') . '</td>';
     $table .= '<td>' . htmlspecialchars($row['topics'] ?? '') . '</td>';
     $table .= '<td>' . htmlspecialchars($row['notes'] ?? '') . '</td>';
     $table .= '<td><a href="viewProfile.php?id=' . htmlspecialchars($row['id']) . 
@@ -91,9 +110,9 @@ foreach ($data as $row) {
 }
 
 if (!$exist) {
-    $table .= '<tr><td colspan="6"><div class="error-block">Your search returned no results.</div></td></tr>';
+    $table .= '<tr><td colspan="7"><div class="error-block">Your search returned no results.</div></td></tr>';
 }
 
 $table .= '</tbody></table>';
 
-echo json_encode($table); 
+echo $table; 

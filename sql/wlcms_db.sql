@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 17, 2025 at 01:58 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Nov 18, 2025 at 11:31 PM
+-- Server version: 10.11.14-MariaDB
+-- PHP Version: 8.4.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -749,6 +749,18 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `speaker_months`
+--
+
+DROP TABLE IF EXISTS `speaker_months`;
+CREATE TABLE `speaker_months` (
+  `id` varchar(256) NOT NULL,
+  `month` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `speaker_topics`
 --
 
@@ -873,6 +885,12 @@ ALTER TABLE `discussion_replies`
 --
 ALTER TABLE `monthly_hours_snapshot`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `speaker_months`
+--
+ALTER TABLE `speaker_months`
+  ADD PRIMARY KEY (`id`,`month`);
 
 --
 -- Indexes for table `speaker_topics`

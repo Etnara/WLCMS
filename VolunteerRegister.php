@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php require_once('database/dbMessages.php'); ?>
+    <?php require_once('database/dbMessages.php'); require_once('database/dbSpeaker_Months.php');?>
     <title>WLCMS | Speaker Interest Form</title>
     
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
@@ -151,7 +151,10 @@ require_once('header.php');
             $topic_summary,
             $organization
         );
-
+        $months = $_POST['months'] ?? [];
+        foreach( $months as $month ) {
+            addMonth($id, $month);
+        }
         $result = add_person($newperson);
 
         if (!$result) {

@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/database/dbPersons.php';
-
+require_once 'database/dbPersons.php';
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $speakerName = $_GET['name'] ?? '';
     $speakerID   = $_GET['id'] ?? '';
