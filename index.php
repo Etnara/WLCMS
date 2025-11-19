@@ -499,7 +499,7 @@
                         if (sizeof($pendingsignups) > 0) {
                             echo '<span class="colored-box">' . sizeof($pendingsignups) . '</span>';
                         }
-                    ?> Sign-Ups </span>
+                    ?> Go </span>
     <div class="circle">&gt;</div>
 </button>
     </div>

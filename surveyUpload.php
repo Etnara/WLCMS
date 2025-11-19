@@ -7,6 +7,9 @@ $accessLevel= $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
 if ($accessLevel < 2) { header('Location: index.php'); die(); }
 
 require_once 'database/dbinfo.php';
+require_once 'vendor/autoload.php';
+use Smalot\PdfParser\Parser;
+
 $con = connect();
 
 $ok = $err = null;
@@ -21,6 +24,15 @@ $csrf = $_SESSION['csrf'];
 function is_real_pdf($tmpPath): bool {
   $f = new finfo(FILEINFO_MIME_TYPE);
   return $f->file($tmpPath) === 'application/pdf';
+}
+
+// helper function for pdf parsing
+function extractValue($text, $label) {
+    $pattern = '/' . preg_quote($label, '/') . '\s*(.*)/';
+    if (preg_match($pattern, $text, $matches)) {
+        return trim($matches[1]);
+    }
+    return null;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -44,11 +56,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if ($data === false || $data === '') {
             $err = 'Could not read uploaded file.';
           } else {
-            $stmt = $con->prepare("INSERT INTO dbsurveys (filename, mime, content) VALUES (?, ?, ?)");
-            $fn   = basename($file['name']);
-            $stmt->bind_param('ssb', $fn, $mime, $data);
+
+            // parses the pdf
+            $parser = new Parser();
+            $pdf = $parser->parseFile($file['tmp_name']);
+            $text = $pdf->getText();
+            file_put_contents("/tmp/debug_pdf.txt", $text);
+
+
+            // extracts the fields from the PDF text
+            $speakerName    = extractValue($text, 'Speaker Name:');
+            $topicTitle     = extractValue($text, 'Topic Title:');
+            $rawDate = extractValue($text, 'Date:');
+            $talkDate = null;
+
+            if ($rawDate) {
+                $timestamp = strtotime($rawDate);
+                if ($timestamp !== false) {
+                    // store in MySQL format
+                    $talkDate = date("Y-m-d", $timestamp);
+                }
+            }
+            $speakerRating  = extractValue($text, 'Speaker Rating:');
+            $topicRating    = extractValue($text, 'Topic Rating:');
+
+            // updated insert with new columns 
+            $stmt = $con->prepare("
+              INSERT INTO dbsurveys 
+              (filename, mime, content, speaker_name, topic_title, talk_date, speaker_rating, topic_rating)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+
+            $fn = basename($file['name']);
+            $stmt->bind_param(
+              'ssbsssii',
+              $fn, $mime, $data,
+              $speakerName, $topicTitle, $talkDate,
+              $speakerRating, $topicRating
+            );
+
             $stmt->send_long_data(2, $data);
-           // redirects instead to stop the browser asking to resubmit form on refresh
+
+            // redirects instead to stop the browser asking to resubmit form on refresh
             if ($stmt->execute()) {
               $stmt->close(); 
               header("Location: " . $_SERVER['PHP_SELF'] . "?ok=" . urlencode('Survey uploaded.'));
@@ -145,7 +194,7 @@ require_once('header.php');
     background-color: #f3f4f6;         
     color: #374151;                    
     border-radius: 8px;
-    padding: 10px;           /* space around the filename thingy */
+    padding: 10px;
     margin-bottom: 0;
   }
   .file-input::file-selector-button {
@@ -159,12 +208,11 @@ require_once('header.php');
   }
   .file-input::file-selector-button:hover { background: #6b7280; }
 
-  /* make date/file-meta more prominent */
   .file-meta { font-size:1.1rem; color:#4b5563; font-weight:700; }
 
   .popup {
   position: absolute;
-  top: 320px; /* CHANGE THIS SO IT MOVES LOWER ON SCREEN */
+  top: 320px;
   left: 50%;
   transform: translateX(-50%);
   padding: 16px 24px;
@@ -186,7 +234,6 @@ require_once('header.php');
     100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
   }
 
-  /* Pagination styles */
   .pagination {
     display: flex;
     gap: 8px;
@@ -223,7 +270,6 @@ require_once('header.php');
     background: #f3f4f6;
   }
 </style>
-<!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -272,7 +318,6 @@ require_once('header.php');
         </thead>
         <tbody>
         <?php
-        // Render database rows
         if (!empty($list)) {
           foreach ($list as $r) {
             ?>
@@ -293,7 +338,6 @@ require_once('header.php');
             <?php
           }
         } else {
-          // placeholder row for layout/testing
           ?>
           <tr>
             <td><span class="text-blue-700">No surveys uploaded yet</span></td>
@@ -307,15 +351,12 @@ require_once('header.php');
       </table>
     </div>
 
-    <!-- Pagination (numbered pages, centered) -->
     <div class="pagination" role="navigation" aria-label="Pagination">
       <?php
-        // build a small window of pages around current page
-        $window = 2; // pages on each side of current
+        $window = 2;
         $startPage = max(1, $pageNum - $window);
         $endPage = min($totalPages, $pageNum + $window);
 
-        // if near edges, extend the window to show more pages
         if ($endPage - $startPage < $window * 2) {
           $needed = $window * 2 - ($endPage - $startPage);
           $startPage = max(1, $startPage - $needed);
@@ -323,14 +364,12 @@ require_once('header.php');
         }
       ?>
 
-      <!-- Back / Previous -->
       <?php if ($pageNum > 1): ?>
         <a class="page-num" href="?page=<?= $pageNum - 1 ?>" aria-label="Previous page">Back</a>
       <?php else: ?>
         <button class="page-num" disabled aria-hidden="true">Back</button>
       <?php endif; ?>
 
-      <!-- Page numbers -->
       <?php for ($p = $startPage; $p <= $endPage; $p++): ?>
         <?php if ($p == $pageNum): ?>
           <span class="page-num active" aria-current="page"><?= $p ?></span>
@@ -339,7 +378,6 @@ require_once('header.php');
         <?php endif; ?>
       <?php endfor; ?>
 
-      <!-- Next -->
       <?php if ($pageNum < $totalPages): ?>
         <a class="page-num" href="?page=<?= $pageNum + 1 ?>" aria-label="Next page">Next</a>
       <?php else: ?>
@@ -349,7 +387,6 @@ require_once('header.php');
   </div>
 </main>
 
-<!-- removes ?ok/err from url after popup so it does not show again when refreshed -->
 <script>
   if (window.history.replaceState) {
     const url = new URL(window.location);
