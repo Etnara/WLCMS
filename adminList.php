@@ -66,9 +66,10 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                 </div>
 
             <form id="person-search" class="space-y-6" method="get">
+            <!--
             <div>
                 <label for="name">Search Admins by name</label>
-                <input type="text" id="name" name="name" class="w-full" value="<?php if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the admins's name">
+                <input type="text" id="name" name="name" class="w-full" value="<?php //if (isset($name)) echo htmlspecialchars($_GET['name']); ?>" placeholder="Enter the admins's name">
                         <table style="border: 0">
                             <td>
                                 <input type="submit" name="submit" value="Search" class="blue-button">
@@ -78,61 +79,12 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                             </td>
                         </table>
             </div>
-
+-->
             <!--<div class="text-center pt-4">
                 <input type="submit" value="Search" class="blue-button">
             </div> -->
                 <?php
-                    if ( (isset($_GET['submit']) && $_GET['submit'] != "Clear") && isset($_GET['name']) ) {
-                        require_once('include/input-validation.php');
-                        require_once('database/dbPersons.php');
-                        $args = sanitize($_GET);
-                        $name = $args['name'];
-
-                        if (!$name) {
-                            //echo '<div class="error-block">Returned to Full List.</div>';
-                        } else if ($name) {
-                            echo "<h3>Search Results</h3>";
-                             $persons = find_admins($name);
-                             require_once('include/output.php');
-                        }
-                        if ((count($persons) > 0)){
-                            echo'<div class="overflow-x-auto">
-                        <table>
-                            <thead class="bg-blue-400">
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                
-                                <th>Notes</th>
-                                <th>Profile</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>';
-                     foreach ($persons as $person) {
-                        /* TODO: Add this function to person class or raw dog it */
-                        /* <td>' . $person->get_notes() . '</td> */
-                        echo '
-                            <tr>
-                            <td>' . $person->get_first_name() . " " . $person->get_last_name() . '</td>
-                            <td><a href="mailto:' . $person->get_email() . '" class="text-blue-700 underline">' . $person->get_email() . '</a></td>
-                            <td>' . $person->get_notes() . '</td>
-                            <td><a href="viewProfile.php?id=' . $person->get_id() . '" class="text-blue-700 underline">Edit</a></td>
-                            </tr>';
-                     }echo '
-                            </tbody>
-                            </table>
-                        </div>';
-
-                    }elseif($name==''){
-
-                    }else {
-                        echo '<div class="error-block">Your search returned no results.</div>';
-                    }
-
-                    }if ( (isset($_GET['submit']) && $_GET['submit'] == "Clear") || !isset($_GET['name']) || $_GET['name']=='' ) {
-                       echo' <div class="overflow-x-auto">
+                echo' <div class="overflow-x-auto">
                     <table>
                         <thead class="bg-blue-400">
                             <tr>
@@ -161,10 +113,7 @@ $numPending = mysqli_query($con, $query)->fetch_assoc()["count(*)"];
                         </tbody>
                     </table>
                 </div>';
-                    }
-
-                ?>
-
+                    ?>
             </form>
 
             
