@@ -301,7 +301,8 @@ require_once('header.php');
                     <label class="mb-1 text-white select-none">.</label>
                     <a href="surveyStats.php"
                     class="blue-button px-6"
-                    style="height:40px; background:#6b7280;">Clear</a>
+                    style="height:40px; background:#6b7280; text-align:center; 
+                    display:flex; align-items:center; justify-content:center;">Clear</a>
                 </div>
             </div>
 
@@ -341,7 +342,8 @@ require_once('header.php');
                         <label class="mb-1 text-white select-none">.</label>
                         <a href="surveyStats.php"
                         class="blue-button px-6"
-                        style="height:40px; background:#6b7280;">Clear</a>
+                        style="height:40px; background:#6b7280; text-align:center; 
+                        display:flex; align-items:center; justify-content:center;">Clear</a>
                     </div>
 
 
