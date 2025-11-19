@@ -358,8 +358,6 @@
 
             <?php if ($access_level >= 2) : ?>
 
-                <a href="viewEventSignUps.php?id=<?php echo $id; ?>"class = "button signup">View Event Signups</a>
-
                 <!-- Archive and Unarchive buttons by Thomas -->
 
                 <?php if (is_archived($event_info['id']))  : ?>

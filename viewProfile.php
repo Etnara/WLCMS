@@ -30,6 +30,7 @@ if ($isAdmin && isset($_GET['id'])) {
     $id = $userID;
 }
 require_once('database/dbPersons.php');
+require_once('database/dbCommunications.php');
 //if (isset($_GET['removePic'])) {
 // if ($_GET['removePic'] === 'true') {
 // remove_profile_picture($id);
@@ -80,12 +81,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
 $con = connect();
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_topic'])) {
+    $topic = $_POST['delete_topic'];
+    mysqli_execute_query($con, "
+        DELETE
+        FROM speaker_topics
+        WHERE speaker='$id'
+        AND topic=?
+    ", [$topic]);
+}
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_topic_dropdown'])) {
+    $topic = $_POST['add_topic_dropdown'] == 'New' ?
+        $_POST['add_topic_text']
+    :   $_POST['add_topic_dropdown'];
+    if ($topic)
+        mysqli_execute_query($con, "
+            INSERT INTO speaker_topics
+            SELECT '$id', ?
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM speaker_topics
+                WHERE speaker='$id'
+                AND topic=?
+            )
+        ", [$topic, $topic]);
+}
+
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_notes'])) {
+    $notes = empty($_POST['update_notes']) ?
+        null
+    :   $_POST['update_notes'];
+    mysqli_execute_query($con, "
+        UPDATE dbpersons
+        SET notes=?
+        WHERE id='$id'
+    ", [$notes]);
+}
+
 $person = mysqli_query($con, "
     SELECT *
     FROM dbpersons
     WHERE id = '$id'
-    ")->fetch_assoc();
+")->fetch_assoc();
+$speaker_topics = mysqli_query($con, "
+    SELECT topic
+    FROM speaker_topics
+    WHERE speaker = '$id'
+");
+$other_topics = mysqli_query($con, "
+    SELECT distinct(topic)
+    FROM `speaker_topics`
+    WHERE topic NOT IN (
+        SELECT topic
+        FROM speaker_topics
+        WHERE speaker='$id'
+    )
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,16 +157,24 @@ $person = mysqli_query($con, "
 
         const tabs = document.querySelectorAll('.tab-button');
         tabs.forEach(tab => {
-        tab.classList.remove('border-b-4', 'border-blue-900');
-        tab.classList.add('hover:border-b-2', 'hover:border-blue-700');
+        tab.classList.remove('border-b-4', 'border-red-800');
+        tab.classList.add('hover:border-b-2', 'hover:border-red-700');
         });
 
         const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
-        activeTab.classList.add('border-b-4', 'border-blue-900');
-        activeTab.classList.remove('hover:border-b-2', 'hover:border-blue-700');
+        activeTab.classList.add('border-b-4', 'border-red-800');
+        activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
+        localStorage.setItem('activeTab', sectionId);
         }
 
-        window.onload = () => showSection('personal');
+        window.onload = () => {
+            if (document.referrer.includes(window.location.href)) {
+                const activeTab = localStorage.getItem('activeTab');
+                showSection(activeTab ? activeTab : 'personal');
+            } else {
+                showSection('personal'); // Load 'personal' if coming from a different page
+            }
+        };
         </script>
         <?php
         require_once('header.php');
@@ -137,7 +200,7 @@ $person = mysqli_query($con, "
 
 <body class="bg-gray-100">
     <!-- Hero Section -->
-    <div class="h-48 relative" style="background-image: url('https://images.thdstatic.com/productImages/7c22c2c6-a12a-404c-bdd6-d56779e7a66f/svn/chesapeake-wallpaper-rolls-3122-10402-64_600.jpg');">
+    <div class="h-48 relative" style="background-image: url('images/heads.jpg')">
     </div>
 
     <!-- Profile Content -->
@@ -174,11 +237,11 @@ $person = mysqli_query($con, "
                 </div>
             </div>
             <div class="mt-6 space-y-2">
-                <button onclick="window.location.href='speakerList.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-700 cursor-pointer">Edit Profile</button>
+                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
 
                 <!-- -->
                 <?php if ($id != $userID): ?>
-                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Speaker List</button>
+                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
                 <?php endif ?>
                 <!-- -->
 
@@ -186,7 +249,7 @@ $person = mysqli_query($con, "
                 <?php if ($accessLevel < 2) : ?>
                 <button onclick="window.location.href='volunteerReport.php?id=<?php echo $user->get_id() ?>';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">My Volunteering Report</button>
                 <?php endif ?>
-                <button onclick="window.location.href='index.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Return to Dashboard</button>
+                <button onclick="window.location.href='index.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Dashboard</button>
             </div>
         </div>
 
@@ -194,52 +257,98 @@ $person = mysqli_query($con, "
         <div class="w-full md:w-2/3 bg-white rounded-2xl shadow-lg border border-gray-300 p-6">
             <!-- Tabs -->
             <div class="flex border-b border-gray-300 mb-4">
-                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-blue-900" data-tab="personal" onclick="showSection('personal')">Topics</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-red-800" data-tab="personal" onclick="showSection('personal')">Topics</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
+
             </div>
 
             <!-- Topics Section -->
             <div id="personal" class="profile-section space-y-4">
                 <div>
 <table>
-    <tr>
-        <form action="speakerList.php" method="post">
-            <td align="center">
-                <button type="submit" class="link-button" name="removed" value="{{ show }}" style="font-size:1.5rem;">ⓧ</button>
-            </td>
-        </form>
-        <td>Topic 1</td>
-    </tr>
-    <tr>
-        <form action="speakerList.php" method="post">
-            <td align="center">
-                <button type="submit" class="link-button" name="removed" value="{{ show }}" style="font-size:1.5rem;">ⓧ</button>
-            </td>
-        </form>
-        <td>Topic 2</td>
-    </tr>
+                    <?php
+                    foreach ($speaker_topics as $topic) {
+                        echo "
+                            <tr>
+                                <form action=\"viewProfile.php?id={$id}\" method=\"post\">
+                                    <td align=\"center\" style=\"width: 3rem;\">
+                                        <button
+                                            type=\"submit\"
+                                            name=\"delete_topic\"
+                                            value=\"{$topic['topic']}\"
+                                            class=\"cursor-pointer\"
+                        style=\"background-color: #db393b; color: white; border: 2px solid var(--color-gray-300); border-radius: 0.6rem; padding: 0.2rem; margin-top: 0.2rem;\"
+                                        >
+                                            X
+                                        </button>
+                                    </td>
+                                    <td class=\"text-lg font-medium\">{$topic['topic']}</td>
+                                </form>
+                            </tr>
+                        ";
+                    }
+                    ?>
 </table>
                 </div>
                 <div>
 
-                        <table style="border: 0">
+                    <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
+
+                        <table style="border: 0; width: 100%;">
+                        <tr>
+                            <td style="width: 10%;">
+                                <input
+                                    type="submit"
+                                    value="Add Topic"
+                                    class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 hover:border-red-800 cursor-pointer"
+                                    style="border-radius: 1rem 0 0 1rem;"
+                                />
+                            </td>
                             <td>
-                                <select id="speaker" name="speaker" style="padding: 1rem; border-radius:1rem">
-                                    <option value="null">None</option>
+                                <select
+                                    name="add_topic_dropdown"
+                                    id="add_topic_dropdown"
+                                    onchange="toggleAddTopicText()"
+                                    class="font-medium border-2 border-gray-300"
+                                    style="padding: 0.75rem; border-radius: 0 1rem 1rem 0; width:100%"
+                                >
+                                    <option disabled selected value>-- Topic --</option>
+                                    <option value="New">New</option>
                                     <?php
-                                    echo "<option value=\"topic1\">Topic 1</option>\n";
-                                    echo "<option value=\"topic2\">Topic 2</option>\n";
-                                    /* foreach ($people as $person) { */
-                                    /*   echo "<option value=\"{$person['id']}\">{$person['first_name']} {$person['last_name']}</option>\n"; */
-                                    /* } */
+                                    foreach ($other_topics as $topic) {
+                                        echo "<option value=\"{$topic['topic']}\">{$topic['topic']}</option>\n";
+                                    }
                                     ?>
-                                    <option value="new">New</option>
                                 </select>
                             </td>
-                            <td>
-                                <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Add Topic</button>
+                        </tr>
+                            <td colspan="2">
+                                <input
+                                    type="text"
+                                    name="add_topic_text"
+                                    id="add_topic_text"
+                                    onchange="toggleAddTopicText()"
+                                    placeholder="Enter a new topic"
+                                    class="font-medium border-2 border-gray-300"
+                                    style="display: none; background-color: #e9e9ed; border-radius: 1rem; padding: 0.5rem; margin-top: 1rem; width:100%"
+                                >
                             </td>
                         </table>
+
+                    </form>
+
+                    <script>
+                        function toggleAddTopicText() {
+                            const dropdown = document.getElementById('add_topic_dropdown');
+                            const textbox = document.getElementById('add_topic_text');
+
+                            textbox.style.display =
+                                dropdown.value === 'New' ?
+                                    'block'
+                                :   'none';
+                        }
+                    </script>
 
                 </div>
             </div>
@@ -247,14 +356,48 @@ $person = mysqli_query($con, "
             <!-- Notes Section -->
             <div id="contact" class="profile-section space-y-4 hidden">
                 <div>
-                    <textarea id="notes" name="notes" required="" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"></textarea>
-                    <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-blue-700 cursor-pointer">Save</button>
+                    <form action="viewProfile.php?id=<?php echo $id ?>" method="post">
+                        <textarea name="update_notes" placeholder="Write any notes you have" rows="3" style="resize:vertical; width:100%; border: 2px solid #cbd5e1; border-radius: 0.375rem; padding: 0.5rem;"><?php echo $person['notes']; ?></textarea>
+                        <input type="submit" value="Save" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-800 cursor-pointer"/>
+                    </form>
                 </div>
-
             </div>
+
+            <!-- Past Communications Section -->
+             <div id="communications" class="profile-section space-y-4 hidden">
+                    <?php
+                        $communications = getAllCommunicationsFor($user->get_email());
+                        if(count($communications)==0){
+                            echo '<p style="text-align: center";>
+                            There have been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
+                            '</p>';
+                        }else{
+                            echo
+                            '<h1 class="mb-4" style="text-align: center">
+                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name().
+                            '</h1>
+                            <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Contacted By</th>
+                                </tr>';
+                            foreach($communications as $communication){
+
+                                $admin = retrieve_person_by_email( $communication[0]);
+                                echo '<tr>' .
+                                '<td>' . $communication[1] . '</td>' .
+                                '<td>' . $admin->get_first_name() . ' ' . $admin->get_last_name() . '</td>'
+                                . '</tr>';
+                            }
+                            echo '</table>';
+                        }
+                    ?>
+
+             </div>
 
         </div>
     </div>
     </div>
 </body>
 </html>
+

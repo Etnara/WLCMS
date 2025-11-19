@@ -101,14 +101,14 @@
 }
 * { font-family: Quicksand, sans-serif; }
 	</style>
-        <title>Fredericksburg SPCA Volunteer System | Log In</title>
+        <title>Women's Leadership Colloquium | Log In</title>
     </head>
     <body>
 <div class="h-screen flex">
 
   <!-- Left: Image Section (Hidden on small screens) -->
   <div class="hidden md:block md:w-1/2 bg-center rounded-r-[50px]"
-       style="background-image: url(images/login_background.jpg);">
+       style="background-image: url(images/heads.jpg);">
   </div>
 
   <!-- Right: Form Section -->
@@ -120,7 +120,7 @@
 
       <!-- Logo Placeholder (Now the same width as inputs and centered) -->
       <div class="w-full flex justify-center mb-6">
-        <img src="images/drawn_logo.png"
+        <img src="images/real-women-logo.webp"
              alt="Logo"
              class="w-full max-w-xs">
       </div>
@@ -143,17 +143,17 @@
                 ?>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" name="email" placeholder="Enter your email" required>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-700" type="text" name="email" placeholder="Enter your email" required>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
-          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400" type="password" name="password" placeholder="Enter your password" required>
+          <input class="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-700" type="password" name="password" placeholder="Enter your password" required>
         </div>
         <div class="flex justify-between items-center mb-4">
           <a href="#" class="text-blue-500 text-sm hover:underline">Forgot password?</a>
-          <a href="https://fredspca.org/" class="text-blue-500 text-sm hover:underline">Fredericksburg SPCA Website</a>
+          <a href="https://www.umw.edu/lcpw/coffee-talk/" class="text-blue-500 text-sm hover:underline">Women's Leadership Colloquium</a>
         </div>
-        <button class="cursor-pointer w-full bg-[#345284] hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
+        <button class="cursor-pointer w-full bg-[#800000] hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-300">Login</button>
       </form>
 
       <!-- Divider -->
@@ -165,8 +165,8 @@
 
       <!-- Sign Up Section -->
       <p class="text-center text-gray-700">
-        Don’t have an account?
-        <a href="VolunteerRegister.php" class="text-blue-500 font-semibold hover:underline">Sign Up Now</a>
+        Want to be a speaker?
+        <a href="VolunteerRegister.php" class="text-red-800 font-semibold hover:underline">Sign up here!</a>
       </p>
 
     </div>

@@ -7,6 +7,10 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-200: oklch(92% 0.035 25);
+    --color-red-300: oklch(90% 0.045 25);
+    --color-red-400: oklch(88% 0.055 25);
+    --color-red-500: oklch(85% 0.07 25);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
@@ -564,10 +568,10 @@
     border-color: var(--color-gray-300);
   }
   .bg-\[\#345284\] {
-    background-color: #345284;
+    background-color: #800000;
   }
   .bg-blue-400 {
-    background-color: var(--color-blue-400);
+    background-color: var(--color-red-200);
   }
   .bg-blue-900 {
     background-color: var(--color-blue-900);
@@ -959,10 +963,10 @@
     padding-block: calc(var(--spacing) * 4);
   }
   thead {
-    background-color: var(--color-blue-100);
+    background-color: var(--color-red-400);
   }
   th {
-    background-color: var(--color-blue-100);
+    background-color: var(--color-red-400);
     padding-inline: calc(var(--spacing) * 6);
     padding-block: calc(var(--spacing) * 4);
     text-align: left;
@@ -1002,7 +1006,7 @@
     line-height: var(--tw-leading, var(--text-lg--line-height));
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-blue-900);
+    color: var(--color-red-800);
   }
   input:not([type="radio"]), select {
     margin-bottom: calc(var(--spacing) * 2);
@@ -1031,7 +1035,7 @@
     z-index: 0;
     height: calc(var(--spacing) * 52);
     width: 100%;
-    background-color: #294877;
+    background-color: #800000;
     background-position: center;
   }
   .center-header {
@@ -1068,13 +1072,13 @@
   .blue-button {
     cursor: pointer;
     border-radius: var(--radius-lg);
-    background-color: var(--color-blue-900);
+    background-color: var(--color-red-800);
     padding-inline: calc(var(--spacing) * 6);
     padding-block: calc(var(--spacing) * 2);
     color: var(--color-white);
     &:hover {
       @media (hover: hover) {
-        background-color: var(--color-blue-700);
+        background-color: var(--color-red-700);
       }
     }
   }
@@ -1099,7 +1103,7 @@
   .blue-div {
     margin-bottom: calc(var(--spacing) * 4);
     height: 1px;
-    background-color: var(--color-blue-900);
+    background-color: var(--color-red-800);
   }
   .info-text {
     font-size: var(--text-lg);
@@ -1111,7 +1115,7 @@
     margin-top: calc(var(--spacing) * 1);
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-blue-700);
+    color: var(--color-red-800);
   }
   .error-block {
     margin-bottom: calc(var(--spacing) * 2);

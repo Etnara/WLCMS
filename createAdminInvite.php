@@ -1,4 +1,5 @@
 <?php
+include_once("sendEmail.php");
 session_cache_expire(30);
 session_start();
 
@@ -14,7 +15,7 @@ require_once('header.php');
 ?>
 <style>
   .date-box {
-      background: #274471;
+      /*background: #274471;*/
       padding: 7px 30px;
       border-radius: 50px;
       box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -54,7 +55,7 @@ require_once('header.php');
       border-radius: 8px;
     }
     .blue-button {
-      background: #274471;
+      /*background: #274471;*/
       color: #fff;
       font-weight: 600;
       border: none;
@@ -64,7 +65,7 @@ require_once('header.php');
       text-decoration: none;
     }
     .blue-button:hover {
-      background: #1f365a;
+      /*background: #1f365a;*/
     }
     .return-button {
     border-radius: var(--radius-lg);
@@ -92,13 +93,14 @@ require_once('header.php');
     <form method="post" action="#">
       <div class="form-row">
         <label>Admin Email</label>
-        <input type="email" name="email" placeholder="name@example.com" required>
+        <input id="emailInput" type="email" name="email" placeholder="name@example.com" required>
       </div>
 
       <!-- SEND BUTTON NOT IMPLEMENTED YET!!!!! WILL NOT WORK!!!! -->
+      <!-- works! -Caleb --> 
         <div class="text-center mt-6">
           <div style="display: flex; justify-content: center; gap: 15px;">
-            <button type="button" class="blue-button">Send Invite</button>
+            <button type="button" class="blue-button" onclick="confirmInvite()">Send Invite</button>
             <a href="AdminForm.php" class="blue-button">Go to Form</a>
           </div>
         </div>
@@ -110,5 +112,17 @@ require_once('header.php');
     <a href="index.php" class="return-button">Back to Dashboard</a>
   </div>
 </main>
+<script> 
+    function confirmInvite() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) {
+    alert('Please enter an email first.');
+    return;
+  }
+    if (confirm(`Are you sure you want to invite ${email}?`)) {
+        window.location.href = `sendAdminInvite.php?email=${email}`;
+    }
+  }
+</script>
 </body>
 </html>

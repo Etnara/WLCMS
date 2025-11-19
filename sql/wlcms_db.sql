@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2025 at 04:11 PM
+-- Generation Time: Nov 09, 2025 at 07:35 PM
 -- Server version: 10.11.14-MariaDB
 -- PHP Version: 8.4.13
 
@@ -24,10 +24,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `authentication_tokens`
+--
+
+DROP TABLE IF EXISTS `authentication_tokens`;
+CREATE TABLE `authentication_tokens` (
+  `uuid` uuid NOT NULL,
+  `time` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dbarchived_volunteers`
 --
 
-DROP TABLE IF EXISTS `dbarchived_volunteers`;
 CREATE TABLE `dbarchived_volunteers` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -70,10 +81,31 @@ INSERT INTO `dbarchived_volunteers` (`id`, `start_date`, `first_name`, `last_nam
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dbcommunications`
+--
+
+CREATE TABLE `dbcommunications` (
+  `admin_email` varchar(127) NOT NULL,
+  `speaker_email` varchar(127) NOT NULL,
+  `date` varchar(127) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dbcommunications`
+--
+
+INSERT INTO `dbcommunications` (`admin_email`, `speaker_email`, `date`) VALUES
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2004-11-05'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-03-22'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-02'),
+('clineber@mail.umw.edu', 'calebalineberry@gmail.com', '2025-11-03');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dbdiscussions`
 --
 
-DROP TABLE IF EXISTS `dbdiscussions`;
 CREATE TABLE `dbdiscussions` (
   `author_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -94,7 +126,6 @@ INSERT INTO `dbdiscussions` (`author_id`, `title`, `body`, `time`) VALUES
 -- Table structure for table `dbeventmedia`
 --
 
-DROP TABLE IF EXISTS `dbeventmedia`;
 CREATE TABLE `dbeventmedia` (
   `id` int(11) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -112,7 +143,6 @@ CREATE TABLE `dbeventmedia` (
 -- Table structure for table `dbeventpersons`
 --
 
-DROP TABLE IF EXISTS `dbeventpersons`;
 CREATE TABLE `dbeventpersons` (
   `eventID` int(11) NOT NULL,
   `userID` varchar(256) NOT NULL,
@@ -136,7 +166,6 @@ INSERT INTO `dbeventpersons` (`eventID`, `userID`, `position`, `notes`) VALUES
 -- Table structure for table `dbevents`
 --
 
-DROP TABLE IF EXISTS `dbevents`;
 CREATE TABLE `dbevents` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -180,7 +209,6 @@ INSERT INTO `dbevents` (`id`, `name`, `date`, `startTime`, `endTime`, `descripti
 -- Table structure for table `dbgroups`
 --
 
-DROP TABLE IF EXISTS `dbgroups`;
 CREATE TABLE `dbgroups` (
   `group_name` varchar(255) NOT NULL,
   `color_level` varchar(50) NOT NULL
@@ -200,7 +228,6 @@ INSERT INTO `dbgroups` (`group_name`, `color_level`) VALUES
 -- Table structure for table `dbmessages`
 --
 
-DROP TABLE IF EXISTS `dbmessages`;
 CREATE TABLE `dbmessages` (
   `id` int(11) NOT NULL,
   `senderID` varchar(256) NOT NULL,
@@ -484,7 +511,6 @@ INSERT INTO `dbmessages` (`id`, `senderID`, `recipientID`, `title`, `body`, `tim
 -- Table structure for table `dbpendingsignups`
 --
 
-DROP TABLE IF EXISTS `dbpendingsignups`;
 CREATE TABLE `dbpendingsignups` (
   `username` varchar(25) NOT NULL,
   `eventname` varchar(100) NOT NULL,
@@ -508,7 +534,6 @@ INSERT INTO `dbpendingsignups` (`username`, `eventname`, `role`, `notes`) VALUES
 -- Table structure for table `dbpersonhours`
 --
 
-DROP TABLE IF EXISTS `dbpersonhours`;
 CREATE TABLE `dbpersonhours` (
   `personID` varchar(256) NOT NULL,
   `eventID` int(11) NOT NULL,
@@ -530,7 +555,6 @@ INSERT INTO `dbpersonhours` (`personID`, `eventID`, `start_time`, `end_time`) VA
 -- Table structure for table `dbpersons`
 --
 
-DROP TABLE IF EXISTS `dbpersons`;
 CREATE TABLE `dbpersons` (
   `id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_date` text DEFAULT NULL,
@@ -568,7 +592,6 @@ INSERT INTO `dbpersons` (`id`, `start_date`, `first_name`, `last_name`, `email`,
 -- Table structure for table `dbshifts`
 --
 
-DROP TABLE IF EXISTS `dbshifts`;
 CREATE TABLE `dbshifts` (
   `shift_id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -609,10 +632,23 @@ INSERT INTO `dbshifts` (`shift_id`, `person_id`, `date`, `startTime`, `endTime`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dbsurveys`
+--
+
+CREATE TABLE `dbsurveys` (
+  `id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `mime` varchar(100) NOT NULL,
+  `content` longblob NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discussion_replies`
 --
 
-DROP TABLE IF EXISTS `discussion_replies`;
 CREATE TABLE `discussion_replies` (
   `reply_id` int(11) NOT NULL,
   `user_reply_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -640,7 +676,6 @@ INSERT INTO `discussion_replies` (`reply_id`, `user_reply_id`, `author_id`, `dis
 -- Table structure for table `monthly_hours_snapshot`
 --
 
-DROP TABLE IF EXISTS `monthly_hours_snapshot`;
 CREATE TABLE `monthly_hours_snapshot` (
   `id` int(11) NOT NULL,
   `person_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -667,10 +702,20 @@ INSERT INTO `monthly_hours_snapshot` (`id`, `person_id`, `month_year`, `hours`) 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `speaker_topics`
+--
+
+CREATE TABLE `speaker_topics` (
+  `speaker` varchar(256) NOT NULL,
+  `topic` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_groups`
 --
 
-DROP TABLE IF EXISTS `user_groups`;
 CREATE TABLE `user_groups` (
   `user_id` varchar(255) NOT NULL,
   `group_name` varchar(255) NOT NULL
@@ -690,10 +735,22 @@ INSERT INTO `user_groups` (`user_id`, `group_name`) VALUES
 --
 
 --
+-- Indexes for table `authentication_tokens`
+--
+ALTER TABLE `authentication_tokens`
+  ADD PRIMARY KEY (`uuid`);
+
+--
 -- Indexes for table `dbarchived_volunteers`
 --
 ALTER TABLE `dbarchived_volunteers`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dbcommunications`
+--
+ALTER TABLE `dbcommunications`
+  ADD PRIMARY KEY (`admin_email`,`speaker_email`,`date`);
 
 --
 -- Indexes for table `dbdiscussions`
@@ -747,6 +804,13 @@ ALTER TABLE `dbshifts`
   ADD PRIMARY KEY (`shift_id`);
 
 --
+-- Indexes for table `dbsurveys`
+--
+ALTER TABLE `dbsurveys`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_dbsurveys_uploaded_at` (`uploaded_at`);
+
+--
 -- Indexes for table `discussion_replies`
 --
 ALTER TABLE `discussion_replies`
@@ -760,6 +824,12 @@ ALTER TABLE `discussion_replies`
 --
 ALTER TABLE `monthly_hours_snapshot`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `speaker_topics`
+--
+ALTER TABLE `speaker_topics`
+  ADD PRIMARY KEY (`speaker`,`topic`);
 
 --
 -- Indexes for table `user_groups`
@@ -790,6 +860,12 @@ ALTER TABLE `dbshifts`
   MODIFY `shift_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
+-- AUTO_INCREMENT for table `dbsurveys`
+--
+ALTER TABLE `dbsurveys`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
 -- AUTO_INCREMENT for table `discussion_replies`
 --
 ALTER TABLE `discussion_replies`
@@ -810,6 +886,12 @@ ALTER TABLE `monthly_hours_snapshot`
 --
 ALTER TABLE `dbevents`
   ADD CONSTRAINT `FKspeakerID` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `speaker_topics`
+--
+ALTER TABLE `speaker_topics`
+  ADD CONSTRAINT `speaker_id` FOREIGN KEY (`speaker`) REFERENCES `dbpersons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

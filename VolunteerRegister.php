@@ -7,15 +7,16 @@
 <head>
     <?php require_once('database/dbMessages.php'); ?>
     <title>WLCMS | Speaker Interest Form</title>
-    <link href="css/normal_tw.css" rel="stylesheet">
+    
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
 $tailwind_mode = true;
 require_once('header.php');
 ?>
+<link href="css/normal_tw.css" rel="stylesheet">
 <style>
     .date-box {
-        background: #274471;
+        background: #800000;
         padding: 7px 30px;
         border-radius: 50px;
         box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -24,9 +25,15 @@ require_once('header.php');
         font-weight: 700;
         text-align: center;
     }
+    /*
+    .hero-header{
+        background-color: #800000; 
+    }*/
+    
     .dropdown {
         padding-right: 50px;
     }
+    
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
 </head>
@@ -35,6 +42,7 @@ require_once('header.php');
     require_once('domain/Person.php');
     require_once('database/dbPersons.php');
     require_once('database/dbinfo.php');
+    require_once('sendEmail.php');
 
     $showPopup = false;
     $popupText = "";
@@ -131,30 +139,29 @@ require_once('header.php');
 
         if ($errors) {
             echo '<p class="error">Your form submission contained unexpected or invalid input.</p>';
-        } elseif ($showPopup) {
-            require_once('registrationForm.php');
-        } else {
-            $newperson = new Person(
-                $id, $password,
-                $first_name, $last_name,
-                $status,
-                $phone1, $email,
-                $archived,
-                $topic_summary,
-                $organization
-            );
+            die();
+        }
 
-            $result = add_person($newperson);
-            if (!$result) {
-                $showPopup = true;
-                $popupText = "That email is already taken.";
-                require_once('registrationForm.php');
-            } else {
-                echo '<script>document.location = "login.php?registerSuccess";</script>';
-                $title = $id . " has been added as a speaker";
-                $body = "New volunteer account has been created";
-                system_message_all_admins($title, $body);
-            }
+        $newperson = new Person(
+            $id, $password,
+            $first_name, $last_name,
+            $status,
+            $phone1, $email,
+            $archived,
+            $topic_summary,
+            $organization
+        );
+
+        $result = add_person($newperson);
+
+        if (!$result) {
+            $showPopup = true;
+        } else {
+            sendFormConfirmation($email, $first_name, $last_name); //email speaker confirmation
+            $title = "New Interest Form to Review: " . $first_name . " " . $last_name;
+            message_all_users("vmsroot", $title, "");
+
+            echo '<script>document.location = "login.php?registerSuccess";</script>';
         }
     } else {
         require_once('registrationForm.php');

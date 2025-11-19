@@ -48,7 +48,7 @@ require_once('header.php');
 ?>
 <style>
         .date-box {
-            background: #274471;
+            /*background: #274471;*/
             padding: 7px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
@@ -189,10 +189,7 @@ function display ($pageNum){
 
         </div>
 
-            <div class="flex justify-center mt-6">
-                <a href="index.php" class="return-button">Return to Dashboard</a>
-                <a href="speakerList.php" class="return-button" style="margin-left: 2rem;">Return to Speaker List</a>
-            </div>
+            
 
     <div class="info-section">
         <div class="blue-div"></div>
@@ -201,20 +198,25 @@ function display ($pageNum){
             Use this tool to filter and search for volunteers or participants by their role, event involvement, and status. Mailing list support is built in.
                     -->
             <?php if ($prevExists): ?>
-                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
+                <a href="?page=<?= $pageNum - 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;"><- Previous</a>
             <?php else: ?>
-                <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
+                <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Previous</span>
             <?php endif; ?>
 
-            <span class="current-page" style="font-weight: bold; color: navy">Page <?= $pageNum + 1 ?></span>
+            <span class="current-page" style="font-weight: bold; color: #800000">Page <?= $pageNum + 1 ?></span>
 
                 <?php if ($nextExists): ?>
-                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid gray;  padding: 8px 12px; border-radius: 5px;">Next -></a>
+                    <a href="?page=<?= $pageNum + 1 ?>" class="page-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px;">Next -></a>
                 <?php else: ?>
-                    <span class="disabled-link" style="border: 1px solid navy;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
+                    <span class="disabled-link" style="border: 1px solid #800000;  padding: 8px 12px; border-radius: 5px; background-color: lightgrey; color: darkgrey; cursor: not-allowed;">Next</span>
             <?php endif; ?>
         </p>
     </div>
+
+    <div class="flex justify-center mt-6">
+                <a href="index.php" class="return-button">Return to Dashboard</a>
+                <a href="speakerList.php" class="return-button" style="margin-left: 2rem;">Return to Speaker List</a>
+            </div>
     </main>
 
     <script>

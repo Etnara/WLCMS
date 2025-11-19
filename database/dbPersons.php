@@ -16,7 +16,7 @@
  */
 include_once('dbinfo.php');
 include_once(dirname(__FILE__).'/../domain/Person.php');
-
+include_once(dirname(__FILE__).'/../sendEmail.php');
 /*
  * add a person to dbPersons table: if already there, return false
  */
@@ -262,6 +262,38 @@ function getPendingSpeakers($offset, $limit){
     }
 }
 
+//get rejected speakers
+function getRejectedSpeakers($offset, $limit){
+    $con=connect();
+
+    try{
+        //allow -1 to get all speakers
+        if ($limit == -1){
+            $limit = 100;
+        }
+
+        $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" AND status = "Rejected Speaker" LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
+
+        $stmt = $con->prepare($query);
+
+        /*
+        if (!$stmt->execute()){
+            throw new Exception("Failed insertion.");
+        }*/
+
+        $result = mysqli_query($con,$query);
+        $thePersons = array();
+        while ($result_row = mysqli_fetch_assoc($result)) {
+            $thePerson = make_a_person($result_row);
+            $thePersons[] = $thePerson;
+        }
+
+        return ['array' => $thePersons, 'message' => "success"];
+    } catch (Exception $e){
+        return ['array' => [], 'message' => $e->getMessage()];
+    }
+}
+
 function acceptSpeaker($volunteer_id){
     $con = connect(); // Ensure this function connects to your database
 
@@ -288,6 +320,24 @@ function acceptSpeaker($volunteer_id){
         // Commit transaction
         mysqli_commit($con);
 
+        //Create Email
+        $query = "SELECT first_name, last_name, email FROM dbpersons WHERE id = ?";
+
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $volunteer_id);
+        if (!$stmt->execute()){
+            throw new Exception("Acceptance Emailing Issue.");
+        }
+
+        $result = $stmt->get_result();
+        if ($result->num_rows === 0) {
+            throw new Exception("Acceptance Mailing Issue");
+        }
+        $row = $result->fetch_assoc();
+        sendFormApproved($row["email"], $row["first_name"], $row["last_name"]);
+        //Send Email
+
+
     }  catch (Exception $e) {
         // Rollback if anything goes wrong
         mysqli_rollback($con);
@@ -299,6 +349,39 @@ function acceptSpeaker($volunteer_id){
     mysqli_close($con);
     return ['success' => true, 'message' => 'Volunteer archived successfully.'];;
 
+}
+
+function deleteSpeaker($speaker_id) {
+    $con = connect(); 
+
+    mysqli_begin_transaction($con);
+
+    try {
+        // Delete the volunteer from dbpersons
+        
+        $query_delete = "DELETE FROM dbpersons WHERE id = ?";
+        $stmt_delete = $con->prepare($query_delete);
+        $stmt_delete->bind_param("s", $speaker_id);
+
+        if (!$stmt_delete->execute()){
+            throw new Exception("Failed to properly delete.");
+        }
+        
+        // Commit transaction
+        mysqli_commit($con);
+
+        //echo "Speaker successfully archived.";
+    } catch (Exception $e) {
+        // Rollback if anything goes wrong
+        mysqli_rollback($con);
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+
+    // Close connection
+    //$stmt->close();
+    $stmt_delete->close();
+    mysqli_close($con);
+    return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
 
@@ -921,16 +1004,14 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
 */
     // updates the required fields of a person's account
     function update_person_required(
-        $id, $first_name, $last_name, $birthday, $street_address, $city, $state,
-        $zip_code, $email, $phone1, $phone1type, $type,
-        $skills,
+        $id, $first_name, $last_name,
+        $email, $phone1,
+        $status, $archived
     ) {
         $query = "update dbpersons set
-            first_name='$first_name', last_name='$last_name', birthday='$birthday',
-            street_address='$street_address', city='$city', state='$state',
-            zip_code='$zip_code', email='$email', phone1='$phone1', phone1type='$phone1type', type='$type',
-            skills='$skills'
-
+            first_name='$first_name', last_name='$last_name',
+            email='$email', phone1='$phone1',
+            status='$status', archived='$archived'
             where id='$id'";
         $connection = connect();
         $result = mysqli_query($connection, $query);
@@ -984,7 +1065,14 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
         mysqli_close($connection);
         return $thePersons;
     }
-
+    function find_all_speakers(){
+        $query = "Select first_name, last_name, email from dbpersons where status='Accepted Speaker'";
+        $connection = connect();
+        $result = mysqli_query($connection, $query);
+        $connection->close();
+        return $result->fetch_all();
+    }
+    
     function find_users($name, /*$id, $phone, $zip, $type, $status*/) {
     $where = "where status='Accepted Speaker' AND ";
     if (!($name /*|| $id || $phone || $zip || $type || $status*/)) {  // ✅ Fixed parentheses

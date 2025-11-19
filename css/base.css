@@ -74,6 +74,8 @@ table, td, tr, th, form, fieldset, em, button, a {
     --button-font-color: #ffffff;
     --button-padding: 0.5rem 1.5rem;
     --button-border-radius: 0.25rem;
+    --button-bg-color: #C13C33;
+    --button-hover-color: #D9463D;
 
     --standard-border: 1px solid #333333;
     --light-border: 1px solid var(--shadow-and-border-color);
@@ -274,7 +276,7 @@ input[type=submit], button, .button {
 }
 
 input[type=submit]:hover, button:hover, .button:hover {
-    background-color: var(--accent-color);
+    background-color: #9d2525;
 }
 
 /* input.visited:invalid {
@@ -283,13 +285,22 @@ input[type=submit]:hover, button:hover, .button:hover {
 
 label {
     /* color: var(--main-color); */
-    color: #0066cc;
+    color: #800000;
     font-weight: 600;
     width: 100%;
     text-align: left;
 }
 
 /* Login Form */
+.btn-primary {
+  background-color: var(--button-bg-color);
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--button-hover-color);
+}
+
 main.login > form {
     display: flex;
     justify-content: center;
@@ -319,7 +330,7 @@ h1 {
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 2rem;
-    background-color: #274471;
+    background-color: #800000;
     color: var(--page-background-color);
     width: 100%;
     text-align: center;
@@ -634,7 +645,7 @@ form.signup-form .section-box {
     border-radius: 5px;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #e0f7fa;
+    background-color: #facac5;
 }
 /**/
 

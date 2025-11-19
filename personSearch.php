@@ -24,7 +24,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fredericksburg SPCA | Volunteer/Participant Search</title>
+    <title>Women's Leadership Colloquium | Speaker Search</title>
     <link href="css/normal_tw.css" rel="stylesheet">
 <!-- BANDAID FIX FOR HEADER BEING WEIRD -->
 <?php
@@ -33,7 +33,7 @@ require_once('header.php');
 ?>
 <style>
         .date-box {
-            background: #274471;
+            /* background: #274471;*/
             padding: 7px 30px;
             border-radius: 50px;
             box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) inset;
