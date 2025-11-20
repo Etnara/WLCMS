@@ -99,21 +99,65 @@
           <h3 class="mb-2">Select the months you're available:</h3>
           -->
           <br/>
-          <div class="month-grid">
-            <label><input type="checkbox" name="months[]" value="January"><span>January</span></label>
-            <label><input type="checkbox" name="months[]" value="February"><span>February</span></label>
-            <label><input type="checkbox" name="months[]" value="March"><span>March</span></label>
-            <label><input type="checkbox" name="months[]" value="April"><span>April</span></label>
-            <label><input type="checkbox" name="months[]" value="May"><span>May</span></label>
-            <label><input type="checkbox" name="months[]" value="June"><span>June</span></label>
-            <label><input type="checkbox" name="months[]" value="July"><span>July</span></label>
-            <label><input type="checkbox" name="months[]" value="August"><span>August</span></label>
-            <label><input type="checkbox" name="months[]" value="September"><span>September</span></label>
-            <label><input type="checkbox" name="months[]" value="October"><span>October</span></label>
-            <label><input type="checkbox" name="months[]" value="November"><span>November</span></label>
-            <label><input type="checkbox" name="months[]" value="December"><span>December</span></label>
-          </div>
+          <?php
+            function getUpcomingSecondTuesdays($count = 12) {
+              $today = new DateTime();
+              $results = [];
 
+              // Start at the current month
+              $year = (int)$today->format('Y');
+              $month = (int)$today->format('n');
+
+              while (count($results) < $count) {
+
+                // First day of the month
+                $date = new DateTime("$year-$month-01");
+
+                // Find the first Tuesday
+                if ($date->format('N') == 2) { 
+                  $firstTuesday = clone $date;
+                } else {
+                  $firstTuesday = clone $date;
+                  $firstTuesday->modify('next tuesday');
+                }
+
+                // Second Tuesday = first + 7 days
+                $secondTuesday = clone $firstTuesday;
+                $secondTuesday->modify('+7 days');
+
+                // Only add if after today
+                if ($secondTuesday > $today) {
+                  // Use month number 1..12 from the DateTime itself
+                  $calendarMonth = (int)$secondTuesday->format('n'); // 1..12
+                  $results[$calendarMonth] = $secondTuesday->format('n/j/y');
+                }
+
+                // Move to next month
+                $month++;
+                if ($month > 12) {
+                  $month = 1;
+                  $year++;
+                }
+              }
+              return $results;
+            }
+            $results = getUpcomingSecondTuesdays();
+          echo'
+          <div class="month-grid">
+            <label><input type="checkbox" name="months[]" value="January"><span>Jan (' . $results[1] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="February"><span>Feb (' . $results[2] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="March"><span>Mar (' . $results[3] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="April"><span>Apr (' . $results[4] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="May"><span>May (' . $results[5] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="June"><span>Jun (' . $results[6] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="July"><span>Jul (' . $results[7] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="August"><span>Aug (' . $results[8] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="September"><span>Sep (' . $results[9] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="October"><span>Oct (' . $results[10] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="November"><span>Nov (' . $results[11] . ')</span></label>
+            <label><input type="checkbox" name="months[]" value="December"><span>Dec (' . $results[12] . ')</span></label>
+          </div>'
+        ?>
         </fieldset>
         <fieldset class="section-box mb-4">
             <h3 class="mb-2">Event Topic</h3>
