@@ -22,7 +22,7 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
 $mail->Username = 'wlccoffeetalks@gmail.com';
-$mail->Password = '------------------------';
+$mail->Password = '--------------';
 
 $mail->setFrom('wlccoffeetalks@gmail.com','WLC Coffee Talks');
 
@@ -107,6 +107,7 @@ function sendAdminInvite($to){
 
 
 // automated email (at least an attempt)
+/*
 function autoEmail($type, $to, $first_name = '', $last_name = '', $date = '') {
     switch ($type) {
         case 'form_confirmation':
@@ -129,24 +130,18 @@ function autoEmail($type, $to, $first_name = '', $last_name = '', $date = '') {
             throw new Exception("Unknown email type: $type");
     }
 }
+*/
 
 //speaker email reminder one week and 24 hr prior to talk
 function speakerReminder($to, $first_name, $last_name, $eventDate){
     global $mail;
-    $now = new DateTime();
-    $event = new DateTime($eventDate);
-    $diff = $event->getTimestamp() - $now->getTimestamp();
-
-    $oneWeek = 7 * 24 * 60 * 60;
-    $oneDay = 24 * 60 * 60;
-    $timeWindow = 60;
-
-    if(abs($diff - $oneWeek) <= $timeWindow){
+    $today = new DateTime();
+    if($today == (clone $eventDate)->modify(modifier: '-7 days')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is in 1 week";
         $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a reminder one week in advance.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
         $mail->send();
-    } elseif(abs($diff - $oneDay) <= $timeWindow){
+    } elseif($today == (clone $eventDate)->modify(modifier: '-1 days')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is tomorrow";
         $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a 24-hour reminder.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
