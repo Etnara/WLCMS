@@ -35,8 +35,6 @@ $targetDayAhead = (clone $today)->modify(modifier: '+1 days')->format('Y-m-d');
 
 $query = "select speaker from dbevents where date=? and speaker is not null";
 
-$conn = connect();
-
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $targetDayAhead);
 $stmt->execute();
@@ -47,7 +45,8 @@ while($row = $resultDayAhead->fetch_assoc()){
     speakerReminder($speaker->get_email(), $speaker->get_first_name(), $speaker->get_last_name(), $targetDayAhead);
 }
 
-
+$conn->close();
+$stmt->close();
 
 
 
