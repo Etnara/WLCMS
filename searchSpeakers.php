@@ -60,11 +60,10 @@ foreach ($merged as $person_id) {
         $topics[] = $row['topic'];
     }
 
-    $monthsResult = mysqli_query($con, "SELECT month FROM speaker_months WHERE id='$person_id'");
-    $months = [];
-    while ($row = mysqli_fetch_assoc($monthsResult)) {
+    $months = getAllMonthsFor($person_id);
+    /*while ($row = mysqli_fetch_assoc($monthsResult)) {
         $months[] = $row['month'];
-    }
+    }*/
 
     $data[] = [
         'id' => $person_id,
