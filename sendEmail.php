@@ -22,7 +22,7 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
 $mail->Username = 'wlccoffeetalks@gmail.com';
-$mail->Password = '--------------';
+$mail->Password = '------------------------';
 
 $mail->setFrom('wlccoffeetalks@gmail.com','WLC Coffee Talks');
 
@@ -102,36 +102,6 @@ function sendAdminInvite($to){
     $mail->send();
 }
 
-
-
-
-
-// automated email (at least an attempt)
-/*
-function autoEmail($type, $to, $first_name = '', $last_name = '', $date = '') {
-    switch ($type) {
-        case 'form_confirmation':
-            sendFormConfirmation($to, $first_name, $last_name);
-            break;
-
-        case 'form_approved':
-            sendFormApproved($to, $first_name, $last_name);
-            break;
-
-        case 'speaker_scheduled':
-            sendScheduledSpeaker($to, $first_name, $last_name, $date);
-            break;
-
-        case 'admin_invite':
-            sendAdminInvite($to);
-            break;
-
-        default:
-            throw new Exception("Unknown email type: $type");
-    }
-}
-*/
-
 //speaker email reminder one week and 24 hr prior to talk
 function speakerReminder($to, $first_name, $last_name, $eventDate){
     global $mail;
@@ -148,6 +118,5 @@ function speakerReminder($to, $first_name, $last_name, $eventDate){
         $mail->send();
     }
 }
-
 
 ?>
