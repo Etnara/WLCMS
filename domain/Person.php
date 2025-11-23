@@ -21,6 +21,7 @@ class Person {
 	private $emergency_contact_relation;
 	private $type;
 	private $status;
+	private $notes;
 
 	private $archived;
 	private $skills;
