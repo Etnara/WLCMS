@@ -146,6 +146,13 @@ $other_topics = mysqli_query($con, "
 ?>
 <!DOCTYPE html>
 <html lang="en">
+    <style>
+    .headshot img{
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
+    </style>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -222,6 +229,8 @@ $other_topics = mysqli_query($con, "
                     <?php
                     if ($user->get_headshot() == NULL){
                         echo '<img src="headshots/blank-profile.jpg" class="block max-w-full h-auto mx-auto" />';
+                    } else{
+                        echo '<img src=' . $user->get_headshot() . ' class="block max-w-full h-auto mx-auto" />';
                     }
                     ?>
                 </div>

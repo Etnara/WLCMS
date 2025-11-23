@@ -39,7 +39,7 @@ class Person {
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization, $headshot
+		$archived, $topic_summary,$organization, $headshot = NULL
 	) {
 		$this->id = $id;
 		$this->headshot = $headshot;

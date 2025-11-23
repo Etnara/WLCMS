@@ -67,9 +67,16 @@
 
        $type = 'v';
 
-        $headshot = $args['headshot'];
+        
+        include 'uploadHeadshot.php';
 
+        $headshot = upload_image('image');
 
+        $oldHeadshot = $_POST['current_headshot'];
+
+        if ($headshot == null) {
+            $headshot = $oldHeadshot;
+        }
 
 
         // For the new fields, default to 0 if not set
@@ -97,6 +104,14 @@
 ?>
 <!DOCTYPE html>
 <html>
+    <style>
+    .headshot img{
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 8px; /* optional */
+    }
+    </style>
 <head>
     <?php require_once('universal.inc'); ?>
     <title>Women's Leadership Colloquium | Manage Profile</title>
