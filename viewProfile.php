@@ -3,7 +3,6 @@
 // data with the logged-in user.
 session_cache_expire(30);
 session_start();
-
 $loggedIn = false;
 $accessLevel = 0;
 $userID = null;
@@ -29,6 +28,7 @@ if ($isAdmin && isset($_GET['id'])) {
 } else {
     $id = $userID;
 }
+require_once('database/dbinfo.php');
 require_once('database/dbPersons.php');
 require_once('database/dbCommunications.php');
 require_once('database/dbEvents.php');
@@ -429,11 +429,32 @@ $other_topics = mysqli_query($con, "
                                     <th>Survey Rating</th>
                                 </tr>';
                         foreach($events as $event){
+                            $query = "select speaker_rating from dbsurveys where speaker_name=? and talk_date=?";
+                            $conn = connect();
+                            $stmt = $conn->prepare($query);
+
+                            $full_name = $user->get_first_name() . " " . $user->get_last_name();
+                            $stmt->bind_param('ss', $full_name, $event['date']);
+                            $stmt->execute();
+
+                            $result = $stmt->get_result();
+                            $stmt->close();
+                            $conn->close();
+                            
+                            $row = $result->fetch_assoc();
+                            
+                            $rating = "N/A";
+                            if($result->num_rows == 1){
+                                $rating = $row['speaker_rating'];
+                            }
+                            
+
+
                             echo '<tr>' .
                             '<td>' . date('m/d/Y', strtotime($event['date'])) . '</td>'.
-                            '<td>'. $event['name']. '<td>' .
-                            '<td>' . '</td>' .
-                            . '<tr>';
+                            '<td>'. $event['name']. '</td>' .
+                            '<td>' . $rating . '</td>' .
+                            '<tr>';
                         }
                     }
                 ?>
