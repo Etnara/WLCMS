@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/database/dbPersons.php';
+require_once 'database/dbPersons.php';
 require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
