@@ -38,7 +38,7 @@ class Person {
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization, 
+		$archived, $topic_summary,$organization
 	) {
 		$this->id = $id;
 
@@ -56,8 +56,6 @@ class Person {
 		$this->email = $email;
 
 		$this->archived = $archived;
-
-		
 
 		//$this->event_topic = $event_topic;
 		$this->topic_summary = $topic_summary;
@@ -97,7 +95,5 @@ class Person {
 	public function get_access_level() { return $this->access_level; }
 
 	public function get_password() { return $this->password; }
-
-
 
 }
