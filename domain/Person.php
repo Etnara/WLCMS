@@ -38,7 +38,7 @@ class Person {
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization, $notes, 
+		$archived, $topic_summary,$organization, 
 	) {
 		$this->id = $id;
 
@@ -57,7 +57,7 @@ class Person {
 
 		$this->archived = $archived;
 
-		$this->notes = $notes;
+		
 
 		//$this->event_topic = $event_topic;
 		$this->topic_summary = $topic_summary;
@@ -98,6 +98,6 @@ class Person {
 
 	public function get_password() { return $this->password; }
 
-	public function get_notes() { return $this->notes; }
+
 
 }
