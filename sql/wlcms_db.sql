@@ -578,7 +578,8 @@ CREATE TABLE `dbpersons` (
   `topic_summary` text NOT NULL,
   `status` text DEFAULT NULL,
   `archived` tinyint(1) NOT NULL,
-  `notes` text DEFAULT NULL
+  `notes` text DEFAULT NULL,
+  `headshot` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --

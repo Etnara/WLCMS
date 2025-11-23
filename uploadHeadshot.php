@@ -39,8 +39,8 @@ function upload_image($fileInputName = 'image')
 
     // Move file
     if (move_uploaded_file($file['tmp_name'], $destination)) {
-        return $destination;    // SUCCESS
+        return $destination;
     }
 
-    return null; // FAIL
+    return null;
 }
