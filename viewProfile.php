@@ -426,11 +426,13 @@ $other_topics = mysqli_query($con, "
                                 <tr>
                                     <th>Date</th>
                                     <th>Coffee Talk</th>
+                                    <th>Survey Rating</th>
                                 </tr>';
                         foreach($events as $event){
                             echo '<tr>' .
                             '<td>' . date('m/d/Y', strtotime($event['date'])) . '</td>'.
-                            '<td>'. $event['name']. '<td>'
+                            '<td>'. $event['name']. '<td>' .
+                            '<td>' . '</td>' .
                             . '<tr>';
                         }
                     }
