@@ -825,7 +825,7 @@ if (date("H:i:s") > "18:19:59") {
     </a>
     <a href="adminList.php" style="text-decoration: none;">
       <div class="in-nav">
-        <img src="images/plus-solid.svg">
+        <img src="images/list-solid.svg">
         <span>Admin List</span>
       </div>
     </a>
