@@ -23,7 +23,7 @@ function connect() {
     $database = "wlcms_db";
     $user = "wlcms_db";
     $pass = "wlcms_db";
-    if ($_SERVER['SERVER_NAME'] == 'jenniferp160.sg-host.com') {
+    if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'jenniferp160.sg-host.com') {
         $user = 'uknrzrk8sj1e7';
         $database = 'dbkzrh4cfmxbt0';
         $pass = 'fxextih7mssg';
