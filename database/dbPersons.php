@@ -847,6 +847,7 @@ function make_a_person($result_row) {
         isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
         $result_row['notes'],
         $result_row['organization'],
+        $result_row['headshot'],
         isset($result_row['access_level']) ? $result_row['access_level'] : null
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
@@ -1063,12 +1064,12 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     function update_person_required(
         $id, $first_name, $last_name,
         $email, $phone1,
-        $status, $archived
+        $status, $archived, $headshot
     ) {
         $query = "update dbpersons set
             first_name='$first_name', last_name='$last_name',
             email='$email', phone1='$phone1',
-            status='$status', archived='$archived'
+            status='$status', archived='$archived', headshot='$headshot'
             where id='$id'";
         $connection = connect();
         $result = mysqli_query($connection, $query);

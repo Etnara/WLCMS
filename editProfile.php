@@ -67,7 +67,7 @@
 
        $type = 'v';
 
-
+        $headshot = $args['headshot'];
 
 
 
@@ -82,7 +82,7 @@
         $result = update_person_required(
             $id, $first_name, $last_name,
             $email, $phone1,
-            $status, $archived
+            $status, $archived, $headshot
         );
         if ($result) {
             if ($editingSelf) {

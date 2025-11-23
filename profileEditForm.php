@@ -148,7 +148,17 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             </div>
         </fieldset>
 
-
+        <fieldset class="section-box">
+            <legend>Headshot</legend>
+            <?php if ($person->get_headshot() != NULL){
+                echo 'Current Headshot: <img src=' . $person->get_headshot() . '>';
+            } else{
+                echo 'No headshot available';
+            }
+            ?>
+            <input type="text" id="headshot" name="headshot" value="<?php echo hsc($person->get_headshot()); ?>" 
+                required placeholder="Enter the name of the headshot:">
+        </fieldset>
 
 
 

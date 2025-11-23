@@ -35,12 +35,14 @@ class Person {
 	private $access_level;
 
 	private $organization;
+	private $headshot;
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization
+		$archived, $topic_summary,$organization, $headshot
 	) {
 		$this->id = $id;
+		$this->headshot = $headshot;
 
 		$this->organization = $organization;
 
@@ -95,5 +97,7 @@ class Person {
 	public function get_access_level() { return $this->access_level; }
 
 	public function get_password() { return $this->password; }
+
+	public function get_headshot() { return $this->headshot; }
 
 }
