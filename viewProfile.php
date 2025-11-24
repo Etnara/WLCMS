@@ -227,7 +227,7 @@ $other_topics = mysqli_query($con, "
                 </div>
                 <div class="headshot">
                     <?php
-                    if ($user->get_headshot() !== NULL && $user->get_headshot() !== ''){
+                    if ($user->get_headshot() !== NULL){
                         echo '<img src="getHeadshot.php?id=' . $user->get_id() .'" class="block max-w-full h-auto mx-auto">';
                     }
                     ?>
