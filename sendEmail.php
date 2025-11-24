@@ -103,18 +103,19 @@ function sendAdminInvite($to){
 }
 
 //speaker email reminder one week and 24 hr prior to talk
+// TODO: Add the time of the event
 function speakerReminder($to, $first_name, $last_name, $eventDate){
     global $mail;
-    $today = new DateTime();
-    if($today == (clone $eventDate)->modify(modifier: '-7 days')){
+    $today = new DateTime()->format('Y-m-d');
+    if($today == (clone $eventDate)->modify(modifier: '-7 days')->format('Y-m-d')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is in 1 week";
-        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a reminder one week in advance.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak in one week on {$eventDate->format('l, j F Y')}.\nThis is a reminder one week in advance.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
         $mail->send();
-    } elseif($today == (clone $eventDate)->modify(modifier: '-1 days')){
+    } elseif($today == (clone $eventDate)->modify(modifier: '-1 days')->format('Y-m-d')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is tomorrow";
-        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak on $eventDate.\nThis is a 24-hour reminder.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak tomorrow on {$eventDate->format('l, j F Y')}.\nThis is a 24-hour reminder.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
         $mail->send();
     }
 }

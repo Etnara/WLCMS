@@ -12,14 +12,15 @@ include_once('database/dbPersons.php');
 $today = new DateTime(); //today's date
 
 //Check for all events with a speaker that are a week from now
-$targetWeekAhead = (clone $today)->modify(modifier: '+7 days')->format('Y-m-d');
+$targetWeekAhead = (clone $today)->modify(modifier: '+7 days');
+$targetWeekAheadStr = $targetWeekAhead->format('Y-m-d');
 
 $query = "select speaker from dbevents where date=? and speaker is not null";
 
 $conn = connect();
 
 $stmt = $conn->prepare($query);
-$stmt->bind_param('s', $targetWeekAhead);
+$stmt->bind_param('s', $targetWeekAheadStr);
 $stmt->execute();
 
 $resultWeekAhead = $stmt->get_result();
@@ -31,12 +32,13 @@ while($row = $resultWeekAhead->fetch_assoc()){
 
 
 //Check for all events with a speaker that are a day from now
-$targetDayAhead = (clone $today)->modify(modifier: '+1 days')->format('Y-m-d');
+$targetDayAhead = (clone $today)->modify(modifier: '+1 days');
+$targetDayAheadStr = $targetDayAhead->format('Y-m-d');
 
 $query = "select speaker from dbevents where date=? and speaker is not null";
 
 $stmt = $conn->prepare($query);
-$stmt->bind_param('s', $targetDayAhead);
+$stmt->bind_param('s', $targetDayAheadStr);
 $stmt->execute();
 
 $resultDayAhead = $stmt->get_result();
