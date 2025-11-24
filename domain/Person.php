@@ -36,13 +36,15 @@ class Person {
 
 	private $organization;
 	private $headshot;
+	private $MIME_type;
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization, $headshot = NULL
+		$archived, $topic_summary,$organization, $headshot = NULL, $MIME_type = NULL
 	) {
 		$this->id = $id;
 		$this->headshot = $headshot;
+		$this->MIME_type = $MIME_type;
 
 		$this->organization = $organization;
 
@@ -99,5 +101,6 @@ class Person {
 	public function get_password() { return $this->password; }
 
 	public function get_headshot() { return $this->headshot; }
-
+	
+	public function get_MIME(){ return $this->$MIME; }
 }

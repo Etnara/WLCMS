@@ -70,12 +70,16 @@
         
         include 'uploadHeadshot.php';
 
-        $headshot = upload_image('image');
+        $temp = upload_image('image');
+        $headshot = $temp['headshot'];
+        $MIME = $temp['MIME'];
 
         $oldHeadshot = $_POST['current_headshot'];
+        $oldMIME = $_POST['current_MIME'];
 
         if ($headshot == null) {
             $headshot = $oldHeadshot;
+            $MIME = $oldMIME;
         }
 
 
@@ -89,7 +93,7 @@
         $result = update_person_required(
             $id, $first_name, $last_name,
             $email, $phone1,
-            $status, $archived, $headshot
+            $status, $archived, $headshot, $MIME
         );
         if ($result) {
             if ($editingSelf) {
