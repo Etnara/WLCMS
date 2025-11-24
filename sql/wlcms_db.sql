@@ -579,7 +579,7 @@ CREATE TABLE `dbpersons` (
   `status` text DEFAULT NULL,
   `archived` tinyint(1) NOT NULL,
   `notes` text DEFAULT NULL,
-  `headshot` blob DEFAULT NULL,
+  `headshot` longblob DEFAULT NULL,
   `mime` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 

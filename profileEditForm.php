@@ -151,7 +151,7 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
         <fieldset class="section-box">
             <legend>Headshot</legend>
             <div class="headshot">
-            <?php if ($person->get_headshot() != NULL){
+            <?php if ($person->get_headshot() != NULL && $person->get_headshot() !== ''){
                 echo 'Current Headshot: ';
                 echo '<img src="getHeadshot.php?id=' . $person->get_id() .'" class="block max-w-full h-auto mx-auto">';
             } else{

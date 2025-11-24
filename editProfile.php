@@ -75,9 +75,9 @@
         $MIME = $temp['MIME'];
 
         $data = getHeadshotData($id);
-        $oldMIME = trim($data['mime']);
+        $oldMIME = trim($data['mime'] ?? '');
         $oldHeadshot = $data['headshot'];
-        $oldMIME = $_POST['current_MIME'];
+        $oldMIME = $_POST['current_MIME'] ?? '';
 
         if ($headshot == null) {
             $headshot = $oldHeadshot;
