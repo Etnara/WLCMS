@@ -230,6 +230,21 @@ function check_out($personID, $eventID, $end_time) {
     return $result;
 }
 
+function getHeadshotData($id){
+    $con=connect();
+    $stmt = $con->prepare("SELECT headshot, mime FROM dbpersons WHERE id=?");
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if (!$result) {
+        mysqli_close($con);
+        return null;
+    }
+    $row = mysqli_fetch_assoc($result);
+    mysqli_close($con);
+    return $row;
+}
+
 //get pending speakers
 function getPendingSpeakers($offset, $limit){
     $con=connect();
@@ -845,8 +860,10 @@ function make_a_person($result_row) {
         $result_row['email'],
         $result_row['archived'],
         isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
-        $result_row['notes'],
         $result_row['organization'],
+        $result_row['headshot'],
+        $result_row['mime'],
+        $result_row['notes'],
         isset($result_row['access_level']) ? $result_row['access_level'] : null
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],
@@ -1063,14 +1080,16 @@ function get_logged_hours($from, $to, $name_from, $name_to, $venue) {
     function update_person_required(
         $id, $first_name, $last_name,
         $email, $phone1,
-        $status, $archived
+        $status, $archived, $headshot, $MIME
     ) {
+        $connection = connect();
+        $e_headshot = mysqli_real_escape_string($connection, $headshot);
+        $e_mime = mysqli_real_escape_string($connection, $MIME);
         $query = "update dbpersons set
             first_name='$first_name', last_name='$last_name',
             email='$email', phone1='$phone1',
-            status='$status', archived='$archived'
+            status='$status', archived='$archived', headshot='$e_headshot', mime='$e_mime'
             where id='$id'";
-        $connection = connect();
         $result = mysqli_query($connection, $query);
         mysqli_commit($connection);
         mysqli_close($connection);

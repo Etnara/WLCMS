@@ -67,9 +67,21 @@
 
        $type = 'v';
 
+        
+        include 'uploadHeadshot.php';
 
+        $temp = upload_image('image');
+        $headshot = $temp['headshot'];
+        $MIME = $temp['MIME'];
 
+        $data = getHeadshotData($id);
+        $oldMIME = trim($data['mime'] ?? '');
+        $oldHeadshot = $data['headshot'] ?? '';
 
+        if ($headshot == null) {
+            $headshot = $oldHeadshot;
+            $MIME = $oldMIME;
+        }
 
 
         // For the new fields, default to 0 if not set
@@ -82,7 +94,7 @@
         $result = update_person_required(
             $id, $first_name, $last_name,
             $email, $phone1,
-            $status, $archived
+            $status, $archived, $headshot, $MIME
         );
         if ($result) {
             if ($editingSelf) {
@@ -97,6 +109,14 @@
 ?>
 <!DOCTYPE html>
 <html>
+    <style>
+    .headshot img{
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 8px; /* optional */
+    }
+    </style>
 <head>
     <?php require_once('universal.inc'); ?>
     <title>Women's Leadership Colloquium | Manage Profile</title>

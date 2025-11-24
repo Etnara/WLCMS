@@ -146,6 +146,13 @@ $other_topics = mysqli_query($con, "
 ?>
 <!DOCTYPE html>
 <html lang="en">
+    <style>
+    .headshot img{
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+    }
+    </style>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -218,9 +225,16 @@ $other_topics = mysqli_query($con, "
                     <h2 class="text-xl font-semibold mb-4">Viewing <?php echo $user->get_first_name() . ' ' . $user->get_last_name() ?></h2>
                     <?php endif ?>
                 </div>
+                <div class="headshot">
+                    <?php
+                    if ($user->get_headshot() !== NULL){
+                        echo '<img src="getHeadshot.php?id=' . $user->get_id() .'" class="block max-w-full h-auto mx-auto">';
+                    }
+                    ?>
+                </div>
                 <div class="space-y-2 divide-y divide-gray-300">
                     <div class="flex justify-between py-2">
-                        <?php echo '<span class="font-medium">Organisation</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
+                        <?php echo '<span class="font-medium">Organization</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
                     </div>
                     <div class="flex justify-between py-2">
                         <?php echo"<span class=\"font-medium\">Email</span><span>{$person["email"]}</span>"; ?>

@@ -94,7 +94,7 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             <!-- <a class="button" href="modifyUserRole.php?id=<?php echo htmlspecialchars($_GET['id']) ?>">Modify User Access</a> -->
         <?php endif ?>
     <?php endif ?>
-    <form class="signup-form" method="post">
+    <form class="signup-form" method="post" enctype="multipart/form-data">
         <br>
 	<p>An asterisk (<em>*</em>) indicates a required field.</p>
 
@@ -148,7 +148,19 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             </div>
         </fieldset>
 
-
+        <fieldset class="section-box">
+            <legend>Headshot</legend>
+            <div class="headshot">
+            <?php if ($person->get_headshot() != NULL && $person->get_headshot() !== ''){
+                echo 'Current Headshot: ';
+                echo '<img src="getHeadshot.php?id=' . $person->get_id() .'" class="block max-w-full h-auto mx-auto">';
+            } else{
+                echo 'No headshot available';
+            }
+            ?>
+            </div>
+            <input type="file" name="image" accept=".png,.jpg,.jpeg">
+        </fieldset>
 
 
 
