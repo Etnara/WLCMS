@@ -106,7 +106,8 @@ function sendAdminInvite($to){
 // TODO: Add the time of the event
 function speakerReminder($to, $first_name, $last_name, $eventDate){
     global $mail;
-    $today = new DateTime()->format('Y-m-d');
+    $today = new DateTime();
+    $today = $today->format('Y-m-d');
     if($today == (clone $eventDate)->modify(modifier: '-7 days')->format('Y-m-d')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is in 1 week";
