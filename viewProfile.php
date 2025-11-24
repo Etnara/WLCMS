@@ -230,7 +230,7 @@ $other_topics = mysqli_query($con, "
                     if ($user->get_headshot() == NULL){
                         echo '<img src="headshots/blank-profile.jpg" class="block max-w-full h-auto mx-auto" />';
                     } else{
-                        echo '<img src=' . $user->get_headshot() . ' class="block max-w-full h-auto mx-auto" />';
+                        echo '<img src="getHeadshot.php?id=' . $user->get_id() .'" class="block max-w-full h-auto mx-auto">';
                     }
                     ?>
                 </div>

@@ -152,14 +152,13 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             <legend>Headshot</legend>
             <div class="headshot">
             <?php if ($person->get_headshot() != NULL){
-                echo 'Current Headshot: <img src="getHeadshot.php?id=' . $person->get_id() . '">';
+                echo 'Current Headshot: ';
+                echo '<img src="getHeadshot.php?id=' . $person->get_id() .'" class="block max-w-full h-auto mx-auto">';
             } else{
                 echo 'No headshot available';
             }
             ?>
             </div>
-            <input type="hidden" name="current_headshot" value="<?php echo $person->get_headshot(); ?>">
-            <input type="hidden" name="current_MIME" value="<?php echo $person->get_MIME(); ?>">
             <input type="file" name="image" accept=".png,.jpg,.jpeg">
         </fieldset>
 

@@ -232,8 +232,10 @@ function check_out($personID, $eventID, $end_time) {
 
 function getHeadshotData($id){
     $con=connect();
-    $query = "SELECT headshot, mime from dbpersons WHERE id=" . $id;
-    $result = mysqli_query($con,$query);
+    $stmt = $con->prepare("SELECT headshot, mime FROM dbpersons WHERE id=?");
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if (!$result) {
         mysqli_close($con);
         return null;
