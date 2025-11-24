@@ -860,10 +860,10 @@ function make_a_person($result_row) {
         $result_row['email'],
         $result_row['archived'],
         isset($result_row['topic_summary']) ? $result_row['topic_summary'] : '',
-        $result_row['notes'],
         $result_row['organization'],
         $result_row['headshot'],
         $result_row['mime'],
+        $result_row['notes'],
         isset($result_row['access_level']) ? $result_row['access_level'] : null
         //   isset($result_row['event_topic']) ? $result_row['event_topic'] : '',
         //$result_row['disability_accomodation_needs'],

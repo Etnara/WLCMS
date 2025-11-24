@@ -40,11 +40,13 @@ class Person {
 
 	public function __construct(
 		$id, $password, $first_name, $last_name, $status, $phone1, $email,
-		$archived, $topic_summary,$organization, $headshot = NULL, $MIME_type = NULL
+		$archived, $topic_summary,$organization, $headshot = NULL, $MIME_type = NULL,
+        $notes = NULL
 	) {
 		$this->id = $id;
 		$this->headshot = $headshot;
 		$this->MIME_type = $MIME_type;
+		$this->notes = $notes;
 
 		$this->organization = $organization;
 
