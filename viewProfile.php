@@ -143,6 +143,9 @@ $other_topics = mysqli_query($con, "
         WHERE speaker='$id'
     )
 ");
+
+$viewingAdmin = $user->get_status() == "Admin";
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -160,29 +163,30 @@ $other_topics = mysqli_query($con, "
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
         function showSection(sectionId) {
-        const sections = document.querySelectorAll('.profile-section');
-        sections.forEach(section => section.classList.add('hidden'));
-        document.getElementById(sectionId).classList.remove('hidden');
+            const sections = document.querySelectorAll('.profile-section');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
 
-        const tabs = document.querySelectorAll('.tab-button');
-        tabs.forEach(tab => {
-        tab.classList.remove('border-b-4', 'border-red-800');
-        tab.classList.add('hover:border-b-2', 'hover:border-red-700');
-        });
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => {
+            tab.classList.remove('border-b-4', 'border-red-800');
+            tab.classList.add('hover:border-b-2', 'hover:border-red-700');
+            });
 
-        const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
-        activeTab.classList.add('border-b-4', 'border-red-800');
-        activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
-        localStorage.setItem('activeTab', sectionId);
-        }
-
-        window.onload = () => {
-            if (document.referrer.includes(window.location.href)) {
-                const activeTab = localStorage.getItem('activeTab');
-                showSection(activeTab ? activeTab : 'personal');
-            } else {
-                showSection('personal'); // Load 'personal' if coming from a different page
+            const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
+            activeTab.classList.add('border-b-4', 'border-red-800');
+            activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
+            localStorage.setItem('activeTab', sectionId);
             }
+
+            const defaultSection = "<?php echo $viewingAdmin ? 'contact' : 'personal'; ?>";
+            window.onload = () => {
+                if (document.referrer.includes(window.location.href)) {
+                    const activeTab = localStorage.getItem('activeTab');
+                    showSection(activeTab ? activeTab : defaultSection);
+                } else {
+                    showSection(defaultSection); // Load 'personal' if coming from a different page
+                }
         };
         </script>
         <?php
@@ -282,14 +286,19 @@ $other_topics = mysqli_query($con, "
         <div class="w-full md:w-2/3 bg-white rounded-2xl shadow-lg border border-gray-300 p-6">
             <!-- Tabs -->
             <div class="flex border-b border-gray-300 mb-4">
+                <?php if(!$viewingAdmin): ?>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-red-800" data-tab="personal" onclick="showSection('personal')">Topics</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="events" onclick="showSection('events')">Past Events</button>
-
+                <?php else: ?>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
+                <?php endif; ?>
             </div>
 
             <!-- Topics Section -->
+             <?php if(!$viewingAdmin):?>
             <div id="personal" class="profile-section space-y-4">
                 <div>
 <table>
@@ -378,7 +387,7 @@ $other_topics = mysqli_query($con, "
 
                 </div>
             </div>
-
+            <?php endif; ?>
             <!-- Notes Section -->
             <div id="contact" class="profile-section space-y-4 hidden">
                 <div>
@@ -420,7 +429,7 @@ $other_topics = mysqli_query($con, "
                     ?>
 
              </div>
-
+            <?php if(!$viewingAdmin):?>
              <!-- Past Events Section -->
              <div id="events" class="profile-section space-y-4 hidden">
                 <?php
@@ -473,9 +482,9 @@ $other_topics = mysqli_query($con, "
                     }
                 ?>
              </div>
+             <?php endif; ?>
         </div>
     </div>
     </div>
 </body>
 </html>
-
