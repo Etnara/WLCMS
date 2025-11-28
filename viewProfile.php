@@ -237,18 +237,24 @@ $viewingAdmin = $user->get_status() == "Admin";
                     ?>
                 </div>
                 <div class="space-y-2 divide-y divide-gray-300">
+                    <?php if(!$viewingAdmin): ?>
                     <div class="flex justify-between py-2">
                         <?php echo '<span class="font-medium">Organization</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
                     </div>
+                    <?php endif; ?>
+                    
                     <div class="flex justify-between py-2">
                         <?php echo"<span class=\"font-medium\">Email</span><span>{$person["email"]}</span>"; ?>
                     </div>
+
+                    <?php if(!$viewingAdmin): ?>
                     <div class="flex justify-between py-2">
                         <?php
                         require_once('include/output.php');
                         echo "<span class=\"font-medium\">Phone Number</span><span>" . formatPhoneNumber($person['phone1']) . "</span>";
                         ?>
                     </div>
+                     
                     <div class="flex flex-col items-center py-2">
                         <span class="font-medium">Availablity</span><span><?php
                             $months = getAllMonthsFor($user->get_id());
@@ -263,6 +269,7 @@ $viewingAdmin = $user->get_status() == "Admin";
 
                             ?></span>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="mt-6 space-y-2">
