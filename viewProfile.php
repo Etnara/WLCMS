@@ -242,7 +242,7 @@ $viewingAdmin = $user->get_status() == "Admin";
                         <?php echo '<span class="font-medium">Organization</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
                     </div>
                     <?php endif; ?>
-                    
+
                     <div class="flex justify-between py-2">
                         <?php echo"<span class=\"font-medium\">Email</span><span>{$person["email"]}</span>"; ?>
                     </div>
@@ -408,21 +408,38 @@ $viewingAdmin = $user->get_status() == "Admin";
             <!-- Past Communications Section -->
              <div id="communications" class="profile-section space-y-4 hidden">
                     <?php
-                        $communications = getAllCommunicationsFor($user->get_email());
+                        if($viewingAdmin){
+                            $communications = getAllCommunicationsForAdmin($user->get_email());
+                        }else{
+                            $communications = getAllCommunicationsFor($user->get_email());
+                        }
                         if(count($communications)==0){
                             echo '<p style="text-align: center";>
                             There have been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
                             '</p>';
                         }else{
+                            if($viewingAdmin){
                             echo
                             '<h1 class="mb-4" style="text-align: center">
-                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name().
-                            '</h1>
-                            <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
+                         History of all communications made by ' . $user->get_first_name() . ' ' . $user->get_last_name().
+                            '</h1>';
+                            }else{
+                            echo
+                            '<h1 class="mb-4" style="text-align: center">
+                         History of all communications with ' . $user->get_first_name() . ' ' . $user->get_last_name().
+                            '</h1>';
+                            }
+                            echo
+                            '<table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Contacted By</th>
-                                </tr>';
+                                    <th>Date</th>';
+                                    if($viewingAdmin){
+                                    echo '<th>Contacted</th>';
+                                    }else{
+                                    echo '<th>Contacted By</th>';
+                                    }
+                                
+                                echo '</tr>';
                             foreach($communications as $communication){
 
                                 $admin = retrieve_person_by_email( $communication[0]);

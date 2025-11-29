@@ -24,7 +24,25 @@ function getAllCommunicationsFor($speaker_email){
     $conn->close();
     return $allCommunications;
 }
+function getAllCommunicationsForAdmin($admin_email){
+    $query = "SELECT speaker_email, date FROM dbcommunications WHERE admin_email = ? ORDER BY date DESC";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $admin_email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
+    $allCommunications = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $formattedDate = date("m/d/Y", strtotime($row['date']));
+        $allCommunications[] = [$row['speaker_email'], $formattedDate];
+    }
+
+    $stmt->close();
+    $conn->close();
+    return $allCommunications;
+}
 function addCommunication($admin_email, $speaker_email){
     $date = date('Y-m-d');
     $query = 'SELECT * FROM dbcommunications WHERE admin_email = ? AND speaker_email = ? AND date = ?';
