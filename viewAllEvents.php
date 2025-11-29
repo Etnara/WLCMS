@@ -16,7 +16,28 @@
         $userID = $_SESSION['_id'];
     }  
     include 'database/dbEvents.php';
+    $selectedEventID = $_GET['event'] ?? null;
     
+   function get_event_ratings($eventID) {
+    $connection = connect(); // this comes from dbinfo.php
+    $eventID = mysqli_real_escape_string($connection, $eventID);
+
+    $query = "
+        SELECT AVG(s.speaker_rating) AS speaker_rating,
+               AVG(s.topic_rating) AS topic_rating
+        FROM dbsurveys s
+        JOIN dbevents e ON s.talk_date = e.date
+        WHERE e.id = '$eventID'
+    ";
+
+    $result = mysqli_query($connection, $query);
+    $ratings = mysqli_fetch_assoc($result);
+
+    mysqli_close($connection);
+    return $ratings;
+}
+
+
     //include 'domain/Event.php';
 ?>
 <!DOCTYPE html>
@@ -32,7 +53,6 @@
         <?php require_once('database/dbEvents.php');?>
         <?php require_once('database/dbPersons.php');?>
         <h1>Events</h1>
-        <main class="general">
             <?php 
                 //require_once('database/dbMessages.php');
                 //$messages = get_user_messages($userID);
@@ -46,6 +66,12 @@
                 $allEvents = get_all_events_sorted_by_date_not_archived();
                 $allArchivedEvents = get_all_events_sorted_by_date_and_archived();
 
+
+                if ($selectedEventID && $selectedEventID !== 'null') {
+                    $allEvents = array_filter($allEvents, fn($e) => $e->getID() == $selectedEventID);
+                    $allArchivedEvents = array_filter($allArchivedEvents, fn($e) => $e->getID() == $selectedEventID);
+                }
+
                 //$events = array_slice(get_all_events_sorted_by_date_not_archived(), $offset, $limit);
                 //$archivedevents = array_slice(get_all_events_sorted_by_date_and_archived(), $offset, $limit);
 
@@ -53,7 +79,8 @@
                 //$upcomingPageNum = isset($_GET['upcomingPage']) ? max(0, intval($_GET['upcomingPage'])) : 0;
                 //$archivedPageNum = isset($_GET['archivedPage']) ? max(0, intval($_GET['archivedPage'])) : 0;
                 $type = $_GET['type'] ?? 'upcoming';
-                    $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+                $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
+                $sortBy = $_GET['sort'] ?? null;
 
                     if ($type === 'upcoming') {
                         $upcomingPageNum = $pageNum;
@@ -62,6 +89,7 @@
                         $archivedPageNum = $pageNum;
                         $upcomingPageNum = 0; // default
                     }
+                
                 $limit = 10;
                 $upcomingOffset = $upcomingPageNum * $limit;
                 $archivedOffset = $archivedPageNum * $limit;
@@ -70,11 +98,26 @@
                 $filteredUpcoming = array_filter($allEvents, function($event) use ($today) {
                     return new DateTime($event->getDate()) >= $today;
                 });
-                $upcomingEvents = array_slice($filteredUpcoming, $upcomingOffset, $limit);
 
                 $filteredArchived = array_filter($allArchivedEvents, function($event) use ($today) {
                     return new DateTime($event->getDate()) < $today;
                 });
+
+                if ($sortBy === 'speaker') {
+                    usort($filteredUpcoming, function($a, $b) {
+                        $ra = get_event_ratings($a->getID())['speaker_rating'] ?? 0;
+                        $rb = get_event_ratings($b->getID())['speaker_rating'] ?? 0;
+                        return $rb <=> $ra;
+                    });
+                } elseif ($sortBy === 'topic') {
+                    usort($filteredUpcoming, function($a, $b) {
+                        $ra = get_event_ratings($a->getID())['topic_rating'] ?? 0;
+                        $rb = get_event_ratings($b->getID())['topic_rating'] ?? 0;
+                        return $rb <=> $ra;
+                    });
+                }
+
+                $upcomingEvents = array_slice($filteredUpcoming, $upcomingOffset, $limit);
                 $upcomingArchivedEvents = array_slice($filteredArchived, $archivedOffset, $limit);
 
                 function pageExists($pageNum, $eventsArray) {
@@ -145,15 +188,21 @@
                 if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
                 <div class="table-wrapper">
                     <h2>Upcoming Events</h2>
+                    <form method="get" style="text-align:center; margin-bottom:1rem;">
+                        <label for="sort">Sort By:</label>
+                        <select name="sort" onchange="this.form.submit()">
+                            <option value="">None</option>
+                            <option value="speaker" <?= $sortBy === 'speaker' ? 'selected' : '' ?>>Speaker Rating</option>
+                            <option value="topic" <?= $sortBy === 'topic' ? 'selected' : '' ?>>Topic Rating</option>
+                        </select>
+                    </form>
                     <table class="general">
                         <thead>
                             <tr>
                                 <th style="width:1px">Title</th>
                                 <th>Event Type</th>
                                 <th>Description</th>
-                                <th style="width:1px">Date</th>
-                                
-                            
+                                <th style="width:1px">Date</th>                    
                             </tr>
                         </thead>
                         <tbody class="standout">
@@ -182,6 +231,9 @@
                                     $numSignups = count($signups); // Number of people signed up
                                     // Check if the user is signed up for this event
                                     $isSignedUp = check_if_signed_up($eventID, $userID);
+                                    
+
+
 
                                     echo "
                                     <tr data-event-id='$eventID'>
@@ -189,6 +241,7 @@
                                         <td>$type</td>
                                         <td>$description</td>
                                         <td>$date</td>";
+                                        
                                         
                                     
                                     // Display Sign Up or Cancel button based on user sign-up status
@@ -258,7 +311,7 @@
                             ?>
                         </tbody>
                     </table>
-                    <?php if($upcomingNextExists || $upcomingPrevExists): ?>
+                    <?php if(!$selectedEventID && ($upcomingNextExists || $upcomingPrevExists)): ?>
                     <div style="text-align:center; margin-bottom:3rem;">
                         <p style="display:inline-block; margin:0;">
                             <?php if ($upcomingPrevExists): ?>
@@ -288,7 +341,8 @@
                                <th style="width:1px">Event Type</th>
                                <th style="width:1px">Description</th>
                                 <th style="width:1px">Date</th>
-                                <th style="width:1px"></th>
+                                <th style="width:1px">Speaker Rating</th>
+                                <th style="width:1px">Topic Rating</th>
                             </tr>
                         </thead>
                         <tbody class="standout">
@@ -316,6 +370,12 @@
                                     // Fetch signups for the event
                                     $signups = fetch_event_signups($eventID);
                                     $numSignups = count($signups); // Number of people signed up
+                                    
+                                    $ratings = get_event_ratings($eventID);
+                                    $speakerRating = $ratings['speaker_rating'] !== null ? round($ratings['speaker_rating'], 2) : 'N/A';
+                                    $topicRating   = $ratings['topic_rating'] !== null ? round($ratings['topic_rating'], 2) : 'N/A';
+
+                                    
                                     //if($accessLevel < 3) {
                                         echo "
                                         <tr data-event-id='$eventID'>
@@ -323,8 +383,8 @@
                                             <td>$type</td>
                                             <td>$description</td>
                                             <td>$date</td>
-                                            
-                                        </tr>";
+                                            <td>$speakerRating</td>
+                                            <td>$topicRating</td>";
                                     //} else {
                                         /*echo "
                                         <tr data-event-id='$eventID'>
@@ -339,7 +399,7 @@
                         </tbody>
                     </table>
                    <div class="info-section">
-                        <?php if($archivedNextExists || $archivedPrevExists): ?>
+                        <?php if(!$selectedEventID && ($archivedNextExists || $archivedPrevExists)): ?>
                         <div style="text-align:center; margin-bottom:3rem;">
                         <p style="display:inline-block; margin:0;">
                             <?php if ($archivedPrevExists): ?>
