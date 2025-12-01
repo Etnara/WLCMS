@@ -70,6 +70,8 @@ foreach ($merged as $person_id) {
 
     $data[] = [
         'id' => $person_id,
+        'headshot' => $rawPerson['headshot'],
+        'mime' => $rawPerson['mime'],
         'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
         'email' => $rawPerson['email'],
         'phone' => $rawPerson['phone1'],
@@ -81,6 +83,7 @@ foreach ($merged as $person_id) {
 $table = '<table>
         <thead class="bg-blue-400">
             <tr>
+            <th>Headshot</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -98,6 +101,11 @@ foreach ($data as $row) {
     $exist = true;
 
     $table .= '<tr>';
+    $headshot_row = '';
+    if ($row['mime'] != NULL && $row['mime'] !== ''){
+        $headshot_row = '<img src="getHeadshot.php?id=' . $row['id'] .'" class="block max-w-full h-auto mx-auto">';
+    }
+    $table .= '<td>' . $headshot_row . '</td>';
     $table .= '<td>' . htmlspecialchars($row['name']) . '</td>';
     $table .= '<td><a href="mailto:' . htmlspecialchars($row['email']) . 
             '" class="text-blue-700 underline" onclick="addNewCommunication(\'' . $admin->get_email() . '\', \'' 
