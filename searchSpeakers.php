@@ -6,6 +6,9 @@ require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
 require_once 'database/dbSpeaker_Months.php';
+session_cache_expire(30);
+session_start();
+$admin = retrieve_person($_SESSION['_id']);
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $merged = [];
@@ -97,7 +100,8 @@ foreach ($data as $row) {
     $table .= '<tr>';
     $table .= '<td>' . htmlspecialchars($row['name']) . '</td>';
     $table .= '<td><a href="mailto:' . htmlspecialchars($row['email']) . 
-            '" class="text-blue-700 underline">' . htmlspecialchars($row['email']) . '</a></td>';
+            '" class="text-blue-700 underline" onclick="addNewCommunication(\'' . $admin->get_email() . '\', \'' 
+            . htmlspecialchars($row['email']) . '\'); return false;">' . htmlspecialchars($row['email']) . '</a></td>';
     $table .= '<td><a href="tel:' . $row['phone'] . '" class="text-blue-700 underline">' . 
             formatPhoneNumber($row['phone']) . '</a></td>';
     $table .= '<td>' . htmlspecialchars($row['months'] ?? '') . '</td>';
