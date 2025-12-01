@@ -27,6 +27,24 @@ function addMonth($speakerID, $month){
     $conn->close();
 }
 
+function removeMonth($speakerID, $month){
+    $query = 'select * from speaker_months where id=? and month=?';
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $speakerID, $month);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if($result->num_rows > 0){
+        $query = 'delete from speaker_months where id=? and month=?';
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ss', $speakerID, $month);
+        $stmt->execute();
+    }
+    $stmt->close();
+    $conn->close();
+}
+
 function rejectedSpeakerMonthsRemoval($speakerID){
     $query = 'select month from speaker_months where id=?';
     $conn = connect();
