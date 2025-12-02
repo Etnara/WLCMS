@@ -2,15 +2,11 @@
 session_cache_expire(30);
 session_start();
 
-$loggedIn = isset($_SESSION['_id']);
-$accessLevel = $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
-$userID = $loggedIn ? $_SESSION['_id'] : null;
+$loggedIn   = isset($_SESSION['_id']);
+$accessLevel= $loggedIn ? ($_SESSION['access_level'] ?? 0) : 0;
+if ($accessLevel < 2) { header('Location: index.php'); die(); }
 
 require_once 'database/dbinfo.php';
-if ($accessLevel < 2) {
-    header('Location: index.php');
-    die();
-}
 
 $con = connect();
 
