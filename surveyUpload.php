@@ -151,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                         }
 
-                        // use event name if speaker not set :)
+                        // show blank if speaker not set
                         if (!$speakerName) {
-                            $speakerName = $eventName;
+                            $speakerName = 'No Speaker Assigned';
                         }
 
                         // insert in dbsurveys
