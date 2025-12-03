@@ -167,11 +167,6 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             </div>
             <input type="file" name="image" accept=".png,.jpg,.jpeg">
         </fieldset>
-<?php else: ?>
-    <input type="hidden" name="phone1" value="(000) 000-0000">
-    <input type="hidden" name="status" value="Admin">
-<?php endif; ?>
-
         <fieldset class="section-box">
           <legend> Availability</legend>
           
@@ -298,6 +293,13 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
           </div>' */
         ?>
         </fieldset>
+<?php else: ?>
+    <input type="hidden" name="phone1" value="(000) 000-0000">
+    <input type="hidden" name="status" value="Admin">
+    <input type="hidden" name="months[]" value="[]">
+<?php endif; ?>
+
+        
 
 
 
