@@ -289,7 +289,7 @@ $viewingAdmin = $user->get_status() == "Admin";
                 <?php if (!$isAdmin): ?>
                 <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
                 <?php else: ?>
-                <button onclick="window.location.href='AdminList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Admin List</button>    
+                <button onclick="window.location.href='adminList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Admin List</button>    
                 <?php endif ?>
                 <!-- -->
 
