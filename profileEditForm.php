@@ -78,7 +78,12 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
 ?>
 <h1>Edit Profile</h1>
 <main class="signup-form">
+    <?php $editAdmin = isset($_GET['admin']) && $_GET['admin'] === '1'; ?>
+    <?php if (!$editAdmin): ?>
     <h2>Modify Speaker Profile</h2>
+    <?php else: ?>
+        <h2>Modify Admin Profile</h2>
+    <?php endif; ?>
     <?php if (isset($updateSuccess)): ?>
         <?php if ($updateSuccess): ?>
             <div class="happy-toast">Profile updated successfully!</div>
@@ -127,13 +132,13 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             <p>The following information helps us determine the best way to contact you regarding event coordination.</p>
             <label for="email"><em>* </em>E-mail</label>
             <input type="email" id="email" name="email" value="<?php echo hsc($person->get_email()); ?>" required placeholder="Enter your e-mail address">
-
+            <?php if (!$editAdmin): ?>
             <label for="phone1"><em>* </em>Phone Number</label>
             <input type="tel" id="phone1" name="phone1" value="<?php echo formatPhoneNumber($person->get_phone1()); ?>" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required placeholder="Ex. (555) 555-5555">
-
+            <?php endif; ?>
 
         </fieldset>
-
+<?php if (!$editAdmin): ?>
         <fieldset class="section-box">
             <legend>Status</legend>
             <div class="radio-group">
@@ -161,14 +166,17 @@ $archived = $tmpPerson['archived'] == "1" ? "Checked" : "";
             </div>
             <input type="file" name="image" accept=".png,.jpg,.jpeg">
         </fieldset>
+<?php else: ?>
+    <input type="hidden" name="phone1" value="(000) 000-0000">
+    <input type="hidden" name="status" value="Admin">
+<?php endif; ?>
 
 
 
 
 
 
-
-
+        <input type="hidden" name="editAdmin" value="<?php echo $editAdmin; ?>">
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="submit" name="profile-edit-form" value="Update Profile">
         <?php if ($editingSelf): ?>

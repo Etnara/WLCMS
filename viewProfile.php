@@ -231,7 +231,7 @@ $viewingAdmin = $user->get_status() == "Admin";
                 </div>
                 <div class="headshot">
                     <?php
-                    if ($user->get_headshot() !== NULL){
+                    if ($user->get_headshot() !== NULL && $user->get_headshot() !== ''){
                         echo '<img src="getHeadshot.php?id=' . $user->get_id() .'" class="block max-w-full h-auto mx-auto">';
                     }
                     ?>
@@ -273,8 +273,18 @@ $viewingAdmin = $user->get_status() == "Admin";
                 </div>
             </div>
             <div class="mt-6 space-y-2">
-                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
-
+                <!--<button onclick="window.location.href='editProfile.php<?php //if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
+                        -->
+                <button 
+                    onclick="window.location.href='editProfile.php<?php 
+                    $isAdmin = (int) $viewingAdmin;
+                        $params = [];
+                        if ($id != $userID) $params[] = 'id=' . $id;
+                        $params[] = 'admin=' . ($isAdmin ? '1' : '0');
+                        echo '?' . implode('&', $params);
+                    ?>';" 
+                    class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer"
+                >Edit Profile</button>
                 <!-- -->
                 <?php if ($id != $userID): ?>
                 <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
