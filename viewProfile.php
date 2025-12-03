@@ -224,7 +224,7 @@ $viewingAdmin = $user->get_status() == "Admin";
                 <div class="flex justify-between items-center">
                     <?php if ($viewingOwnProfile): ?>
                     <h2 class="text-xl font-semibold mb-4">My Profile</h2>
-                    <h2 class="mb-4">Edit Icon Placeholder</h2>
+                    <!--<h2 class="mb-4">Edit Icon Placeholder</h2> -->
                     <?php else: ?>
                     <h2 class="text-xl font-semibold mb-4">Viewing <?php echo $user->get_first_name() . ' ' . $user->get_last_name() ?></h2>
                     <?php endif ?>
@@ -286,8 +286,10 @@ $viewingAdmin = $user->get_status() == "Admin";
                     class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer"
                 >Edit Profile</button>
                 <!-- -->
-                <?php if ($id != $userID): ?>
+                <?php if (!$isAdmin): ?>
                 <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
+                <?php else: ?>
+                <button onclick="window.location.href='AdminList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Admin List</button>    
                 <?php endif ?>
                 <!-- -->
 
