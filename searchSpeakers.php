@@ -80,7 +80,19 @@ foreach ($merged as $person_id) {
         'notes' => $rawPerson['notes']
     ];
 }
-$table = '<table>
+$style = '<style>
+    .headshot {
+        width: 120px;
+        height: 120px;
+    }
+    .headshot img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    </style>';
+$table = $style . '<table>
         <thead class="bg-blue-400">
             <tr>
             <th>Headshot</th>
@@ -103,7 +115,7 @@ foreach ($data as $row) {
     $table .= '<tr>';
     $headshot_row = '';
     if ($row['mime'] != NULL && $row['mime'] !== ''){
-        $headshot_row = '<img src="getHeadshot.php?id=' . $row['id'] .'" class="block max-w-full h-auto mx-auto">';
+        $headshot_row = '<div class= "headshot"><img src="getHeadshot.php?id=' . $row['id'] .'"class="block max-w-full w-auto h-auto max-h-full mx-auto"></div>'; /*class="block max-w-full w-auto h-auto mx-auto*/
     }
     $table .= '<td>' . $headshot_row . '</td>';
     $table .= '<td>' . htmlspecialchars($row['name']) . '</td>';
