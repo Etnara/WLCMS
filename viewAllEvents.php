@@ -19,7 +19,7 @@
     $selectedEventID = $_GET['event'] ?? null;
     
    function get_event_ratings($eventID) {
-    $connection = connect(); // this comes from dbinfo.php
+    $connection = connect(); 
     $eventID = mysqli_real_escape_string($connection, $eventID);
 
     $query = "
@@ -66,7 +66,6 @@
                 $allEvents = get_all_events_sorted_by_date_not_archived();
                 $allArchivedEvents = get_all_events_sorted_by_date_and_archived();
 
-
                 if ($selectedEventID && $selectedEventID !== 'null') {
                     $allEvents = array_filter($allEvents, fn($e) => $e->getID() == $selectedEventID);
                     $allArchivedEvents = array_filter($allArchivedEvents, fn($e) => $e->getID() == $selectedEventID);
@@ -104,15 +103,26 @@
                 });
 
                 if ($sortBy === 'speaker') {
-                    usort($filteredUpcoming, function($a, $b) {
+                    usort($filteredArchived, function($a, $b) {
                         $ra = get_event_ratings($a->getID())['speaker_rating'] ?? 0;
                         $rb = get_event_ratings($b->getID())['speaker_rating'] ?? 0;
+
+                        if ($ra == $rb) {
+                            // Tie-breaker: newer date first
+                            return strtotime($b->getDate()) <=> strtotime($a->getDate());
+                        }
                         return $rb <=> $ra;
                     });
                 } elseif ($sortBy === 'topic') {
-                    usort($filteredUpcoming, function($a, $b) {
+                    usort($filteredArchived, function($a, $b) {
                         $ra = get_event_ratings($a->getID())['topic_rating'] ?? 0;
                         $rb = get_event_ratings($b->getID())['topic_rating'] ?? 0;
+
+                        // Sort descending: higher ratings first
+                        if ($ra == $rb) {
+                            // Tie-breaker: newer date first
+                            return strtotime($b->getDate()) <=> strtotime($a->getDate());
+                        }
                         return $rb <=> $ra;
                     });
                 }
@@ -186,16 +196,16 @@
                 $user = retrieve_person($userID);
                 //sizeof($upcomingEvents
                 if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
-                <div class="table-wrapper">
-                    <h2>Upcoming Events</h2>
-                    <form method="get" style="text-align:center; margin-bottom:1rem;">
+                <form method="get" style="text-align:center; margin-bottom:1rem;">
                         <label for="sort">Sort By:</label>
                         <select name="sort" onchange="this.form.submit()">
                             <option value="">None</option>
                             <option value="speaker" <?= $sortBy === 'speaker' ? 'selected' : '' ?>>Speaker Rating</option>
                             <option value="topic" <?= $sortBy === 'topic' ? 'selected' : '' ?>>Topic Rating</option>
                         </select>
-                    </form>
+                </form>
+                <div class="table-wrapper">
+                    <h2>Upcoming Events</h2>
                     <table class="general">
                         <thead>
                             <tr>
