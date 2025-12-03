@@ -6,6 +6,9 @@ require_once 'include/input-validation.php';
 require_once 'database/dbCommunications.php';
 require_once('include/output.php');
 require_once 'database/dbSpeaker_Months.php';
+session_cache_expire(30);
+session_start();
+$admin = retrieve_person($_SESSION['_id']);
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $merged = [];
@@ -67,6 +70,8 @@ foreach ($merged as $person_id) {
 
     $data[] = [
         'id' => $person_id,
+        'headshot' => $rawPerson['headshot'],
+        'mime' => $rawPerson['mime'],
         'name' => $rawPerson['first_name'] . ' ' . $rawPerson['last_name'],
         'email' => $rawPerson['email'],
         'phone' => $rawPerson['phone1'],
@@ -75,9 +80,22 @@ foreach ($merged as $person_id) {
         'notes' => $rawPerson['notes']
     ];
 }
-$table = '<table>
+$style = '<style>
+    .headshot {
+        width: 120px;
+        height: 120px;
+    }
+    .headshot img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    </style>';
+$table = $style . '<table>
         <thead class="bg-blue-400">
             <tr>
+            <th>Headshot</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -95,9 +113,15 @@ foreach ($data as $row) {
     $exist = true;
 
     $table .= '<tr>';
+    $headshot_row = '';
+    if ($row['mime'] != NULL && $row['mime'] !== ''){
+        $headshot_row = '<div class= "headshot"><img src="getHeadshot.php?id=' . $row['id'] .'"class="block max-w-full w-auto h-auto max-h-full mx-auto"></div>'; /*class="block max-w-full w-auto h-auto mx-auto*/
+    }
+    $table .= '<td>' . $headshot_row . '</td>';
     $table .= '<td>' . htmlspecialchars($row['name']) . '</td>';
     $table .= '<td><a href="mailto:' . htmlspecialchars($row['email']) . 
-            '" class="text-blue-700 underline">' . htmlspecialchars($row['email']) . '</a></td>';
+            '" class="text-blue-700 underline" onclick="addNewCommunication(\'' . $admin->get_email() . '\', \'' 
+            . htmlspecialchars($row['email']) . '\'); return false;">' . htmlspecialchars($row['email']) . '</a></td>';
     $table .= '<td><a href="tel:' . $row['phone'] . '" class="text-blue-700 underline">' . 
             formatPhoneNumber($row['phone']) . '</a></td>';
     $table .= '<td>' . htmlspecialchars($row['months'] ?? '') . '</td>';

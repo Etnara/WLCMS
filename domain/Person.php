@@ -104,5 +104,5 @@ class Person {
 
 	public function get_headshot() { return $this->headshot; }
 	
-	public function get_MIME(){ return $this->$MIME; }
+	public function get_MIME(){ return $this->MIME_type; }
 }

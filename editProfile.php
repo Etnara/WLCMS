@@ -18,6 +18,7 @@
     } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["profile-edit-form"])) {
         require_once('domain/Person.php');
         require_once('database/dbPersons.php');
+        require_once('database/dbSpeaker_Months.php');
         // make every submitted field SQL-safe except for password
         $ignoreList = array('password');
         $args = sanitize($_POST, $ignoreList);
@@ -83,6 +84,20 @@
             $MIME = $oldMIME;
         }
 
+        $allMonths = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+
+        // Months selected or empty
+        $selectedMonths = isset($args['months']) ? $args['months'] : [];
+
+        foreach ($allMonths as $month) {
+            if (in_array($month, $selectedMonths)) {
+                addMonth($id,$month);
+            } else {
+                removeMonth($id,$month);
+            }
+        }
 
         // For the new fields, default to 0 if not set
 
