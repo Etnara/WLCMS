@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
 
                         // read header row for the categories (like search for ratings etc)
-                        $header = fgetcsv($handle);
+                        $header = fgetcsv($handle, escape: '');
                         if (!$header) {
                             fclose($handle);
                             header("Location: " . $_SERVER['PHP_SELF'] . "?err=" . urlencode('CSV appears to have no header row.'));
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $topicCount   = 0;
 
                         // read each row and accumulate ratings if numeric
-                        while (($row = fgetcsv($handle)) !== false) {
+                        while (($row = fgetcsv($handle, escape: '')) !== false) {
                             // Speaker rating
                             if (isset($row[$speakerIdx]) && $row[$speakerIdx] !== '' && is_numeric($row[$speakerIdx])) {
                                 $speakerTotal += (float)$row[$speakerIdx];
