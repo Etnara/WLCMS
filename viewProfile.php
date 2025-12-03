@@ -143,6 +143,9 @@ $other_topics = mysqli_query($con, "
         WHERE speaker='$id'
     )
 ");
+
+$viewingAdmin = $user->get_status() == "Admin";
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -160,29 +163,30 @@ $other_topics = mysqli_query($con, "
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
         function showSection(sectionId) {
-        const sections = document.querySelectorAll('.profile-section');
-        sections.forEach(section => section.classList.add('hidden'));
-        document.getElementById(sectionId).classList.remove('hidden');
+            const sections = document.querySelectorAll('.profile-section');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
 
-        const tabs = document.querySelectorAll('.tab-button');
-        tabs.forEach(tab => {
-        tab.classList.remove('border-b-4', 'border-red-800');
-        tab.classList.add('hover:border-b-2', 'hover:border-red-700');
-        });
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => {
+            tab.classList.remove('border-b-4', 'border-red-800');
+            tab.classList.add('hover:border-b-2', 'hover:border-red-700');
+            });
 
-        const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
-        activeTab.classList.add('border-b-4', 'border-red-800');
-        activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
-        localStorage.setItem('activeTab', sectionId);
-        }
-
-        window.onload = () => {
-            if (document.referrer.includes(window.location.href)) {
-                const activeTab = localStorage.getItem('activeTab');
-                showSection(activeTab ? activeTab : 'personal');
-            } else {
-                showSection('personal'); // Load 'personal' if coming from a different page
+            const activeTab = document.querySelector(`[data-tab="${sectionId}"]`);
+            activeTab.classList.add('border-b-4', 'border-red-800');
+            activeTab.classList.remove('hover:border-b-2', 'hover:border-red-700');
+            localStorage.setItem('activeTab', sectionId);
             }
+
+            const defaultSection = "<?php echo $viewingAdmin ? 'contact' : 'personal'; ?>";
+            window.onload = () => {
+                if (document.referrer.includes(window.location.href)) {
+                    const activeTab = localStorage.getItem('activeTab');
+                    showSection(activeTab ? activeTab : defaultSection);
+                } else {
+                    showSection(defaultSection); // Load 'personal' if coming from a different page
+                }
         };
         </script>
         <?php
@@ -220,7 +224,7 @@ $other_topics = mysqli_query($con, "
                 <div class="flex justify-between items-center">
                     <?php if ($viewingOwnProfile): ?>
                     <h2 class="text-xl font-semibold mb-4">My Profile</h2>
-                    <h2 class="mb-4">Edit Icon Placeholder</h2>
+                    <!--<h2 class="mb-4">Edit Icon Placeholder</h2> -->
                     <?php else: ?>
                     <h2 class="text-xl font-semibold mb-4">Viewing <?php echo $user->get_first_name() . ' ' . $user->get_last_name() ?></h2>
                     <?php endif ?>
@@ -233,18 +237,24 @@ $other_topics = mysqli_query($con, "
                     ?>
                 </div>
                 <div class="space-y-2 divide-y divide-gray-300">
+                    <?php if(!$viewingAdmin): ?>
                     <div class="flex justify-between py-2">
                         <?php echo '<span class="font-medium">Organization</span><span>' . ($person["organization"] ?? "None") . "</span>"; ?>
                     </div>
+                    <?php endif; ?>
+
                     <div class="flex justify-between py-2">
                         <?php echo"<span class=\"font-medium\">Email</span><span>{$person["email"]}</span>"; ?>
                     </div>
+
+                    <?php if(!$viewingAdmin): ?>
                     <div class="flex justify-between py-2">
                         <?php
                         require_once('include/output.php');
                         echo "<span class=\"font-medium\">Phone Number</span><span>" . formatPhoneNumber($person['phone1']) . "</span>";
                         ?>
                     </div>
+                     
                     <div class="flex flex-col items-center py-2">
                         <span class="font-medium">Availablity</span><span><?php
                             $months = getAllMonthsFor($user->get_id());
@@ -259,14 +269,27 @@ $other_topics = mysqli_query($con, "
 
                             ?></span>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="mt-6 space-y-2">
-                <button onclick="window.location.href='editProfile.php<?php if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
-
+                <!--<button onclick="window.location.href='editProfile.php<?php //if ($id != $userID) echo '?id=' . $id ?>';" class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer">Edit Profile</button>
+                        -->
+                <button 
+                    onclick="window.location.href='editProfile.php<?php 
+                    $isAdmin = (int) $viewingAdmin;
+                        $params = [];
+                        if ($id != $userID) $params[] = 'id=' . $id;
+                        $params[] = 'admin=' . ($isAdmin ? '1' : '0');
+                        echo '?' . implode('&', $params);
+                    ?>';" 
+                    class="text-lg font-medium w-full px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 cursor-pointer"
+                >Edit Profile</button>
                 <!-- -->
-                <?php if ($id != $userID): ?>
+                <?php if (!$isAdmin): ?>
                 <button onclick="window.location.href='speakerList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Speaker List</button>
+                <?php else: ?>
+                <button onclick="window.location.href='adminList.php';" class="text-lg font-medium w-full px-4 py-2 border-2 border-gray-300 text-black rounded-md hover:border-red-700 cursor-pointer">Return to Admin List</button>    
                 <?php endif ?>
                 <!-- -->
 
@@ -282,14 +305,19 @@ $other_topics = mysqli_query($con, "
         <div class="w-full md:w-2/3 bg-white rounded-2xl shadow-lg border border-gray-300 p-6">
             <!-- Tabs -->
             <div class="flex border-b border-gray-300 mb-4">
+                <?php if(!$viewingAdmin): ?>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 border-b-4 border-red-800" data-tab="personal" onclick="showSection('personal')">Topics</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
                 <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="events" onclick="showSection('events')">Past Events</button>
-
+                <?php else: ?>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="contact" onclick="showSection('contact')">Notes</button>
+                <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700" data-tab="communications" onclick="showSection('communications')">Past Communications</button>
+                <?php endif; ?>
             </div>
 
             <!-- Topics Section -->
+             <?php if(!$viewingAdmin):?>
             <div id="personal" class="profile-section space-y-4">
                 <div>
 <table>
@@ -378,7 +406,7 @@ $other_topics = mysqli_query($con, "
 
                 </div>
             </div>
-
+            <?php endif; ?>
             <!-- Notes Section -->
             <div id="contact" class="profile-section space-y-4 hidden">
                 <div>
@@ -392,21 +420,38 @@ $other_topics = mysqli_query($con, "
             <!-- Past Communications Section -->
              <div id="communications" class="profile-section space-y-4 hidden">
                     <?php
-                        $communications = getAllCommunicationsFor($user->get_email());
+                        if($viewingAdmin){
+                            $communications = getAllCommunicationsForAdmin($user->get_email());
+                        }else{
+                            $communications = getAllCommunicationsFor($user->get_email());
+                        }
                         if(count($communications)==0){
                             echo '<p style="text-align: center";>
                             There have been no communications with ' . $user->get_first_name() . ' ' . $user->get_last_name() .
                             '</p>';
                         }else{
+                            if($viewingAdmin){
                             echo
                             '<h1 class="mb-4" style="text-align: center">
-                         History of all contact with ' . $user->get_first_name() . ' ' . $user->get_last_name().
-                            '</h1>
-                            <table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
+                         History of all communications made by ' . $user->get_first_name() . ' ' . $user->get_last_name().
+                            '</h1>';
+                            }else{
+                            echo
+                            '<h1 class="mb-4" style="text-align: center">
+                         History of all communications with ' . $user->get_first_name() . ' ' . $user->get_last_name().
+                            '</h1>';
+                            }
+                            echo
+                            '<table style="margin: 0 auto; border: 0; border-collapse: separate; border-spacing: 30px 0; text-align:center;">
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Contacted By</th>
-                                </tr>';
+                                    <th>Date</th>';
+                                    if($viewingAdmin){
+                                    echo '<th>Contacted</th>';
+                                    }else{
+                                    echo '<th>Contacted By</th>';
+                                    }
+                                
+                                echo '</tr>';
                             foreach($communications as $communication){
 
                                 $admin = retrieve_person_by_email( $communication[0]);
@@ -420,7 +465,7 @@ $other_topics = mysqli_query($con, "
                     ?>
 
              </div>
-
+            <?php if(!$viewingAdmin):?>
              <!-- Past Events Section -->
              <div id="events" class="profile-section space-y-4 hidden">
                 <?php
@@ -473,9 +518,9 @@ $other_topics = mysqli_query($con, "
                     }
                 ?>
              </div>
+             <?php endif; ?>
         </div>
     </div>
     </div>
 </body>
 </html>
-

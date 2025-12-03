@@ -508,7 +508,7 @@
         <img src="images/admin1.webp" />
         <div class="small-text">Our team makes this all possible.</div>
         <div class="large-text">Admin Management</div>
-<button class="circle-arrow-button" onclick="window.location.href='AdminForm.php'">
+<button class="circle-arrow-button" onclick="window.location.href='adminList.php'">
     <span class="button-text">Go</span>
     <div class="circle">&gt;</div>
 </button>
