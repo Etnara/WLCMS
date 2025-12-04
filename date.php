@@ -38,7 +38,7 @@
 <html>
     <head>
         <?php require_once('universal.inc') ?>
-        <title>Fredericksburg SPCA | View Date</title>
+        <title>View Date</title>
     </head>
     <body>
         <?php require_once('header.php') ?>

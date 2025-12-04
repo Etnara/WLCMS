@@ -173,7 +173,7 @@
     <?php 
         require_once('universal.inc');
     ?>
-    <title>Fredericksburg SPCA | View Event: <?php echo $event_info['name'] ?></title>
+    <title>View Event: <?php echo $event_info['name'] ?></title>
     <link rel="stylesheet" href="css/event.css" type="text/css" />
     <?php if ($access_level >= 2) : ?>
         <script src="js/event.js"></script>
