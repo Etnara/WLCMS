@@ -25,7 +25,7 @@ require_once('header.php');
       text-align: center;
   }   
   .dropdown {
-      padding-right: 50px;
+      padding-right: 2px;
   }   
 </style>
 <!-- BANDAID END, REMOVE ONCE SOME GENIUS FIXES -->
