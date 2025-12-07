@@ -534,7 +534,7 @@ function create_event($event) {
             "null"
         :   "'{$event["speaker"]}'";
 
-    # Placeholders for SPCA
+    # Placeholders
     $type = (isset($event["type"])) ? $event["type"] : "None";
     $capacity = (isset($event["capacity"])) ? $event["capacity"] : 999;
     $location = (isset($event["location"])) ? $event["location"] : "";
@@ -584,7 +584,7 @@ function update_event($eventID, $eventDetails) {
             "null"
         :   "'{$eventDetails["speaker"]}'";
 
-    # Placeholders for SPCA
+    # Placeholders
     $capacity = (isset($event["capacity"])) ? $event["capacity"] : 999;
     $location = (isset($event["location"])) ? $event["location"] : "";
     $query = "
