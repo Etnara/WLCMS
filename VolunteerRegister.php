@@ -31,7 +31,7 @@ require_once('header.php');
     }*/
     
     .dropdown {
-        padding-right: 50px;
+        padding-right: 2px;
     }
     
 </style>

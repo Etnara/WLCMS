@@ -58,7 +58,7 @@ require_once('header.php');
             text-align: center;
         }
         .dropdown {
-            padding-right: 50px;
+            padding-right: 2px;
         }
 
 </style>

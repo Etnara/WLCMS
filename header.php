@@ -245,13 +245,17 @@ if (date("H:i:s") > "18:19:59") {
             border: 1px solid #ccc;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
-            min-width: 150px;
-            padding: 10px;
+            /*min-width: 150px;*/
+            width: max-content;
+            min-width: max-content;
+            padding: 2px;
         }
         .dropdown div {
-            padding: 8px;
+            padding: 8px 2px;
             white-space: nowrap;
             transition: background 0.3s;
+            display: flex; 
+            
         }
         .dropdown div:hover {
             background: rgba(0, 0, 0, 0.1);
