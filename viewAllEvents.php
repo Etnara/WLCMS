@@ -19,20 +19,12 @@
     }  
     include 'database/dbEvents.php';
     $selectedEventID = $_GET['event'] ?? null;
-<<<<<<< Updated upstream
-    
-   function get_event_ratings($eventID) {
-    $connection = connect(); 
-    $eventID = mysqli_real_escape_string($connection, $eventID);
-
-=======
    
    function get_event_ratings($eventID) {
     $connection = connect();
     $eventID = mysqli_real_escape_string($connection, $eventID);
 
 
->>>>>>> Stashed changes
     $query = "
         SELECT AVG(s.speaker_rating) AS speaker_rating,
                AVG(s.topic_rating) AS topic_rating
@@ -41,27 +33,18 @@
         WHERE e.id = '$eventID'
     ";
 
-<<<<<<< Updated upstream
-    $result = mysqli_query($connection, $query);
-    $ratings = mysqli_fetch_assoc($result);
-
-=======
 
     $result = mysqli_query($connection, $query);
     $ratings = mysqli_fetch_assoc($result);
 
 
->>>>>>> Stashed changes
     mysqli_close($connection);
     return $ratings;
 }
 
 
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
     //include 'domain/Event.php';
 ?>
 <!DOCTYPE html>
@@ -77,11 +60,7 @@
         <?php require_once('database/dbEvents.php');?>
         <?php require_once('database/dbPersons.php');?>
         <h1>Events</h1>
-<<<<<<< Updated upstream
-            <?php 
-=======
             <?php
->>>>>>> Stashed changes
                 //require_once('database/dbMessages.php');
                 //$messages = get_user_messages($userID);
                 //require_once('database/dbevents.php');
@@ -95,19 +74,11 @@
                 $allEvents = get_all_events_sorted_by_date_not_archived();
                 $allArchivedEvents = get_all_events_sorted_by_date_and_archived();
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 if ($selectedEventID && $selectedEventID !== 'null') {
                     $allEvents = array_filter($allEvents, fn($e) => $e->getID() == $selectedEventID);
                     $allArchivedEvents = array_filter($allArchivedEvents, fn($e) => $e->getID() == $selectedEventID);
                 }
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 //$events = array_slice(get_all_events_sorted_by_date_not_archived(), $offset, $limit);
                 //$archivedevents = array_slice(get_all_events_sorted_by_date_and_archived(), $offset, $limit);
 
@@ -118,10 +89,6 @@
                 $type = $_GET['type'] ?? 'upcoming';
                 $pageNum = isset($_GET['page']) ? max(0, intval($_GET['page'])) : 0;
                 $sortBy = $_GET['sort'] ?? null;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
                     if ($type === 'upcoming') {
                         $upcomingPageNum = $pageNum;
@@ -130,11 +97,7 @@
                         $archivedPageNum = $pageNum;
                         $upcomingPageNum = 0; // default
                     }
-<<<<<<< Updated upstream
-                
-=======
                
->>>>>>> Stashed changes
                 $limit = 10;
                 $upcomingOffset = $upcomingPageNum * $limit;
                 $archivedOffset = $archivedPageNum * $limit;
@@ -144,28 +107,16 @@
                 $filteredUpcoming = array_filter($allEvents, function($event) use ($today) {
                     return new DateTime($event->getDate()) >= $today;
                 });
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
                 $filteredArchived = array_filter($allArchivedEvents, function($event) use ($today) {
                     return new DateTime($event->getDate()) < $today;
                 });
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 if ($sortBy === 'speaker') {
                     usort($filteredArchived, function($a, $b) {
                         $ra = get_event_ratings($a->getID())['speaker_rating'] ?? 0;
                         $rb = get_event_ratings($b->getID())['speaker_rating'] ?? 0;
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                         if ($ra == $rb) {
                             // Tie-breaker: newer date first
                             return strtotime($b->getDate()) <=> strtotime($a->getDate());
@@ -177,10 +128,6 @@
                         $ra = get_event_ratings($a->getID())['topic_rating'] ?? 0;
                         $rb = get_event_ratings($b->getID())['topic_rating'] ?? 0;
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                         // Sort descending: higher ratings first
                         if ($ra == $rb) {
                             // Tie-breaker: newer date first
@@ -190,10 +137,6 @@
                     });
                 }
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 $upcomingEvents = array_slice($filteredUpcoming, $upcomingOffset, $limit);
                 $upcomingArchivedEvents = array_slice($filteredArchived, $archivedOffset, $limit);
 
@@ -280,11 +223,7 @@
                 if (sizeof($upcomingEvents) > 0 || sizeof($upcomingArchivedEvents) > 0): ?>
                 <form method="get" style="text-align:center; margin-bottom:1rem;">
                         <label for="sort">Sort By:</label>
-<<<<<<< Updated upstream
-                        <select name="sort" onchange="this.form.submit()">
-=======
                         <select name="sort" onchange="this.form.submit()" style="width:auto; display:inline-block;">
->>>>>>> Stashed changes
                             <option value="">None</option>
                             <option value="speaker" <?= $sortBy === 'speaker' ? 'selected' : '' ?>>Speaker Rating</option>
                             <option value="topic" <?= $sortBy === 'topic' ? 'selected' : '' ?>>Topic Rating</option>
@@ -328,16 +267,7 @@
                                     $numSignups = count($signups); // Number of people signed up
                                     // Check if the user is signed up for this event
                                     $isSignedUp = check_if_signed_up($eventID, $userID);
-<<<<<<< Updated upstream
-                                    
-=======
                                    
-
-
-
->>>>>>> Stashed changes
-
-
 
                                     echo "
                                     <tr data-event-id='$eventID'>
@@ -345,15 +275,9 @@
                                         <td>$type</td>
                                         <td>$description</td>
                                         <td>$date</td>";
-<<<<<<< Updated upstream
-                                        
-                                        
-                                    
-=======
                                        
                                        
                                    
->>>>>>> Stashed changes
                                     // Display Sign Up or Cancel button based on user sign-up status
                                        // if ($user_training_level != $training_level_required) {
                                         //    echo "
@@ -485,21 +409,11 @@
                                     // Fetch signups for the event
                                     $signups = fetch_event_signups($eventID);
                                     $numSignups = count($signups); // Number of people signed up
-<<<<<<< Updated upstream
-                                    
-=======
                                    
->>>>>>> Stashed changes
                                     $ratings = get_event_ratings($eventID);
                                     $speakerRating = $ratings['speaker_rating'] !== null ? round($ratings['speaker_rating'], 2) : 'N/A';
                                     $topicRating   = $ratings['topic_rating'] !== null ? round($ratings['topic_rating'], 2) : 'N/A';
-
-<<<<<<< Updated upstream
-                                    
-=======
-
                                    
->>>>>>> Stashed changes
                                     //if($accessLevel < 3) {
                                         echo "
                                         <tr data-event-id='$eventID'>
