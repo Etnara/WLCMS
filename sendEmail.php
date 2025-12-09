@@ -22,7 +22,7 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
 $mail->Username = 'wlccoffeetalks@gmail.com';
-$mail->Password = '------------------------';
+$mail->Password = '-------------';
 
 $mail->setFrom('wlccoffeetalks@gmail.com','WLC Coffee Talks');
 
@@ -38,11 +38,15 @@ function sendEmail($to, $name, $subject, $message) {
 function sendFormConfirmation($to, $first_name, $last_name) {
     global $mail;
     $mail->addAddress($to, $first_name . ' '. $last_name);
-    $mail->Subject = "Interest Form Recieved";
-
+    $mail->Subject = "Interest Form Received";
+    $mail->isHTML();
     $mail->Body =
-"Thank you for your interest in speaking for the Women's Leadership Colloquium's Coffee Talks!
-We will let you know when your form has been reviewed and accepted.";
+$first_name . ",<br> 
+<br>Thank you for your interest in speaking for the Women's Leadership Colloquium's Coffee Talks!<br>
+We will let you know when your form has been reviewed and accepted.<br>
+<br>
+**Note**<br>
+This is an automatic email messaging system, replies are not monitored.";
 
     $mail->send();
 }
@@ -51,10 +55,14 @@ function sendFormApproved($to, $first_name, $last_name) {
     global $mail;
     $mail->addAddress($to, $first_name . " " . $last_name);
     $mail->Subject = "Interest Form Approved";
-
+    $mail->isHTML();
     $mail->Body =
-"Your interest form for the Women's Leadership Coloquium Coffee Talks has been approved!
-You will be notified when you have been scheduled for a Coffee Talk.";
+$first_name . ",<br>
+<br>Your interest form for the Women's Leadership Coloquium Coffee Talks has been approved!<br>
+You will be notified when you have been scheduled for a Coffee Talk.<br>
+<br>
+**Note**<br>
+This is an automatic email messaging system, replies are not monitored.";
 
     $mail->send();
 }
@@ -63,10 +71,14 @@ function sendScheduledSpeaker($to, $first_name, $last_name, $date) {
     global $mail;
     $mail->addAddress($to, $first_name. " " . $last_name);
     $mail->Subject = "Scheduled for Coffee Talk on **Date**";
-
+    $mail->isHTML();
     $mail->Body =
-"You have been scheduled to speak on " . $date . "
-Please email bwilli22@umw.edu if you need to rechedule or cancel.";
+"Hey " . $first_name . ",<br>
+You have been scheduled to speak on " . $date . "<br>
+Please email bwilli22@umw.edu if you need to rechedule or cancel.<br>
+<br>
+**Note**<br>
+This is an automatic email messaging system, replies are not monitored.";
 
     $mail->send();
 }
@@ -91,8 +103,12 @@ function sendAdminInvite($to){
     $mail->isHTML();
     $mail->Body = "
         Welcome to the Coffee Talks Management System! <br>
-        Please create your admin account <a href =\"{$link}\">here</a>. <br>
-        This link expires in 24 hours.
+        <br>Please create your admin account <a href =\"{$link}\">here</a>. <br>
+        This link expires in 24 hours. <br>
+        <br>
+        **Note**<br>
+        This is an automatic email messaging system, replies are not monitored.
+        
     ";
 
     $con = connect();
@@ -111,12 +127,26 @@ function speakerReminder($to, $first_name, $last_name, $eventDate){
     if($today == (clone $eventDate)->modify(modifier: '-7 days')->format('Y-m-d')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is in 1 week";
-        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak in one week on {$eventDate->format('l, j F Y')}.\nThis is a reminder one week in advance.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->Body = "
+        Hi $first_name,\n
+        \nYou're scheduled to speak in one week on {$eventDate->format('l, j F Y')}.\n
+        \nThis is a reminder one week in advance.\n
+        \nPlease email bwilli22@umw.edu if you need to reschedule or cancel.\n
+        \n
+        **Note**\n
+        This is an automatic email messaging system, replies are not monitored.";
         $mail->send();
     } elseif($today == (clone $eventDate)->modify(modifier: '-1 days')->format('Y-m-d')){
         $mail->addAddress($to, $first_name . ' '. $last_name);
         $mail->Subject = "Reminder: Your Coffee Talk is tomorrow";
-        $mail->Body = "Hi $first_name,\n\nYou're scheduled to speak tomorrow on {$eventDate->format('l, j F Y')}.\nThis is a 24-hour reminder.\n\nPlease email bwilli22@umw.edu if you need to reschedule or cancel.";
+        $mail->Body = "
+        Hi $first_name,\n
+        \nYou're scheduled to speak tomorrow on {$eventDate->format('l, j F Y')}.\n
+        This is a 24-hour reminder.\n
+        \nPlease email bwilli22@umw.edu if you need to reschedule or cancel.\n
+        \n
+        **Note**\n
+        This is an automatic email messaging system, replies are not monitored.";
         $mail->send();
     }
 }
