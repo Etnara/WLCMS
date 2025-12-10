@@ -84,7 +84,8 @@ function getAllMonthsFor($speakerID){
 
 function getAllSpeakersFor($month){
     //$query = 'select id from speaker_months where month=?'; 
-    $query = "select id from speaker_months where month like CONCAT('%', ?, '%')";
+    $query = "SELECT sm.id FROM speaker_months AS sm JOIN dbpersons AS p ON p.id = sm.id 
+            WHERE sm.month LIKE CONCAT('%', ?, '%') AND p.status = 'Accepted Speaker'";
     $conn = connect();
     $month = ucfirst($month);
     $stmt = $conn->prepare($query);
