@@ -56,7 +56,7 @@
 <html>
     <head>
         <?php require_once('universal.inc') ?>
-        <title>Fredericksburg SPCA | Reset Password</title>
+        <title>Reset Password</title>
     </head>
     <body>
         <?php require_once('header.php') ?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
     session_cache_expire(30);
     session_start();
@@ -16,9 +16,9 @@
         header('Location: calendar.php');
         die();
   	}
-  	
+
   	include_once('database/dbEvents.php');
-  	
+
     // We need to check for a bad ID here before we query the db
     // otherwise we may be vulnerable to SQL injection(!)
   	$event_info = fetch_event_by_id($id);
@@ -115,13 +115,13 @@
         if (isset($args["request_type"])) {
             //if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $request_type = $args['request_type'];
-            if (!valueConstrainedTo($request_type, 
+            if (!valueConstrainedTo($request_type,
                     array('add self', 'add another', 'remove'))) {
                 echo "Bad request";
                 die();
             }
             $eventID = $args["id"];
-    
+
             // Check if Get request from user is from an organization member
             // (volunteer, admin/super admin)
             if ($request_type == 'add self' && $access_level >= 1) {
@@ -136,7 +136,7 @@
                 require_once('database/dbMessages.php');
                 require_once('include/output.php');
                 $event = fetch_event_by_id($eventID);
-                
+
                 $eventName = htmlspecialchars_decode($event['name']);
                 $eventDate = date('l, F j, Y', strtotime($event['date']));
                 $eventStart = time24hto12h($event['start-time']);
@@ -170,10 +170,10 @@
 <html>
 
 <head>
-    <?php 
+    <?php
         require_once('universal.inc');
     ?>
-    <title>Fredericksburg SPCA | View Event: <?php echo $event_info['name'] ?></title>
+    <title>View Event: <?php echo $event_info['name'] ?></title>
     <link rel="stylesheet" href="css/event.css" type="text/css" />
     <?php if ($access_level >= 2) : ?>
         <script src="js/event.js"></script>
@@ -228,7 +228,7 @@
             }
         ?>
         <!---->
-        
+
         <?php
             require_once('include/output.php');
             $event_name = $event_info['name'];
@@ -247,9 +247,9 @@
             $urlEvent_Name = urlencode($event_name);
             $urlDescription = urlencode($event_description);
             $urlLocation = urlencode("718 Caroline St, Fredericksburg, VA 22401");
-            $urlString = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" . $urlEvent_Name . "&dates=" . $iso_sTime . 
+            $urlString = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" . $urlEvent_Name . "&dates=" . $iso_sTime .
             "/" . $iso_eTime . "&details=" . $urlDescription . "&location=" . $urlLocation;
-        
+
             if ($event_speaker == "")
                 $event_speaker = "None";
             else {
@@ -273,7 +273,7 @@
             <?php if ($access_level >= 2): ?>
                 <a href="editEvent.php?id=<?= $id ?>" title="Edit Event" class="edit-icon">
                     <i class="fas fa-pencil-alt"></i>
-                <a href="deleteEvent.php?id=<?= $id ?>" title="Delete Event" class="delete-icon" 
+                <a href="deleteEvent.php?id=<?= $id ?>" title="Delete Event" class="delete-icon"
                     onclick="return confirmDelete(<?= htmlspecialchars($id) ?>);">
                         <i class="fas fa-trash"></i>
                 </a>
@@ -297,7 +297,7 @@
                         <?php echo wordwrap($event_description, 50, "<br />\n"); ?>
                     </td>
                 </tr>
-                <tr>  
+                <tr>
                     <td class="label">Date</td>
                     <td><?php echo $event_date; ?></td>
                 </tr>
@@ -318,7 +318,7 @@
                         <?php echo wordwrap($event_location, 50, "<br />\n"); ?>
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td class="label">Capacity</td>
                     <td id="description-cell"><?php echo $event_capacity; ?></td>
@@ -394,26 +394,16 @@
 
 
                 <!-- <a href="editEvent.php?id=<?= $id ?>" class="button cancel">Edit Event Details</a> -->
-                
+
 
             <?php endif ?>
 
             <a href="calendar.php?month=<?= substr($event_info['date'], 0, 7) ?>" class="button cancel">Return to Calendar</a>
             <a href="viewAllEvents.php" class="button cancel">Return to All Events</a>
             <a href="<?php echo $urlString;?>" target="_blank" class="button cancel">Add to Google Calendar</a>
-            
+
 
         </div>
-
-         <!-- Share Event on Facebook Button -->
-            <?php
-                $page_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            ?>
-            <meta property="og:image" content="https://jenniferp160.sg-host.com/images/FredSPCAlogo.png">
-            <div class="fb-share-button" data-href= $page_link data-layout="" data-size=""><a target="_blank" 
-                href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%2FfredSPCA%2FviewAllEvents.php&amp;src=sdkpreparse" 
-                class="fb-xfbml-parse-ignore">Share</a>
-            </div>
 
         <!-- Confirmation Modals -->
         <?php if ($access_level >= 2) : ?>
@@ -461,7 +451,7 @@
         ?>
             <?php endif ?>
 
-            
+
 
         <!-- Scripts for Modal Controls -->
         <script>
