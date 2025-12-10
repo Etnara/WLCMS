@@ -15,7 +15,7 @@
         // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
         $accessLevel = $_SESSION['access_level'];
         $userID = $_SESSION['_id'];
-    } 
+    }
     // Require admin privileges
     if ($accessLevel < 2) {
         header('Location: login.php');
@@ -76,8 +76,8 @@
     }
     require_once('include/output.php');
 
-    include_once('database/dbinfo.php'); 
-    $con=connect();  
+    include_once('database/dbinfo.php');
+    $con=connect();
     $query = "
         SELECT id, first_name, last_name
         FROM dbpersons
@@ -101,8 +101,8 @@
             <h2>Event Details</h2>
             <form id="new-event-form" method="post">
                 <label for="name">Event Name </label>
-                <input type="hidden" name="id" value="<?php echo $id ?>"/> 
-                <input type="text" id="name" name="name" value="<?php echo $event['name'] ?>" required placeholder="Enter name"> 
+                <input type="hidden" name="id" value="<?php echo $id ?>"/>
+                <input type="text" id="name" name="name" value="<?php echo $event['name'] ?>" required placeholder="Enter name">
                 <!--
                 <label for="name">Abbreviated Name</label>
                 <input type="text" id="abbrev-name" name="abbrev-name" value="<//?php echo $event['abbrevName'] ?>" maxlength="11"  required placeholder="Enter name that will appear on calendar">
@@ -110,7 +110,7 @@
                 <label for="name">Description </label>
                 <input type="text" id="description" name="description" value="<?php echo $event['description'] ?>" required placeholder="Enter description">
                 <label for="name">Date </label>
-                <input type="date" id="date" name="date" value="<?php echo $event['date'] ?>" min="<?php echo date('Y-m-d'); ?>" required>
+                <input type="date" id="date" name="date" value="<?php echo $event['date'] ?>" required>
                 <label for="name">Start Time </label>
                 <input type="text" id="start-time" name="start-time" value="<?php echo time24hto12h($event['startTime']) ?>" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
                 <label for="name">End Time </label>
@@ -142,13 +142,13 @@
                             $topics_row = mysqli_fetch_assoc($topics_result);
                             $person['topic_summary'] = $topics_row['topic_summary'] ?? 'No topic';
                         }
-                        unset($person); 
+                        unset($person);
                         ?>
 
                         <!--<label for="searchSpeaker"> Search Speaker </label>-->
                         <input type="text" id="searchSpeaker" placeholder="Search Speaker (Name or Topic)" style="margin-bottom: 0.5rem; width: 100%;">
                 <select id="speaker" name="speaker">
-                   
+
                   <option value="null">None</option>
                   <?php
                     foreach ($people as $person) {
@@ -160,15 +160,15 @@
                       echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']}</option>\n";
                       /*$selected = ($person['id'] == $event['speaker'] || $person['id'] == $event['topic']) ? "selected" : "";
                       echo "<option value=\"{$person['id']}\" {$selected}>{$person['first_name']} {$person['last_name']} - {$person['topic_summary']}</option>\n";*/
-                    } 
-                  ?> 
+                    }
+                  ?>
                 </select>
                 <script>
                     const searchInput = document.getElementById("searchSpeaker");
                         const select = document.getElementById("speaker");
-                        const allOptions = Array.from(select.options).slice(1); 
+                        const allOptions = Array.from(select.options).slice(1);
 
-                        
+
                         allOptions.sort((a, b) => {
                             const topicA = a.text.split(" - ")[1] || "";
                             const topicB = b.text.split(" - ")[1] || "";
@@ -177,10 +177,10 @@
 
                         allOptions.forEach(option => select.appendChild(option));
 
-                        
+
                         searchInput.addEventListener("input", () => {
                             const query = searchInput.value.toLowerCase();
-                            select.innerHTML = '<option value="null">None</option>'; 
+                            select.innerHTML = '<option value="null">None</option>';
 
                             allOptions.forEach(option => {
                                 if (option.text.toLowerCase().includes(query)) {
@@ -200,12 +200,12 @@
                 <input type="hidden" id="capacity" name="capacity" value="999" placeholder="Enter capacity (e.g. 1-99)">
                 <!--<fieldset>
                     <label for="name">* Service </label>
-                    </?php 
+                    </?php
                         // fetch data from the $all_services variable
                         // and individually display as an option
                         echo '<ul>';
                         while ($service = mysqli_fetch_array(
-                                $all_services, MYSQLI_ASSOC)):; 
+                                $all_services, MYSQLI_ASSOC)):;
                             $shouldCheck = false;
                             foreach($current_services as $current_serv) {
                                 if ($service['id'] == $current_serv['id']) {
@@ -222,12 +222,12 @@
                 </fieldset> --->
                 <!--<label for="name">Location </label>
                 <select for="name" id="location" name="location" required>
-                    </?php 
+                    </?php
                         // fetch data from the $all_locations variable
                         // and individually display as an option
                         while ($location = mysqli_fetch_array(
-                                $all_locations, MYSQLI_ASSOC)):; 
-                    
+                                $all_locations, MYSQLI_ASSOC)):;
+
                             if ($event['locationID'] == $location['id']) {
                                 echo '<option selected value="' . $location['id']. '">';
                             } else {
@@ -235,8 +235,8 @@
                             }
                             echo $location['name'];
                             echo '</option>';
-                        
-                        endwhile; 
+
+                        endwhile;
                         // terminate while loop
                     ?>
                 </select>---><p></p>
