@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             exit;
                         }
 
-                        // normalize headers to lowercase 
+                        // normalize headers to lowercase
                         $normalized = [];
                         foreach ($header as $idx => $col) {
                             $key = strtolower(trim($col));
@@ -228,9 +228,9 @@ $totalRows = $countRow['cnt'] ?? 0;
 $totalPages = max(1, ceil($totalRows / $limit));
 
 $query  = "
-    SELECT 
-        id, 
-        filename, 
+    SELECT
+        id,
+        filename,
         speaker_name,
         topic_title,
         talk_date
@@ -396,17 +396,17 @@ require_once('header.php');
       </select>
 
       <div style="display: flex; align-items: center; gap: 10px;">
-          <input 
-              type="file" 
-              name="csv" 
-              accept=".csv" 
-              class="file-input" 
-              style="flex: 1;" 
+          <input
+              type="file"
+              name="csv"
+              accept=".csv"
+              class="file-input"
+              style="flex: 1;"
               required
           >
 
-          <button 
-              type="submit" 
+          <button
+              type="submit"
               class="blue-button"
               style="white-space: nowrap; padding: 10px 20px; margin-top: -3px; display: flex; align-items: center; justify-content: center;"
           >
@@ -474,8 +474,6 @@ require_once('header.php');
             <td class="file-meta">—</td>
             <td class="file-meta">—</td>
             <td class="file-meta">—</td>
-            <td class="file-meta">—</td>
-            <td><button class="blue-button" disabled>Delete</button></td>
           </tr>
         <?php endif; ?>
 

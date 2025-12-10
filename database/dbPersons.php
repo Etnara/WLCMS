@@ -439,7 +439,8 @@ function search_speakers($text) {
             }
         }
 
-        $queryTopics = "SELECT DISTINCT speaker FROM speaker_topics WHERE topic LIKE CONCAT('%', ?, '%') LIMIT 10";
+        $queryTopics = "SELECT DISTINCT st.speaker FROM speaker_topics AS st JOIN dbpersons AS p ON p.id = st.speaker 
+            WHERE st.topic LIKE CONCAT('%', ?, '%') AND p.status = 'Accepted Speaker' LIMIT 10";
         $stmtTopics = $con->prepare($queryTopics);
         $stmtTopics->bind_param("s", $text);
         $stmtTopics->execute();

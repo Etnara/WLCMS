@@ -14,7 +14,7 @@
         // 0 = not logged in, 1 = standard user, 2 = manager (Admin), 3 super admin (TBI)
         $accessLevel = $_SESSION['access_level'];
         $userID = $_SESSION['_id'];
-    } 
+    }
     // Require admin privileges
     if ($accessLevel < 2) {
         header('Location: login.php');
@@ -41,7 +41,7 @@
             $startTime = $args['start-time'] = $validated[0];
             $endTime = $args['end-time'] = $validated[1];
             $date = $args['date'] = validateDate($args["date"]);
-    
+
             if (!$startTime || !$endTime || !$date > 11){
                 echo 'bad args';
                 die();
@@ -54,7 +54,7 @@
                 header('Location: eventSuccess.php');
                 exit();
             }
-            
+
         }
     }
     $date = null;
@@ -68,8 +68,8 @@
         }
     }
 
-    include_once('database/dbinfo.php'); 
-    $con=connect();  
+    include_once('database/dbinfo.php');
+    $con=connect();
     $query = "
         SELECT id, first_name, last_name
         FROM dbpersons
@@ -90,15 +90,15 @@
             <h2>New Event Form</h2>
             <form id="new-event-form" method="POST">
                 <label for="name">* Event Name </label>
-                <input type="text" id="name" name="name" required placeholder="Enter name"> 
+                <input type="text" id="name" name="name" required placeholder="Enter name">
                 <label for="name">* Description </label>
                 <input type="text" id="description" name="description" required placeholder="Enter description">
                 <label for="name">* Date </label>
-                <input type="date" id="date" name="date" <?php if ($date) echo 'value="' . $date . '"'; ?> min="<?php echo date('Y-m-d'); ?>" required>
+                <input type="date" id="date" name="date" <?php if ($date) echo 'value="' . $date . '"'; ?> required>
                 <label for="name">* Start Time </label>
-                <input type="text" id="start-time" name="start-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM">
+                <input type="text" id="start-time" name="start-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter start time. Ex. 12:00 PM" value="8:00 AM">
                 <label for="name">* End Time </label>
-                <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM">
+                <input type="text" id="end-time" name="end-time" pattern="([1-9]|10|11|12):[0-5][0-9] ?([aApP][mM])" required placeholder="Enter end time. Ex. 1:00 PM" value="9:00 AM">
                 <label for="name">* Speaker </label>
                 <?php
                         $people = [];
@@ -119,7 +119,7 @@
                             $topics_row = mysqli_fetch_assoc($topics_result);
                             $person['topic_summary'] = $topics_row['topic_summary'] ?? 'No topic';
                         }
-                        unset($person); 
+                        unset($person);
                         ?>
 
                         <!--<label for="searchSpeaker"> Search Speaker </label>-->
@@ -139,9 +139,9 @@
                 <script>
                     const searchInput = document.getElementById("searchSpeaker");
                         const select = document.getElementById("speaker");
-                        const allOptions = Array.from(select.options).slice(1); 
+                        const allOptions = Array.from(select.options).slice(1);
 
-                        
+
                         allOptions.sort((a, b) => {
                             const topicA = a.text.split(" - ")[1] || "";
                             const topicB = b.text.split(" - ")[1] || "";
@@ -150,10 +150,10 @@
 
                         allOptions.forEach(option => select.appendChild(option));
 
-                        
+
                         searchInput.addEventListener("input", () => {
                             const query = searchInput.value.toLowerCase();
-                            select.innerHTML = '<option value="null">None</option>'; 
+                            select.innerHTML = '<option value="null">None</option>';
 
                             allOptions.forEach(option => {
                                 if (option.text.toLowerCase().includes(query)) {
@@ -169,7 +169,7 @@
                 <input type="hidden" id="capacity" value="None">
 
                 <input type="submit" value="Create Event">
-                
+
             </form>
                 <?php if ($date): ?>
                     <a class="button cancel" href="calendar.php?month=<?php echo substr($date, 0, 7) ?>" style="margin-top: -.5rem">Return to Calendar</a>

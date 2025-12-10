@@ -92,7 +92,7 @@ $style = '<style>
         display: block;
     }
     </style>';
-$table = $style . '<table>
+$table = $style . '<div class="overflow-x-auto"><table>
         <thead class="bg-blue-400">
             <tr>
             <th>Headshot</th>
@@ -136,6 +136,6 @@ if (!$exist) {
     $table .= '<tr><td colspan="7"><div class="error-block">Your search returned no results.</div></td></tr>';
 }
 
-$table .= '</tbody></table>';
+$table .= '</tbody></table></div>';
 
 echo $table; 
