@@ -93,9 +93,9 @@
         }
         /*
         .content-box {
-            flex: 1 1 280px; 
+            flex: 1 1 280px;
             max-width: 375px;
-            padding: 10px 2px; 
+            padding: 10px 2px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -104,9 +104,9 @@
         }
 
         .content-box-sub {
-            flex: 1 1 300px; 
+            flex: 1 1 300px;
             max-width: 470px;
-            padding: 10px 10px; 
+            padding: 10px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -550,7 +550,7 @@
             <button class="arrow-button">→</button>
         </div>
                     -->
-        
+
                 <?php
                     require_once('database/dbMessages.php');
                     $unreadMessageCount = get_user_unread_count($person->get_id());
@@ -559,7 +559,7 @@
                         $inboxIcon = 'inbox-unread.svg';
                     }
                 ?>
-         <!--       
+         <!--
         <div class="content-box-test" onclick="window.location.href='inbox.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/<?php echo $inboxIcon ?>" alt="Notification Icon">
@@ -632,22 +632,6 @@
                     -->
         </div>
 
-        <!-- Right Side: Page Links -->
-         <!--
-        <div class="footer-right">
-            <div class="footer-section">
-                <div class="footer-topic">Connect</div>
-                <a href="https://www.facebook.com/share/g/15X2tqwFkA/">Facebook</a>
-                <a href="https://www.instagram.com/fredspca/?hl=en">Instagram</a>
-                <a href="https://fredspca.org">Main Website</a>
-            </div>
-            <div class="footer-section">
-                <div class="footer-topic">Contact Us</div>
-                <a href="mailto:volunteer@fredspca.org">volunteer@fredspca.org</a>
-                <a href="tel:5408981500">540-898-1500 (ext 117)</a>
-            </div>
-        </div>
-                    -->
     </footer>
     <p>_</p>
 
