@@ -5,7 +5,8 @@
         "mailgun/mailgun-php": "^4.3",
         "nyholm/psr7": "^1.8",
         "guzzlehttp/guzzle": "^7.10",
-        "php-http/guzzle7-adapter": "^1.1"
+        "php-http/guzzle7-adapter": "^1.1",
+        "symfony/options-resolver": "^7"
     },
     "config": {
         "allow-plugins": {
