@@ -16,6 +16,7 @@ if (isset($_SESSION['_id'])) {
 <head>
     <?php require_once('universal.inc') ?>
     <link rel="stylesheet" href="css/messages.css">
+    
     <script>
         function toggleBulkActions() {
             const checkboxes = document.querySelectorAll('.messageCheckbox');
@@ -76,10 +77,8 @@ if (isset($_SESSION['_id'])) {
     <?php if (count($allMessages) > 0): ?>
         <form id="bulkDeleteForm" action="deleteNotification.php" method="POST">
             <div class="top-bar">
-            <button type="submit" name="delete_all" class="button delete" style="width:10%; margin-bottom: 10px;" onclick="return confirm('Are you sure you want to delete ALL notifications?');">Delete All</button>
                 <div id="bulk-actions" style="display:none;">
                     <span><strong>With Selected:</strong></span>
-                    <button type="submit" name="bulk_delete" class="button delete" style="margin-bottom: 10px;" onclick="return confirm('Delete selected notifications?');">Delete</button>
                 </div>
             </div>
 
@@ -87,11 +86,11 @@ if (isset($_SESSION['_id'])) {
                 <table class="general">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAll"></th>
+                            
                             <th>Speaker</th>
                             <th>Title</th>
                             <th>Received</th>
-                            <th>Delete</th>
+                            <th>Delete Email</th>
                         </tr>
                     </thead>
                     <tbody class="standout">
@@ -110,28 +109,24 @@ if (isset($_SESSION['_id'])) {
                                 if (!$message['wasRead']) $class .= ' unread';
                                 if ($message['prioritylevel']) $class .= ' prio' . $message['prioritylevel'];*/
                                 foreach ($allEmails as $email):
-                                    $admin_email = $email['admin_email'];
+                                    $emailID = $email['id'];
                                     $speaker_email = $email['speaker_email'] ?? '';
                                     $title = $email['subject'];
-                                    $body = $email['body'] ??'';
-                                    $timePacked = $email['time_sent'];
-                                    [$year, $month, $day] = explode('-', $timePacked);
                                     $time = new DateTime($email['time_sent']);
                                     $class = 'message email';
                                     $speaker = retrieve_person_by_email($speaker_email);
                                 
                                 
                         ?>
-                        <tr class="<?= $class ?>" data-message-id="<?= $messageID ?>">
-                            <td><input type="checkbox" class="rowCheckbox" name="selected_messages[]" value="<?= $messageID ?>"></td>
+                        <tr class="<?= $class ?>" data-message-id="<?= $emailID ?>" onclick="window.location='viewEmail.php?id=<?= $emailID ?>'">
                             <td><?= $speaker->get_first_name() . " " . $speaker->get_last_name() ?></td>
                             <td><?= $title ?></td>
                             <td><?= $time->format("m/d/Y") ?></td>
                             <td>
                                 <a class="button delete" 
-                                href="deleteNotification.php?id=<?= $messageID ?>" 
-                                onclick="return confirm('Are you sure you want to delete this message?');">
-                                Delete Notification
+                                href="deleteNotification.php?id=<?= $emailID ?>" 
+                                onclick="return confirm('Are you sure you want to delete this email?');">
+                                Delete
                                 </a>
                             </td>
                         </tr>

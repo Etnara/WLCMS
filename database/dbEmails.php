@@ -2,9 +2,8 @@
 
 require_once("dbinfo.php");
 
-
 function getAllEmails(){
-    $query = "SELECT admin_email, speaker_email, subject, body, time_sent FROM dbemails ORDER BY time_sent DESC";
+    $query = "SELECT id, speaker_email, subject, time_sent FROM dbemails ORDER BY time_sent DESC";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -67,4 +66,26 @@ function getAllEmailsForAdmin( $admin_email ) {
     $stmt->close();
     $conn->close();
     return $allEmails;
+}
+
+function getEmail( $emailID ) {
+    $query = "SELECT speaker_email, admin_email, subject, body, time_sent FROM dbemails WHERE id = ?";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $emailID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $email = null;
+    if ($row = $result->fetch_assoc()) {
+        $email = [
+            'speaker_email' => $row['speaker_email'],
+            'admin_email' => $row['admin_email'],
+            'subject' => $row['subject'],
+            'body' => $row['body'],
+            'time_sent' => $row['time_sent']
+        ];
+    }
+    $stmt->close();
+    $conn->close();
+    return $email;
 }
