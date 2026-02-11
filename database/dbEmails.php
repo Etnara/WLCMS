@@ -89,3 +89,13 @@ function getEmail( $emailID ) {
     $conn->close();
     return $email;
 }
+
+function storeSentEmail( $admin_email, $speaker_email, $subject, $body ) {
+    $query = "INSERT INTO dbemails (admin_email, speaker_email, subject, body, time_sent) VALUES (?, ?, ?, ?, NOW())";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ssss", $admin_email, $speaker_email, $subject, $body);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+}

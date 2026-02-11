@@ -57,6 +57,7 @@ if (isset($_SESSION['_id'])) {
 <h1>Email Inbox</h1>
 <main class="general">
     <?php
+    require_once('database/dbinfo.php');
     require_once('database/dbEmails.php');
     require_once('database/dbMessages.php');
     require_once('database/dbPersons.php');
@@ -74,7 +75,7 @@ if (isset($_SESSION['_id'])) {
 
     mark_all_as_read($userID);
     ?>
-    <?php if (count($allMessages) > 0): ?>
+    <?php if (count($allEmails) > 0): ?>
         <form id="bulkDeleteForm" action="deleteNotification.php" method="POST">
             <div class="top-bar">
                 <div id="bulk-actions" style="display:none;">
