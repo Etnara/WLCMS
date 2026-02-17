@@ -79,7 +79,7 @@ if ($response === false) {
 
 $admin = retrieve_person($userID);
 
-storeSentEmail( $admin->get_email(), $to, $subject, $text);
+storeEmail( $admin->get_email(), $to, $subject, $text);
 
 http_response_code($status);
 echo $response;

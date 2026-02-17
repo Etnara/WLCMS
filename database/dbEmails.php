@@ -92,7 +92,7 @@ function getEmail( $emailID ) {
     return $email;
 }
 
-function storeSentEmail( $admin_email, $speaker_email, $subject, $body ) {
+function storeEmail( $admin_email, $speaker_email, $subject, $body ) {
     $query = "INSERT INTO dbemails (admin_email, speaker_email, subject, body, time_sent) VALUES (?, ?, ?, ?, NOW())";
     $conn = connect();
     $stmt = $conn->prepare($query);
@@ -101,7 +101,6 @@ function storeSentEmail( $admin_email, $speaker_email, $subject, $body ) {
     $stmt->close();
     $conn->close();
 }
-
 function addEmailChainLink( $emailID, $nextEmailID ) {
     $query = "UPDATE dbemails SET next_email = ? WHERE id = ?";
     $conn = connect();
