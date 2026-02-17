@@ -39,6 +39,44 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
             <p style="border: 1px solid black; padding: 10px; margin: 10px; border-radius: 5px;"><?= htmlspecialchars($email['body']) ?></p>
             <p className="text-left"><?= htmlspecialchars($email['time_sent']) ?></p>
         </div>
+        <?php
+    if ($email['next_email'] !== null) {
+        $email = getEmail($email['next_email']);
+        
+    } else {
+        
+        $email = null;
+        
+    }
+    while ($email !== null) {
+    $speaker = retrieve_person_by_email($email['speaker_email']);
+    ?>
+    <div class="mb-8">
+        <p>
+            <strong>
+                Reply from <?= htmlspecialchars($speaker->get_first_name()) ?>
+                <?= htmlspecialchars($speaker->get_last_name()) ?>
+                (<?= htmlspecialchars($email['speaker_email']) ?>):
+            </strong>
+        </p>
+
+        <p style="border: 1px solid black; padding: 10px; margin: 10px; border-radius: 5px;">
+            <?= htmlspecialchars($email['body']) ?>
+        </p>
+
+        <p class="text-left"><?= htmlspecialchars($email['time_sent']) ?></p>
+    </div>
+    <?php
+
+
+    if ($email['next_email'] !== null) {
+        $email = getEmail($email['next_email']);
+    } else {
+        break;
+    }
+}
+?>
+    
         <a href="#" class="button mr-4" onclick="openReplyComposer(
         '<?= htmlspecialchars($email['speaker_email'], ENT_QUOTES) ?>',
         '<?= htmlspecialchars($email['subject'], ENT_QUOTES) ?>'
@@ -47,7 +85,7 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
         <div class="modal-content">
             <h2>Reply</h2>
 
-            <form id="replyForm" method="POST" action="sendMailgunEmail.php">
+            <form id="replyForm" method="POST" action="curlMailgunOut.php">
             <input type="hidden" name="to" id="replyTo">
             <input type="hidden" name="subject" id="replySubject">
 

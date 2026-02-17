@@ -3,7 +3,7 @@
 require_once("dbinfo.php");
 
 function getAllEmails(){
-    $query = "SELECT id, speaker_email, subject, time_sent FROM dbemails ORDER BY time_sent DESC";
+    $query = "SELECT id, speaker_email, subject, time_sent FROM dbemails where next_email is null ORDER BY time_sent DESC";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -17,7 +17,7 @@ function getAllEmails(){
     return $allEmails;
 }
 function getAllEmailsForSpeaker( $speaker_email ) {
-    $query = "SELECT admin_email, subject, body, time_sent FROM dbemails WHERE speaker_email = ? ORDER BY time_sent DESC";
+    $query = "SELECT admin_email, subject, body, time_sent FROM dbemails WHERE speaker_email = ? and next_email is null ORDER BY time_sent DESC";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $speaker_email);
@@ -69,7 +69,7 @@ function getAllEmailsForAdmin( $admin_email ) {
 }
 
 function getEmail( $emailID ) {
-    $query = "SELECT speaker_email, admin_email, subject, body, time_sent FROM dbemails WHERE id = ?";
+    $query = "SELECT id, speaker_email, admin_email, subject, body, time_sent, next_email FROM dbemails WHERE id = ?";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $emailID);
@@ -78,11 +78,13 @@ function getEmail( $emailID ) {
     $email = null;
     if ($row = $result->fetch_assoc()) {
         $email = [
+            'id' => $row['id'], 
             'speaker_email' => $row['speaker_email'],
             'admin_email' => $row['admin_email'],
             'subject' => $row['subject'],
             'body' => $row['body'],
-            'time_sent' => $row['time_sent']
+            'time_sent' => $row['time_sent'],
+            'next_email' => $row['next_email'],
         ];
     }
     $stmt->close();
@@ -95,6 +97,16 @@ function storeSentEmail( $admin_email, $speaker_email, $subject, $body ) {
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ssss", $admin_email, $speaker_email, $subject, $body);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+}
+
+function addEmailChainLink( $emailID, $nextEmailID ) {
+    $query = "UPDATE dbemails SET next_email = ? WHERE id = ?";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $nextEmailID, $emailID);
     $stmt->execute();
     $stmt->close();
     $conn->close();
