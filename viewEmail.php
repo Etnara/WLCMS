@@ -14,6 +14,7 @@ require_once("database/dbEmails.php");
 require_once("database/dbPersons.php");
 
 $email = getEmail($_GET["id"]);
+$currentEmail = $email;
 $speaker = retrieve_person_by_email($email['speaker_email']);
 
 ?>
@@ -43,11 +44,7 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
     if ($email['next_email'] !== null) {
         $email = getEmail($email['next_email']);
         
-    } else {
-        
-        $email = null;
-        
-    }
+    
     while ($email !== null) {
     $speaker = retrieve_person_by_email($email['speaker_email']);
     ?>
@@ -70,24 +67,28 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
 
 
     if ($email['next_email'] !== null) {
+        $currentEmail = $email;
         $email = getEmail($email['next_email']);
+
     } else {
         break;
+    }
     }
 }
 ?>
     
         <a href="#" class="button mr-4" onclick="openReplyComposer(
-        '<?= htmlspecialchars($email['speaker_email'], ENT_QUOTES) ?>',
-        '<?= htmlspecialchars($email['subject'], ENT_QUOTES) ?>'
+        '<?= htmlspecialchars($currentEmail['speaker_email'], ENT_QUOTES) ?>',
+        '<?= htmlspecialchars($currentEmail['subject'], ENT_QUOTES) ?>'
         )">Reply</a>
         <div id="replyModal" class="modal hidden">
         <div class="modal-content">
             <h2>Reply</h2>
 
             <form id="replyForm" method="POST" action="curlMailgunOut.php">
-            <input type="hidden" name="to" id="replyTo">
-            <input type="hidden" name="subject" id="replySubject">
+            <input type="hidden" name="to" value='<?= htmlspecialchars($currentEmail['speaker_email'], ENT_QUOTES) ?>' id="replyTo">
+            <input type="hidden" name="subject" value="<?= htmlspecialchars($currentEmail['subject'], ENT_QUOTES) ?>"id="replySubject">
+            <input type="hidden" name="parentID" value="<?= $currentEmail['id'] ?>" id="replyParent">
 
             <textarea
                 name="body"

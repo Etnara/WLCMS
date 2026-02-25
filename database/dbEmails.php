@@ -101,6 +101,21 @@ function storeEmail( $admin_email, $speaker_email, $subject, $body ) {
     $stmt->close();
     $conn->close();
 }
+
+function getMostRecentID(){
+    $query = "SELECT id from dbemails order by id desc limit 1";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $result = $result->fetch_assoc();
+
+    $stmt->close();
+    $conn->close();
+    return $result['id'];
+}
+
 function addEmailChainLink( $emailID, $nextEmailID ) {
     $query = "UPDATE dbemails SET next_email = ? WHERE id = ?";
     $conn = connect();

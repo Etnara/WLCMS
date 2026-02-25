@@ -41,7 +41,7 @@ if (!$apiKey || !$domain) {
 
 $to      = trim($_POST['to'] ?? 'calebalineberry@gmail.com');
 $subject = trim($_POST['subject'] ?? 'Hello World!');
-$text    = trim($_POST['text'] ?? 'Hardcoded test email from my website that is going to be stored in the database');
+$text    = trim($_POST['body'] ?? 'Unideal');
 $html    = trim($_POST['html'] ?? '');
 
 $from = "WLC Coffee Talks <mail@{$domain}>";
@@ -80,6 +80,7 @@ if ($response === false) {
 $admin = retrieve_person($userID);
 
 storeEmail( $admin->get_email(), $to, $subject, $text);
+addEmailChainLink($_POST['parentID'], getMostRecentID());
 
 http_response_code($status);
 echo $response;
