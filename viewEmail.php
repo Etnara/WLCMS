@@ -47,13 +47,13 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
     
     while ($email !== null) {
     $speaker = retrieve_person_by_email($email['speaker_email']);
+    $admin = retrieve_person_by_email($email['admin_email']);
+    $senderBool = $email['sender_bool'];
     ?>
     <div class="mb-8">
         <p>
             <strong>
-                Reply from <?= htmlspecialchars($speaker->get_first_name()) ?>
-                <?= htmlspecialchars($speaker->get_last_name()) ?>
-                (<?= htmlspecialchars($email['speaker_email']) ?>):
+                Reply from <?= $senderBool == 1 ? htmlspecialchars($speaker->get_first_name()) . " " . htmlspecialchars($speaker->get_last_name()) : htmlspecialchars($admin->get_first_name()) . " " . htmlspecialchars($admin->get_last_name()) ?>:
             </strong>
         </p>
 
@@ -86,9 +86,9 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
             <h2>Reply</h2>
 
             <form id="replyForm" method="POST" action="curlMailgunOut.php">
-            <input type="hidden" name="to" value='<?= htmlspecialchars($currentEmail['speaker_email'], ENT_QUOTES) ?>' id="replyTo">
-            <input type="hidden" name="subject" value="<?= htmlspecialchars($currentEmail['subject'], ENT_QUOTES) ?>"id="replySubject">
-            <input type="hidden" name="parentID" value="<?= $currentEmail['id'] ?>" id="replyParent">
+            <input type="hidden" name="to" value='<?= htmlspecialchars($email['speaker_email'], ENT_QUOTES) ?>' id="replyTo">
+            <input type="hidden" name="subject" value="<?= htmlspecialchars($email['subject'], ENT_QUOTES) ?>"id="replySubject">
+            <input type="hidden" name="parentID" value="<?= $email['id'] ?>" id="replyParent">
 
             <textarea
                 name="body"

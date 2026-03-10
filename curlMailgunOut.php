@@ -79,7 +79,7 @@ if ($response === false) {
 
 $admin = retrieve_person($userID);
 
-storeEmail( $admin->get_email(), $to, $subject, $text);
+storeEmail( $admin->get_email(), $to, $subject, $text, false );
 addEmailChainLink($_POST['parentID'], getMostRecentID());
 
 http_response_code($status);

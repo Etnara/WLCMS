@@ -3,7 +3,7 @@
 require_once("dbinfo.php");
 
 function getAllEmails(){
-    $query = "SELECT id, speaker_email, subject, time_sent FROM dbemails where next_email is null ORDER BY time_sent DESC";
+    $query = "SELECT id, speaker_email, subject, time_sent FROM dbemails where isHead = 1 ORDER BY time_sent DESC";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -69,7 +69,7 @@ function getAllEmailsForAdmin( $admin_email ) {
 }
 
 function getEmail( $emailID ) {
-    $query = "SELECT id, speaker_email, admin_email, subject, body, time_sent, next_email FROM dbemails WHERE id = ?";
+    $query = "SELECT id, speaker_email, admin_email, subject, body, time_sent, next_email, sender_bool FROM dbemails WHERE id = ?";
     $conn = connect();
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $emailID);
@@ -85,6 +85,7 @@ function getEmail( $emailID ) {
             'body' => $row['body'],
             'time_sent' => $row['time_sent'],
             'next_email' => $row['next_email'],
+            'sender_bool' => $row['sender_bool']
         ];
     }
     $stmt->close();
@@ -92,11 +93,11 @@ function getEmail( $emailID ) {
     return $email;
 }
 
-function storeEmail( $admin_email, $speaker_email, $subject, $body ) {
-    $query = "INSERT INTO dbemails (admin_email, speaker_email, subject, body, time_sent) VALUES (?, ?, ?, ?, NOW())";
+function storeEmail( $admin_email, $speaker_email, $subject, $body, $senderBool ) {
+    $query = "INSERT INTO dbemails (admin_email, speaker_email, subject, body, time_sent, sender_bool) VALUES (?, ?, ?, ?, NOW(), ?)";
     $conn = connect();
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssss", $admin_email, $speaker_email, $subject, $body);
+    $stmt->bind_param("ssssi", $admin_email, $speaker_email, $subject, $body, $senderBool);
     $stmt->execute();
     $stmt->close();
     $conn->close();
