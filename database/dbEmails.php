@@ -126,3 +126,25 @@ function addEmailChainLink( $emailID, $nextEmailID ) {
     $stmt->close();
     $conn->close();
 }
+
+function deleteEmailChain( $emailID ) {
+    $query = "select next_email from dbemails where id = ?";
+    $conn = connect();
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $emailID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $nextEmailID = $row['next_email'];
+        if ($nextEmailID !== null) {
+            deleteEmailChain($nextEmailID); // Recursive call to delete emails starting from end of the chain
+        }
+    }
+    $query = "DELETE FROM dbemails WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $emailID);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+}

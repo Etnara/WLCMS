@@ -59,24 +59,15 @@ if (isset($_SESSION['_id'])) {
     <?php
     require_once('database/dbinfo.php');
     require_once('database/dbEmails.php');
-    require_once('database/dbMessages.php');
     require_once('database/dbPersons.php');
     require_once('include/output.php');
 
-    $newMessages = get_user_unread_messages($userID);
-    $oldMessages = get_user_read_messages($userID);
-    $allMessages = array_merge($newMessages, $oldMessages);
-
+    
     $allEmails = getAllEmails();
 
-    usort($allMessages, function($a, $b) {
-        return strtotime(str_replace('-', ' ', $b['time'])) - strtotime(str_replace('-', ' ', $a['time']));
-    });
-
-    mark_all_as_read($userID);
     ?>
     <?php if (count($allEmails) > 0): ?>
-        <form id="bulkDeleteForm" action="deleteNotification.php" method="POST">
+        <form id="bulkDeleteForm" action="deleteEmailChain.php" method="POST">
             <div class="top-bar">
                 <div id="bulk-actions" style="display:none;">
                     <span><strong>With Selected:</strong></span>
@@ -125,9 +116,9 @@ if (isset($_SESSION['_id'])) {
                             <td><?= $time->format("m/d/Y") ?></td>
                             <td>
                                 <a class="button delete" 
-                                href="deleteNotification.php?id=<?= $emailID ?>" 
-                                onclick="return confirm('Are you sure you want to delete this email?');">
-                                Delete
+                                href="deleteEmailChain.php?id=<?= $emailID ?>" 
+                                onclick="return confirm('Are you sure you want to delete this email chain?');">
+                                Delete Chain
                                 </a>
                             </td>
                         </tr>
