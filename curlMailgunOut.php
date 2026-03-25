@@ -29,20 +29,22 @@ $dotenv->load();
 $apiKey = $_ENV['MAILGUN_API_KEY'] ?? null;
 $domain = $_ENV['MAILGUN_DOMAIN'] ?? null;
 
-echo $apiKey;
-echo $domain;
-
-
 
 if (!$apiKey || !$domain) {
   http_response_code(500);
   exit("Missing MAILGUN_API_KEY or MAILGUN_DOMAIN");
 }
 
-$to      = trim($_POST['to'] ?? 'calebalineberry@gmail.com');
+if (isset($_POST['to'])) {
+    $to = trim($_POST['to']);
+} else {
+    die("Missing 'to' field");
+}
 $subject = trim($_POST['subject'] ?? 'Hello World!');
 $text    = trim($_POST['body'] ?? 'Unideal');
 $html    = trim($_POST['html'] ?? '');
+
+
 
 $from = "WLC Coffee Talks <mail@{$domain}>";
 
@@ -72,15 +74,23 @@ curl_close($ch);
 header('Content-Type: application/json');
 
 if ($response === false) {
-  http_response_code(500);
-  echo json_encode(['ok' => false, 'error' => $err]);
-  exit;
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => $err]);
+    exit;
 }
 
-$admin = retrieve_person($userID);
-
-storeEmail( $admin->get_email(), $to, $subject, $text, false );
-addEmailChainLink($_POST['parentID'], getMostRecentID());
+// Guard against null session/user before touching the DB
+if ($userID && $status === 200) {
+    $admin = retrieve_person($userID);
+    if ($admin) {
+        storeEmail($admin->get_email(), $to, $subject, $text, false);
+        if (isset($_POST['parentID'])) {
+            addEmailChainLink($_POST['parentID'], getMostRecentID());
+        }
+    } else {
+        error_log("curlMailgunOut: could not retrieve admin for userID=$userID");
+    }
+}
 
 http_response_code($status);
 echo $response;

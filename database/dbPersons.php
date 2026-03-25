@@ -403,6 +403,18 @@ function deleteSpeaker($speaker_id) {
     return ['success' => true, 'message' => 'Speaker deleted successfully.'];
 }
 
+function getAcceptedSpeakers()
+{
+    $con = connect();
+    $query = 'SELECT * FROM dbpersons WHERE id != "vmsroot" AND status = "Accepted Speaker"';
+    $result = mysqli_query($con, $query);
+    $thePersons = array();
+    while ($result_row = mysqli_fetch_assoc($result)) {
+        $thePerson = make_a_person($result_row);
+        $thePersons[] = $thePerson;
+    }
+    return $thePersons;
+}
 function search_speakers($text) {
     $con = connect();
 

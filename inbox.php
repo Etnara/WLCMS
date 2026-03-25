@@ -16,6 +16,7 @@ if (isset($_SESSION['_id'])) {
 <head>
     <?php require_once('universal.inc') ?>
     <link rel="stylesheet" href="css/messages.css">
+    <link rel="stylesheet" href="css/compose_email.css">
     
     <script>
         function toggleBulkActions() {
@@ -36,6 +37,20 @@ if (isset($_SESSION['_id'])) {
                 document.getElementById(formId).submit();
             }
         }
+        function openCompose() {
+            const win = document.getElementById('compose-window');
+            win.classList.remove('hidden', 'minimized');
+        }
+
+        function closeCompose() {
+            document.getElementById('compose-window').classList.add('hidden');
+        }
+
+        function minimizeCompose() {
+            document.getElementById('compose-window').classList.toggle('minimized');
+        }
+
+        
     </script>
     <style>
         #bulk-actions {
@@ -56,6 +71,45 @@ if (isset($_SESSION['_id'])) {
 <?php require_once('header.php') ?>
 <h1>Email Inbox</h1>
 <main class="general">
+
+
+
+<button type="button" id="compose-btn" onclick="openCompose()">Compose New Email</button>
+
+<!-- Compose Window -->
+    <div id="compose-window" class="compose-window hidden">
+    <div class="compose-header" id="compose-drag-handle">
+        <span>New Message</span>
+        <div class="compose-controls">
+        <button type="button" onclick="minimizeCompose()" title="Minimize">─</button>
+        <button type="button" onclick="closeCompose()" title="Close">✕</button>
+        </div>
+    </div>
+    <div class="compose-body" id="compose-body">
+        <div style="flex">
+            <input type="text" name="to" placeholder="To" class="compose-field">
+            <select name="List_of_Speakers" class="compose-select">
+                <option value="">-- Or select from previous speakers --</option>
+                <?php
+                require_once('database/dbPersons.php');
+                $speakers = getAcceptedSpeakers();
+                foreach ($speakers as $speaker) {
+                    echo '<option value="' . htmlspecialchars($speaker->get_email()) . '">' 
+                        . htmlspecialchars($speaker->get_first_name() . ' ' . $speaker->get_last_name()) . " (" . htmlspecialchars($speaker->get_email()) . ")"
+                        . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+
+        <input type="text"   name="subject" placeholder="Subject" class="compose-field">
+        <textarea name="body" class="compose-textarea" placeholder="Write your message..."></textarea>
+        <div class="compose-footer">
+        <button class="send-btn" type="submit" onclick="sendEmail()">Send</button>
+        </div>
+    </div>
+    </div>
+    
     <?php
     require_once('database/dbinfo.php');
     require_once('database/dbEmails.php');
@@ -88,18 +142,7 @@ if (isset($_SESSION['_id'])) {
                     <tbody class="standout">
                         <?php 
                             $id_to_name_hash = [];
-                            /*foreach ($allMessages as $message):
-                                $sender = $id_to_name_hash[$message['senderID']] ?? get_name_from_id($message['senderID']);
-                                $id_to_name_hash[$message['senderID']] = $sender;
-
-                                $messageID = $message['id'];
-                                $title = $message['title'];
-                                $timePacked = $message['time'];
-                                [$year, $month, $day, $clock] = explode('-', $timePacked);
-                                $time = time24hto12h($clock);
-                                $class = 'message';
-                                if (!$message['wasRead']) $class .= ' unread';
-                                if ($message['prioritylevel']) $class .= ' prio' . $message['prioritylevel'];*/
+                        
                                 foreach ($allEmails as $email):
                                     $emailID = $email['id'];
                                     $speaker_email = $email['speaker_email'] ?? '';
@@ -148,6 +191,43 @@ if (isset($_SESSION['_id'])) {
                 const anyChecked = [...document.querySelectorAll('.rowCheckbox')].some(cb => cb.checked);
                 document.getElementById('bulk-actions').style.display = anyChecked ? 'block' : 'none';
             }
+            document.querySelector('select[name="List_of_Speakers"]').addEventListener('change', function() {
+            if (this.value) {
+                document.querySelector('input[name="to"]').value = this.value;
+            }
+        });
+        function sendEmail() {
+            const to       = document.querySelector('input[name="to"]').value.trim();
+            const speaker  = document.querySelector('select[name="List_of_Speakers"]').value.trim();
+            const subject  = document.querySelector('input[name="subject"]').value.trim();
+            const body     = document.querySelector('textarea[name="body"]').value.trim();
+
+            const recipient = to !== '' ? to : speaker;
+
+            if (!recipient || recipient === '') {
+                alert('Please enter a recipient.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('to', recipient);
+            formData.append('subject', subject);
+            formData.append('body', body);
+
+            fetch('curlMailgunOut.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert('Email sent!');
+                closeCompose();
+            })
+            .catch(err => {
+                alert('Failed to send email.');
+                console.error(err);
+            });
+}
         </script>
 </main>
 </body>
