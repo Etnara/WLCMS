@@ -38,7 +38,7 @@ $bodyTxt = $_POST['body-plain'] ?? '';
 $bodyHtml= $_POST['body-html'] ?? '';
 $messageId = $_POST['Message-Id'] ?? ($_POST['message-id'] ?? '');
 
-storeEmail($to, $from, $subject, $bodyTxt);
+storeEmail($to, $from, $subject, $bodyTxt, 1);
 
 // 4) Respond 200 OK quickly  
 http_response_code(200);
