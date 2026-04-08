@@ -1,3 +1,4 @@
 .DS_Store
 php_errorlog
 .env
+google_config.php
