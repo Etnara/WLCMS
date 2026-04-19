@@ -559,21 +559,21 @@
                         $inboxIcon = 'inbox-unread.svg';
                     }
                 ?>
-         <!--
+         
         <div class="content-box-test" onclick="window.location.href='inbox.php'">
             <div class="icon-overlay">
                 <img style="border-radius: 5px;" src="images/<?php echo $inboxIcon ?>" alt="Notification Icon">
             </div>
             <img class="background-image" src="images/blank-white-background.jpg" />
-            <div class="large-text-sub">System Notifications<?php
+            <div class="large-text-sub">Emails<?php
                         if ($unreadMessageCount > 0) {
                             echo ' (' . $unreadMessageCount . ')';
                         }
                     ?></div>
-            <div class="graph-text">Stay up to date.</div>
+            <div class="graph-text">Check and send emails.</div>
             <button class="arrow-button">→</button>
         </div>
-                    -->
+                    
         <!--
         <div class="content-box-test" onclick="window.location.href='generateReport.php'">
             <div class="icon-overlay">
