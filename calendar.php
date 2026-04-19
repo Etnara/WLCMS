@@ -219,6 +219,19 @@
   >
     Return to Dashboard
   </a>
+  <a href="google_calendar/google_connect.php" style="
+    background-color: #6b7280;  /* bg-gray-500 */
+    color: white;               /* text-white */
+    padding: 0.5rem 1.5rem;     /* py-2 px-6 */
+    border-radius: 0.5rem;      /* rounded-lg */
+    text-decoration: none;      /* default for Tailwind links */
+    display: inline-block;      /* ensures padding applies correctly */
+  "
+  onmouseover="this.style.backgroundColor='#4b5563';"
+  onmouseout="this.style.backgroundColor='#6b7280';"
+  >
+    Connect Google Calendar
+  </a>
 </div>
 </div>
 

@@ -24,6 +24,7 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         require_once('include/input-validation.php');
         require_once('database/dbEvents.php');
+        require_once('google_calendar/googleCalendarSync.php');
         $args = sanitize($_POST, null);
         $required = array(
             "name", "description", "date", "start-time", "end-time", "speaker"
@@ -51,6 +52,7 @@
             if(!$id){
                 die();
             } else {
+                sync_event_to_google($userID, $id);
                 header('Location: eventSuccess.php');
                 exit();
             }

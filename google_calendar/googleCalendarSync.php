@@ -1,6 +1,6 @@
 <?php
-require_once 'google_client.php';
-require_once 'db.php';
+require_once 'googleClient.php';
+require_once __DIR__ . '/../database/dbinfo.php';
 
 function sync_event_to_google(string $user_id, int $event_id): void {
     $db = connect();

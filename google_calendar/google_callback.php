@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'google_client.php';
+require_once 'googleClient.php';
 require_once '../database/dbinfo.php';
 
 $client = get_google_client();
@@ -16,7 +16,7 @@ if (isset($token['error'])) {
 }
 
 // Get logged-in user's ID from your session (adjust to match your session variable)
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['_id'];
 
 $access_token    = $token['access_token'];
 $refresh_token   = $token['refresh_token'] ?? null;
@@ -33,5 +33,5 @@ $stmt = $db->prepare("
 $stmt->bind_param('ssss', $access_token, $refresh_token, $expires_at, $user_id);
 $stmt->execute();
 
-header('Location: /dashboard.php?google=connected');
+header('Location: /wlcms/index.php?google=connected');
 exit;
