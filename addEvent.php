@@ -52,7 +52,7 @@
             if(!$id){
                 die();
             } else {
-                sync_event_to_google($userID, $id);
+                sync_event_to_google($id);
                 header('Location: eventSuccess.php');
                 exit();
             }
