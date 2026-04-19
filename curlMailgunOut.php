@@ -93,4 +93,5 @@ if ($userID && $status === 200) {
 }
 
 http_response_code($status);
-echo $response;
+header("Location: viewEmail.php?id=" . $_POST['chainRoot']);
+exit();

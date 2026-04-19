@@ -1773,3 +1773,16 @@ function get_total_vol_hours($dateFrom, $dateTo) {
             }
     }
     */
+
+function isSpeaker($email){
+    $con = connect();
+    $query = "SELECT * FROM dbpersons WHERE email='$email' AND status='Accepted Speaker'";
+    $result = mysqli_query($con, $query);
+    if (!$result) {
+        mysqli_close($con);
+        return false;
+    }
+    $row = mysqli_fetch_assoc($result);
+    mysqli_close($con);
+    return $row != null; // Return true if a speaker is found, false otherwise
+}

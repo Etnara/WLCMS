@@ -15,8 +15,9 @@ require_once("database/dbPersons.php");
 
 $email = getEmail($_GET["id"]);
 $currentEmail = $email;
-$speaker = retrieve_person_by_email($email['speaker_email']);
-
+if(isSpeaker($email['speaker_email'])){
+    $speaker = retrieve_person_by_email($email['speaker_email']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +35,11 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
     <h1><?= htmlspecialchars($email['subject']) ?></h1>
     <main class="general justify-left p-6  ">    
         <div class="mb-8">
+            <?php if(isSpeaker($email['speaker_email'])): ?> 
             <p><strong>From:</strong> <?= htmlspecialchars($speaker->get_first_name()) ?> <?= htmlspecialchars($speaker->get_last_name()) ?> (<?= htmlspecialchars($email['speaker_email']) ?>)</p>
+            <?php else: ?>
+            <p><strong>From:</strong> <?= htmlspecialchars($email['speaker_email']) ?></p>
+            <?php endif; ?>
         </div>
         <div class="mb-8">
             <p style="border: 1px solid black; padding: 10px; margin: 10px; border-radius: 5px;"><?= htmlspecialchars($email['body']) ?></p>
@@ -42,19 +47,27 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
         </div>
         <?php
     if ($email['next_email'] !== null) {
-        $email = getEmail($email['next_email']);
+        $email = getEmail($email['next_email']); 
         
     
     while ($email !== null) {
-    $speaker = retrieve_person_by_email($email['speaker_email']);
+    if(isSpeaker($email['speaker_email'])){
+        $speaker = retrieve_person_by_email($email['speaker_email']);
+    }
     $admin = retrieve_person_by_email($email['admin_email']);
     $senderBool = $email['sender_bool'];
+    echo $senderBool;
     ?>
     <div class="mb-8">
+        
         <p>
+            <?php if(isSpeaker($email['speaker_email'])): ?> 
             <strong>
                 Reply from <?= $senderBool == 1 ? htmlspecialchars($speaker->get_first_name()) . " " . htmlspecialchars($speaker->get_last_name()) : htmlspecialchars($admin->get_first_name()) . " " . htmlspecialchars($admin->get_last_name()) ?>:
             </strong>
+            <?php else: ?>
+            <strong>Reply from <?= $senderBool == 1 ? htmlspecialchars($email['speaker_email']) : htmlspecialchars($email['admin_email']) ?>:</strong>
+            <?php endif; ?>
         </p>
 
         <p style="border: 1px solid black; padding: 10px; margin: 10px; border-radius: 5px;">
@@ -89,6 +102,7 @@ $speaker = retrieve_person_by_email($email['speaker_email']);
             <input type="hidden" name="to" value='<?= htmlspecialchars($email['speaker_email'], ENT_QUOTES) ?>' id="replyTo">
             <input type="hidden" name="subject" value="<?= htmlspecialchars($email['subject'], ENT_QUOTES) ?>"id="replySubject">
             <input type="hidden" name="parentID" value="<?= $email['id'] ?>" id="replyParent">
+            <input type="hidden" name="chainRoot" value="<?= $_GET['id'] ?>" id="replyChainRoot">
 
             <textarea
                 name="body"

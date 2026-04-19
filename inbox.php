@@ -148,13 +148,18 @@ if (isset($_SESSION['_id'])) {
                                     $speaker_email = $email['speaker_email'] ?? '';
                                     $title = $email['subject'];
                                     $time = new DateTime($email['time_sent']);
-                                    $class = 'message email';
-                                    $speaker = retrieve_person_by_email($speaker_email);
-                                
-                                
+                                    $class = 'message email';  
+                                    if (isSpeaker($speaker_email)) {
+                                        $speaker = retrieve_person_by_email($speaker_email);
+                                    }                                                                 
                         ?>
+
                         <tr class="<?= $class ?>" data-message-id="<?= $emailID ?>" onclick="window.location='viewEmail.php?id=<?= $emailID ?>'">
-                            <td><?= $speaker->get_first_name() . " " . $speaker->get_last_name() ?></td>
+                            <?php if(isSpeaker($speaker_email)): ?>
+                                <td><?= $speaker->get_first_name() . " " . $speaker->get_last_name() ?></td>
+                            <?php else: ?>
+                                <td><?= $speaker_email ?></td>
+                            <?php endif; ?>
                             <td><?= $title ?></td>
                             <td><?= $time->format("m/d/Y") ?></td>
                             <td>
